@@ -1,9 +1,9 @@
 ---
-k3s_server_url: "https://172.16.10.246:6443"
+k3s_server_url: "https://172.16.30.245:6443"
 k3s_token: "K1075723420d01a41f3c014ffb11c3f8620730b22af5eeca117835f5036a010ccc0::server:e34bd6811b4ca72d6d5190fd8de58b51"
 
 # Trusted networks for firewall (RHEL systems)
 k3s_trusted_networks:
   - 10.42.0.0/16      # k3s pod network
   - 10.43.0.0/16      # k3s service network
-  - 172.16.10.0/24    # local network
+  - 172.16.30.0/24    # local network
