@@ -6,13 +6,11 @@
 #   - Jellyfin (media server)
 #   - Media Stack (Sonarr, Radarr, qBittorrent, Jackett)
 #   - Paperless-ngx (document management)
-#   - Plane (project management)
 #   - Immich (photo management)
 #   - Agate (Gemini protocol server)
 #   - Personal Site (static landing page at mulliken.net)
 #
 # Prerequisites:
-#   - vars/plane_secrets.yml must exist and be encrypted with ansible-vault
 #   - vars/immich_secrets.yml must exist and be encrypted with ansible-vault
 #
 # Usage:
@@ -26,9 +24,6 @@
 #
 #   # Deploy only Paperless
 #   ansible-playbook -i inventory/hosts.yml playbooks/applications.yml --tags paperless
-#
-#   # Deploy only Plane
-#   ansible-playbook -i inventory/hosts.yml playbooks/applications.yml --tags plane --ask-vault-pass
 #
 #   # Deploy only Immich
 #   ansible-playbook -i inventory/hosts.yml playbooks/applications.yml --tags immich --ask-vault-pass
@@ -51,8 +46,6 @@
 #   - jackett: Jackett indexer manager
 #   - paperless: Paperless-ngx document management
 #   - documents: Paperless-ngx document management (alias)
-#   - plane: Plane project management
-#   - project_management: Plane project management (alias)
 #   - immich: Immich photo management
 #   - photos: Immich photo management (alias)
 #   - agate: Agate Gemini protocol server
@@ -67,7 +60,6 @@
   gather_facts: false
   tags: [applications, apps]
   vars_files:
-    - vars/plane_secrets.yml
     - vars/media_secrets.yml
     - vars/paperless_secrets.yml
     - vars/immich_secrets.yml
@@ -80,9 +72,6 @@
 
     - role: app_paperless
       tags: [paperless, documents]
-
-    - role: app_plane
-      tags: [plane, project_management]
 
     - role: app_immich
       tags: [immich, photos]
