@@ -85,6 +85,12 @@ spec:
               value: "{{ gluetun_firewall_input_ports }}"
             - name: FIREWALL_OUTBOUND_SUBNETS
               value: "{{ gluetun_firewall_outbound_subnets }}"
+            # Use K8s DNS instead of Gluetun's loopback DNS server
+            # Required workaround for musl libc bug in Alpine-based containers
+            # Note: DNS queries go through cluster DNS (not VPN), but all other
+            # traffic is VPN-protected. This is an acceptable tradeoff.
+            - name: DNS_KEEP_NAMESERVER
+              value: "on"
           ports:
             - containerPort: 8000
               name: gluetun-http
@@ -248,6 +254,16 @@ spec:
               mountPath: /config
             - name: media
               mountPath: /media
+          # No liveness probe - SABnzbd becomes unresponsive during heavy
+          # download/unpack operations which would cause unnecessary restarts
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8085
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 6
       volumes:
         - name: qbittorrent-config
           persistentVolumeClaim:

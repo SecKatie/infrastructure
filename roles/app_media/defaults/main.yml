@@ -68,10 +68,10 @@ jackett_cpu_limit: "500m"
 jackett_memory_limit: "256Mi"
 
 # SABnzbd resources
-sabnzbd_cpu_request: "50m"
-sabnzbd_memory_request: "256Mi"
-sabnzbd_cpu_limit: "1000m"
-sabnzbd_memory_limit: "1Gi"
+sabnzbd_cpu_request: "100m"
+sabnzbd_memory_request: "512Mi"
+sabnzbd_cpu_limit: "2000m"
+sabnzbd_memory_limit: "2Gi"
 
 # FlareSolverr resources
 flaresolverr_cpu_request: "50m"
