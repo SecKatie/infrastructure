@@ -1,0 +1,27 @@
+---
+- name: Detect primary network interface
+  ansible.builtin.set_fact:
+    infra_static_ip_detected_interface: "{{ ansible_facts['default_ipv4']['interface'] | default('eth0') }}"
+  when: infra_static_ip_interface is not defined
+
+- name: Set network interface
+  ansible.builtin.set_fact:
+    infra_static_ip_network_interface: "{{ infra_static_ip_interface | default(infra_static_ip_detected_interface) }}"
+
+- name: Display configuration
+  ansible.builtin.debug:
+    msg: |
+      Configuring static IP:
+        Host: {{ inventory_hostname }}
+        Interface: {{ infra_static_ip_network_interface }}
+        IP Address: {{ infra_static_ip_address }}/{{ infra_static_ip_prefix }}
+        Gateway: {{ infra_static_ip_gateway }}
+        DNS: {{ infra_static_ip_dns | join(', ') }}
+
+- name: Configure static IP on Debian-based systems
+  ansible.builtin.include_tasks: debian.yml
+  when: ansible_facts['os_family'] == "Debian"
+
+- name: Configure static IP on RedHat-based systems
+  ansible.builtin.include_tasks: rhel.yml
+  when: ansible_facts['os_family'] == "RedHat"

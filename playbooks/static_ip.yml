@@ -1,0 +1,32 @@
+---
+# Playbook to configure static IPs on all K3s cluster nodes
+# Run with: ansible-playbook -i inventory playbooks/static_ip.yml -K
+#
+# WARNING: This will change network configuration and may temporarily
+# disconnect nodes. Ensure you have out-of-band access (Tailscale/console).
+
+- name: Configure static IPs on K3s cluster nodes
+  hosts: k3s_cluster
+  gather_facts: true
+  vars:
+    infra_static_ip_gateway: "172.16.10.1"
+    infra_static_ip_dns:
+      - "172.16.10.1"
+      - "1.1.1.1"
+  roles:
+    - role: infra_static_ip
+
+- name: Display post-configuration summary
+  hosts: k3s_cluster
+  gather_facts: false
+  tasks:
+    - name: Show completion message
+      ansible.builtin.debug:
+        msg: |
+          Static IP configured: {{ infra_static_ip_address }}
+
+          IMPORTANT: After network restart, nodes will use new IPs.
+          You may need to:
+          1. Reconnect K3s agents to the control plane
+          2. Verify Tailscale connectivity
+          3. Update any firewall rules if needed

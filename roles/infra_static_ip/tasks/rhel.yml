@@ -1,0 +1,28 @@
+---
+# RHEL static IP configuration using NetworkManager
+
+- name: Get current connection name for interface
+  ansible.builtin.shell:
+    cmd: |
+      set -o pipefail
+      nmcli -t -f NAME,DEVICE connection show | grep ':{{ infra_static_ip_network_interface }}$' | cut -d: -f1 | head -1
+    executable: /bin/bash
+  register: infra_static_ip_connection_name
+  changed_when: false
+
+- name: Set connection name fact
+  ansible.builtin.set_fact:
+    infra_static_ip_nm_connection: "{{ infra_static_ip_connection_name.stdout | default(infra_static_ip_network_interface) }}"
+
+- name: Configure static IP address via nmcli
+  community.general.nmcli:
+    conn_name: "{{ infra_static_ip_nm_connection }}"
+    ifname: "{{ infra_static_ip_network_interface }}"
+    type: ethernet
+    ip4: "{{ infra_static_ip_address }}/{{ infra_static_ip_prefix }}"
+    gw4: "{{ infra_static_ip_gateway }}"
+    dns4: "{{ infra_static_ip_dns }}"
+    method4: manual
+    state: present
+  become: true
+  notify: Restart NetworkManager

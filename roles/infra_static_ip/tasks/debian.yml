@@ -1,0 +1,61 @@
+---
+# Debian/Raspberry Pi static IP configuration
+# Uses NetworkManager (nmcli) which is standard on modern Debian
+
+- name: Check if NetworkManager is available
+  ansible.builtin.command: which nmcli
+  register: infra_static_ip_nmcli_check
+  changed_when: false
+  failed_when: false
+
+- name: Configure static IP via NetworkManager
+  when: infra_static_ip_nmcli_check.rc == 0
+  block:
+    - name: Get current connection name for interface
+      ansible.builtin.shell:
+        cmd: |
+          set -o pipefail
+          nmcli -t -f NAME,DEVICE connection show | grep ':{{ infra_static_ip_network_interface }}$' | cut -d: -f1 | head -1
+        executable: /bin/bash
+      register: infra_static_ip_connection_name
+      changed_when: false
+
+    - name: Set connection name fact
+      ansible.builtin.set_fact:
+        infra_static_ip_nm_connection: "{{ infra_static_ip_connection_name.stdout | default('Wired connection 1') }}"
+
+    - name: Configure static IP address
+      community.general.nmcli:
+        conn_name: "{{ infra_static_ip_nm_connection }}"
+        ifname: "{{ infra_static_ip_network_interface }}"
+        type: ethernet
+        ip4: "{{ infra_static_ip_address }}/{{ infra_static_ip_prefix }}"
+        gw4: "{{ infra_static_ip_gateway }}"
+        dns4: "{{ infra_static_ip_dns }}"
+        method4: manual
+        state: present
+      become: true
+      notify: Restart NetworkManager
+
+- name: Configure static IP via dhcpcd (fallback for older Raspberry Pi OS)
+  when: infra_static_ip_nmcli_check.rc != 0
+  block:
+    - name: Check if dhcpcd.conf exists
+      ansible.builtin.stat:
+        path: /etc/dhcpcd.conf
+      register: infra_static_ip_dhcpcd_conf
+
+    - name: Configure dhcpcd for static IP
+      when: infra_static_ip_dhcpcd_conf.stat.exists
+      ansible.builtin.blockinfile:
+        path: /etc/dhcpcd.conf
+        block: |
+          # Static IP configuration for {{ infra_static_ip_network_interface }}
+          interface {{ infra_static_ip_network_interface }}
+          static ip_address={{ infra_static_ip_address }}/{{ infra_static_ip_prefix }}
+          static routers={{ infra_static_ip_gateway }}
+          static domain_name_servers={{ infra_static_ip_dns | join(' ') }}
+        marker: "# {mark} ANSIBLE MANAGED - Static IP"
+        backup: true
+      become: true
+      notify: Restart dhcpcd

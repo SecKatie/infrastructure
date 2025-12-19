@@ -11,7 +11,7 @@
 #   - Core: Storage (Longhorn), Security (Sealed Secrets), Networking (Traefik)
 #   - Observability: Victoria Metrics, Grafana, Node Exporter
 #   - Dashboards: Kubernetes Dashboard, Headlamp, Homepage
-#   - Applications: Jellyfin, Media stack, Paperless, Plane
+#   - Applications: Jellyfin, Media stack, Paperless, Immich
 #
 # Usage:
 #   # Deploy everything
@@ -43,7 +43,6 @@
 #   - media: Media management stack (Sonarr, Radarr, qBittorrent, Jackett)
 #   - paperless: Paperless-ngx document management
 #   - headlamp: Headlamp Kubernetes web UI
-#   - plane: Plane project management
 #
 # For more details on each component, see the individual playbook files:
 #   - playbooks/infrastructure.yml
