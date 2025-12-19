@@ -6,7 +6,7 @@ metadata:
   namespace: {{ personal_site_namespace }}
   labels:
     app.kubernetes.io/name: personal-site
-    app.kubernetes.io/part-of: dashboard
+    app.kubernetes.io/part-of: personal-site
     app.kubernetes.io/managed-by: ansible
   annotations:
     app.kubernetes.io/description: "Personal landing page - mulliken.net"
@@ -24,7 +24,7 @@ spec:
     metadata:
       labels:
         app.kubernetes.io/name: personal-site
-        app.kubernetes.io/part-of: dashboard
+        app.kubernetes.io/part-of: personal-site
         app.kubernetes.io/managed-by: ansible
     spec:
       affinity:
@@ -73,7 +73,7 @@ metadata:
   namespace: {{ personal_site_namespace }}
   labels:
     app.kubernetes.io/name: personal-site
-    app.kubernetes.io/part-of: dashboard
+    app.kubernetes.io/part-of: personal-site
     app.kubernetes.io/managed-by: ansible
 spec:
   type: ClusterIP

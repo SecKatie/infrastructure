@@ -9,6 +9,7 @@
 #   - Plane (project management)
 #   - Immich (photo management)
 #   - Agate (Gemini protocol server)
+#   - Personal Site (static landing page at mulliken.net)
 #
 # Prerequisites:
 #   - vars/plane_secrets.yml must exist and be encrypted with ansible-vault
@@ -35,6 +36,9 @@
 #   # Deploy only Agate
 #   ansible-playbook -i inventory/hosts.yml playbooks/applications.yml --tags agate
 #
+#   # Deploy only Personal Site
+#   ansible-playbook -i inventory/hosts.yml playbooks/applications.yml --tags personal-site
+#
 # Tags:
 #   - applications: All user applications
 #   - apps: All user applications (alias)
@@ -53,6 +57,8 @@
 #   - photos: Immich photo management (alias)
 #   - agate: Agate Gemini protocol server
 #   - gemini: Agate Gemini protocol server (alias)
+#   - personal-site: Personal landing page (mulliken.net)
+#   - personal: Personal landing page (alias)
 # =============================================================================
 
 - name: Deploy user applications
@@ -83,3 +89,6 @@
 
     - role: install_agate
       tags: [agate, gemini]
+
+    - role: app_personal_site
+      tags: [personal-site, personal]

@@ -8,7 +8,7 @@
     definition:
       metadata:
         labels:
-          app.kubernetes.io/part-of: dashboard
+          app.kubernetes.io/part-of: personal-site
           app.kubernetes.io/managed-by: ansible
         annotations:
           app.kubernetes.io/description: "Personal landing page namespace"

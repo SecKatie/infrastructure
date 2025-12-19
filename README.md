@@ -233,9 +233,9 @@ The following roles can be migrated to use the `common_k8s` library to eliminate
 - [ ] `dashboard_kubernetes` - Uses IngressRoute (keep as-is for HTTPS backend)
 - [ ] `dashboard_headlamp` - Migrate certificate, ingress, storage
 - [ ] `dashboard_homepage` - Migrate certificate, ingress, storage
-- [ ] `dashboard_personal_site` - Migrate ingress
 
 ### Application Roles
+- [ ] `app_personal_site` - Migrate ingress
 - [x] `app_jellyfin` - Migrate certificate, ingress, cloudflare, storage
 - [x] `app_media` - Migrate certificate, ingress, storage
 - [x] `app_paperless` - Migrate cloudflare, storage

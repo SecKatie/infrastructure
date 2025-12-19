@@ -6,7 +6,6 @@
 #   - Kubernetes Dashboard (cluster management UI)
 #   - Headlamp (modern Kubernetes web UI)
 #   - Homepage (application dashboard and launcher)
-#   - Personal Site (static landing page at mulliken.net)
 #
 # Prerequisites:
 #   - vars/homepage_secrets.yml must exist and be encrypted with ansible-vault
@@ -23,17 +22,12 @@
 #   # Deploy only Homepage
 #   ansible-playbook -i inventory/hosts.yml playbooks/dashboards.yml --tags homepage --ask-vault-pass
 #
-#   # Deploy only Personal Site
-#   ansible-playbook -i inventory/hosts.yml playbooks/dashboards.yml --tags personal-site
-#
 # Tags:
 #   - dashboards: All dashboard applications
 #   - k8s_dashboard: Kubernetes Dashboard
 #   - kubernetes_dashboard: Kubernetes Dashboard (alias)
 #   - headlamp: Headlamp Kubernetes web UI
 #   - homepage: Homepage application launcher
-#   - personal-site: Personal landing page (mulliken.net)
-#   - personal: Personal landing page (alias)
 # =============================================================================
 
 - name: Deploy dashboard applications
@@ -52,6 +46,3 @@
 
     - role: dashboard_homepage
       tags: [homepage]
-
-    - role: dashboard_personal_site
-      tags: [personal-site, personal]
