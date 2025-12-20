@@ -1,0 +1,56 @@
+---
+# NFS Persistent Volume for media (shared with other media apps)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: radarr-media-pv
+  labels:
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-media-radarr
+  nfs:
+    server: 172.16.10.248
+    path: /volume2/media
+---
+# PVC for NFS media
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-media-pvc
+  namespace: radarr
+  labels:
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-media-radarr
+  resources:
+    requests:
+      storage: 1Ti
+---
+# Radarr config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config-pvc
+  namespace: radarr
+  labels:
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi

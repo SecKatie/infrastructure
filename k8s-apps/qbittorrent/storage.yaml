@@ -1,0 +1,56 @@
+---
+# NFS Persistent Volume for media (shared with other media apps)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: qbittorrent-media-pv
+  labels:
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-media-qbittorrent
+  nfs:
+    server: 172.16.10.248
+    path: /volume2/media
+---
+# PVC for NFS media
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qbittorrent-media-pvc
+  namespace: qbittorrent
+  labels:
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-media-qbittorrent
+  resources:
+    requests:
+      storage: 1Ti
+---
+# qBittorrent config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qbittorrent-config-pvc
+  namespace: qbittorrent
+  labels:
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
