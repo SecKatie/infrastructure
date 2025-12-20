@@ -1,4 +1,3 @@
----
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -9,16 +8,17 @@ metadata:
     app.kubernetes.io/instance: ddclient
     app.kubernetes.io/component: dns-updater
     app.kubernetes.io/managed-by: argocd
+    argocd.argoproj.io/instance: agate
   annotations:
-    app.kubernetes.io/description: "Dynamic DNS updater for gemini.mulliken.net"
+    app.kubernetes.io/description: Dynamic DNS updater for gemini.mulliken.net
 spec:
+  replicas: 1
+  strategy:
+    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: ddclient
       app.kubernetes.io/instance: ddclient
-  replicas: 1
-  strategy:
-    type: Recreate
   template:
     metadata:
       labels:
@@ -38,41 +38,35 @@ spec:
       containers:
         - name: ddclient
           image: lscr.io/linuxserver/ddclient:latest
+          imagePullPolicy: Always
           env:
             - name: PUID
               value: "1000"
             - name: PGID
               value: "1000"
             - name: TZ
-              value: "America/Los_Angeles"
+              value: America/New_York
             - name: CLOUDFLARE_API_TOKEN
               valueFrom:
                 secretKeyRef:
                   name: ddclient-secret
                   key: CLOUDFLARE_API_TOKEN
           resources:
-            requests:
-              cpu: 50m
-              memory: 32Mi
             limits:
               cpu: 200m
               memory: 128Mi
+            requests:
+              cpu: 50m
+              memory: 32Mi
           volumeMounts:
             - name: config
               mountPath: /config/ddclient.conf
               subPath: ddclient.conf
             - name: cache
               mountPath: /var/cache/ddclient
-              subPath: cache
-            - name: run
-              mountPath: /var/run/ddclient
       volumes:
         - name: config
           configMap:
             name: ddclient-config
         - name: cache
-          persistentVolumeClaim:
-            claimName: ddclient-cache-pvc
-        - name: run
           emptyDir: {}
-
