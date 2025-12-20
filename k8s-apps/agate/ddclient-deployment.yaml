@@ -35,10 +35,6 @@ spec:
                 matchExpressions:
                   - key: node-role.kubernetes.io/control-plane
                     operator: DoesNotExist
-      securityContext:
-        fsGroup: 1000
-        runAsUser: 1000
-        runAsGroup: 1000
       containers:
         - name: ddclient
           image: lscr.io/linuxserver/ddclient:latest
@@ -61,10 +57,6 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
-          securityContext:
-            runAsUser: 1000
-            runAsNonRoot: true
-            allowPrivilegeEscalation: false
           volumeMounts:
             - name: config
               mountPath: /config/ddclient.conf
