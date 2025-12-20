@@ -1,0 +1,34 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: kubernetes-dashboard
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: kubernetes-dashboard
+    app.kubernetes.io/part-of: dashboard
+    app.kubernetes.io/managed-by: argocd
+  finalizers:
+    - resources-finalizer.argocd.argoproj.io
+spec:
+  project: default
+  sources:
+    # Helm chart for kubernetes-dashboard
+    - repoURL: https://kubernetes.github.io/dashboard/
+      chart: kubernetes-dashboard
+      targetRevision: 7.14.0
+      helm:
+        releaseName: kubernetes-dashboard
+    # Additional resources (admin user, ingress route)
+    - repoURL: https://github.com/SecKatie/ansible-playbooks.git
+      path: k8s-apps/kubernetes-dashboard/resources
+      targetRevision: main
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: kubernetes-dashboard
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true

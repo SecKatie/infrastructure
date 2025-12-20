@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: headlamp
+  namespace: headlamp
+  labels:
+    app.kubernetes.io/name: headlamp
+    app.kubernetes.io/managed-by: argocd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - headlamp.corp.mulliken.net
+      secretName: headlamp-tls
+  rules:
+    - host: headlamp.corp.mulliken.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: headlamp
+                port:
+                  number: 80
