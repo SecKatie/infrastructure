@@ -13,7 +13,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: https://github.com/SecKatie/ansible-playbooks.git
+        repoURL: https://github.com/SecKatie/infrastructure.git
         revision: main
         directories:
           - path: k8s-apps/*
