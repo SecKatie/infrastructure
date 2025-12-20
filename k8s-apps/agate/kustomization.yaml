@@ -8,3 +8,7 @@ resources:
   - namespace.yaml
   - storage.yaml
   - agate.yaml
+  - ddclient-config.yaml
+  - ddclient-sealedsecret.yaml
+  - ddclient-storage.yaml
+  - ddclient-deployment.yaml
