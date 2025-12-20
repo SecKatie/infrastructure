@@ -25,4 +25,4 @@ spec:
               service:
                 name: sabnzbd
                 port:
-                  number: 8085
+                  number: 8080

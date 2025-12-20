@@ -72,7 +72,7 @@ spec:
             - name: TZ
               value: "America/New_York"
             - name: FIREWALL_VPN_INPUT_PORTS
-              value: "8085"
+              value: "8080"
             - name: FIREWALL_OUTBOUND_SUBNETS
               value: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
             # Use K8s DNS instead of Gluetun's loopback DNS server
@@ -82,7 +82,7 @@ spec:
             - containerPort: 8000
               name: gluetun-http
               protocol: TCP
-            - containerPort: 8085
+            - containerPort: 8080
               name: sabnzbd-http
               protocol: TCP
           resources:
@@ -131,7 +131,7 @@ spec:
           readinessProbe:
             httpGet:
               path: /
-              port: 8085
+              port: 8080
             initialDelaySeconds: 30
             periodSeconds: 15
             timeoutSeconds: 10
@@ -159,8 +159,8 @@ metadata:
 spec:
   type: ClusterIP
   ports:
-    - port: 8085
-      targetPort: 8085
+    - port: 8080
+      targetPort: 8080
       protocol: TCP
       name: http
   selector:
