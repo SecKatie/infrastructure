@@ -1,3 +1,4 @@
+---
 apiVersion: apps/v1
 kind: Deployment
 metadata:
@@ -8,65 +9,46 @@ metadata:
     app.kubernetes.io/instance: ddclient
     app.kubernetes.io/component: dns-updater
     app.kubernetes.io/managed-by: argocd
-    argocd.argoproj.io/instance: agate
-  annotations:
-    app.kubernetes.io/description: Dynamic DNS updater for gemini.mulliken.net
 spec:
   replicas: 1
-  strategy:
-    type: Recreate
   selector:
     matchLabels:
       app.kubernetes.io/name: ddclient
       app.kubernetes.io/instance: ddclient
+  strategy:
+    type: Recreate
   template:
     metadata:
       labels:
         app.kubernetes.io/name: ddclient
         app.kubernetes.io/instance: ddclient
         app.kubernetes.io/component: dns-updater
-        app.kubernetes.io/managed-by: argocd
     spec:
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
-                  - key: node-role.kubernetes.io/control-plane
-                    operator: DoesNotExist
       containers:
         - name: ddclient
           image: lscr.io/linuxserver/ddclient:latest
-          imagePullPolicy: Always
           env:
             - name: PUID
               value: "1000"
             - name: PGID
               value: "1000"
             - name: TZ
-              value: America/New_York
-            - name: CLOUDFLARE_API_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: ddclient-secret
-                  key: CLOUDFLARE_API_TOKEN
+              value: "America/Chicago"
+          envFrom:
+            - secretRef:
+                name: ddclient-secret
           resources:
-            limits:
-              cpu: 200m
-              memory: 128Mi
             requests:
-              cpu: 50m
+              cpu: 10m
               memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
           volumeMounts:
             - name: config
-              mountPath: /config/ddclient.conf
+              mountPath: /defaults/ddclient.conf
               subPath: ddclient.conf
-            - name: cache
-              mountPath: /var/cache/ddclient
       volumes:
         - name: config
           configMap:
             name: ddclient-config
-        - name: cache
-          emptyDir: {}

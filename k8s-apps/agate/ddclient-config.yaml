@@ -1,29 +1,23 @@
+---
 apiVersion: v1
 kind: ConfigMap
 metadata:
   name: ddclient-config
   namespace: gemini
   labels:
-    app.kubernetes.io/name: ddclient
-    app.kubernetes.io/instance: ddclient
-    app.kubernetes.io/component: config
+    app.kubernetes.io/name: agate
+    app.kubernetes.io/component: ddclient
     app.kubernetes.io/managed-by: argocd
 data:
   ddclient.conf: |
-    # Configuration file for ddclient
-
-    daemon=300                   # check every 300 seconds
-    syslog=yes                   # log update msgs to syslog
-    pid=/var/run/ddclient/ddclient.pid
-    cache=/var/cache/ddclient/ddclient.cache
-
-    # Use web-based IP detection
-    use=web, web=checkip.dyndns.org/, web-skip='IP Address'
+    daemon=300
+    syslog=yes
+    ssl=yes
 
     # Cloudflare configuration
     protocol=cloudflare
     zone=mulliken.net
     ttl=1
-    login=token
+    usev4=webv4, webv4=ipify-ipv4
     password_env=CLOUDFLARE_API_TOKEN
     gemini.mulliken.net
