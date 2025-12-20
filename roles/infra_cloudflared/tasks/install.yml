@@ -1,0 +1,39 @@
+---
+- name: Check if cloudflared is already installed
+  ansible.builtin.command:
+    cmd: which cloudflared
+  register: cloudflared_installed
+  changed_when: false
+  failed_when: false
+
+- name: Get system architecture
+  ansible.builtin.set_fact:
+    cloudflared_arch: "{{ 'arm64' if ansible_facts['architecture'] == 'aarch64' else 'arm' if 'arm' in ansible_facts['architecture'] else 'amd64' }}"
+
+- name: Download cloudflared binary
+  ansible.builtin.get_url:
+    url: "https://github.com/cloudflare/cloudflared/releases/latest/download/cloudflared-linux-{{ cloudflared_arch }}"
+    dest: /usr/local/bin/cloudflared
+    mode: "0755"
+    owner: root
+    group: root
+  become: true
+  when: cloudflared_installed.rc != 0
+
+- name: Create cloudflared service user
+  ansible.builtin.user:
+    name: "{{ cloudflared_user }}"
+    system: true
+    shell: /usr/sbin/nologin
+    home: "{{ cloudflared_config_dir }}"
+    create_home: false
+  become: true
+
+- name: Create cloudflared configuration directory
+  ansible.builtin.file:
+    path: "{{ cloudflared_config_dir }}"
+    state: directory
+    owner: "{{ cloudflared_user }}"
+    group: "{{ cloudflared_group }}"
+    mode: "0750"
+  become: true

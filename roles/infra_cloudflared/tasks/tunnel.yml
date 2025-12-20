@@ -1,0 +1,62 @@
+---
+# Tunnel creation tasks - run on Ansible controller (delegate_to: localhost)
+
+- name: Check if Cloudflare tunnel already exists
+  ansible.builtin.shell: |
+    cloudflared tunnel list --output json 2>/dev/null || echo "[]"
+  register: cf_tunnel_list_result
+  delegate_to: localhost
+  become: false
+  changed_when: false
+
+- name: Extract existing tunnel information
+  ansible.builtin.set_fact:
+    cf_existing_tunnel: "{{ (cf_tunnel_list_result.stdout | from_json) | selectattr('name', 'equalto', cloudflared_tunnel_name) | list | first | default({}) }}"
+
+- name: Create Cloudflare tunnel if it doesn't exist
+  ansible.builtin.shell: |
+    cloudflared tunnel create {{ cloudflared_tunnel_name }}
+  register: cf_tunnel_create_result
+  delegate_to: localhost
+  become: false
+  when: cf_existing_tunnel == {}
+
+- name: Get tunnel ID from existing tunnel
+  ansible.builtin.set_fact:
+    cloudflared_tunnel_id: "{{ cf_existing_tunnel.id }}"
+  when: cf_existing_tunnel != {}
+
+- name: Get tunnel ID from newly created tunnel
+  ansible.builtin.set_fact:
+    cloudflared_tunnel_id: "{{ cf_tunnel_create_result.stdout | regex_search('([a-f0-9]{8}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{4}-[a-f0-9]{12})', '\\1') | first }}"
+  when:
+    - cf_existing_tunnel == {}
+    - cf_tunnel_create_result is defined
+    - cf_tunnel_create_result.rc == 0
+
+- name: Set credentials file path
+  ansible.builtin.set_fact:
+    cloudflared_creds_path: "{{ lookup('env', 'HOME') }}/.cloudflared/{{ cloudflared_tunnel_id }}.json"
+
+- name: Check if DNS route exists
+  ansible.builtin.shell: |
+    cloudflared tunnel route dns {{ cloudflared_tunnel_name }} {{ cloudflared_hostname }} 2>&1 || true
+  register: cf_dns_route_result
+  delegate_to: localhost
+  become: false
+  changed_when: "'Added' in cf_dns_route_result.stdout"
+  failed_when: false
+
+- name: Read tunnel credentials
+  ansible.builtin.slurp:
+    src: "{{ cloudflared_creds_path }}"
+  register: cf_tunnel_credentials
+  delegate_to: localhost
+  become: false
+
+- name: Display tunnel info
+  ansible.builtin.debug:
+    msg: |
+      Tunnel: {{ cloudflared_tunnel_name }}
+      ID: {{ cloudflared_tunnel_id }}
+      Hostname: {{ cloudflared_hostname }}

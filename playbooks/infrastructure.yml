@@ -6,9 +6,13 @@
 #   - Raspberry Pi node configuration (iSCSI, cgroups)
 #   - NFS support on all nodes
 #   - Optional IPv6 disabling
+#   - Squid proxy with Cloudflare tunnel (super6c_node_4)
 #
 # Usage:
 #   ansible-playbook -i inventory/hosts.yml playbooks/infrastructure.yml
+#
+#   # Deploy only Squid proxy
+#   ansible-playbook -i inventory/hosts.yml playbooks/infrastructure.yml --tags squid
 #
 #   # Skip IPv6 configuration (it's tagged 'never' by default)
 #   ansible-playbook -i inventory/hosts.yml playbooks/infrastructure.yml --tags ipv6
@@ -18,6 +22,7 @@
 #   - rpi: Raspberry Pi specific configuration
 #   - nfs: NFS client installation
 #   - ipv6: IPv6 disabling (tagged 'never' by default)
+#   - squid: Squid proxy with Cloudflare tunnel
 # =============================================================================
 
 - name: Configure Raspberry Pi nodes
@@ -108,3 +113,34 @@
         - ipv6_status.stdout == '1'
         - k3s_server_status.status.LoadState is defined
         - k3s_server_status.status.LoadState == 'loaded'
+
+# =============================================================================
+# Squid Proxy with Cloudflare Tunnel (super6c_node_4)
+# =============================================================================
+# Deploys Squid proxy accessible via Cloudflare tunnel at proxy.mulliken.net
+# Used by Uptime Kuma on VPS to monitor internal services
+# =============================================================================
+
+- name: Deploy Squid Proxy on super6c_node_4
+  hosts: super6c_node_4
+  become: true
+  gather_facts: true
+  tags: [infrastructure, squid]
+  vars_files:
+    - vars/squid_secrets.yml
+  roles:
+    - role: infra_squid
+      tags: [squid]
+
+- name: Deploy Cloudflared Tunnel for Squid Proxy
+  hosts: super6c_node_4
+  become: true
+  gather_facts: true
+  tags: [infrastructure, squid, cloudflared]
+  vars:
+    cloudflared_tunnel_name: "squid-proxy-tunnel"
+    cloudflared_hostname: "proxy.mulliken.net"
+    cloudflared_service_url: "http://localhost:3128"
+  roles:
+    - role: infra_cloudflared
+      tags: [cloudflared]

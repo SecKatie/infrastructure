@@ -1,0 +1,42 @@
+---
+# Squid Proxy Configuration
+
+# Port Squid listens on
+squid_port: 3128
+
+# Bind address (localhost = only cloudflared can connect)
+squid_bind_address: "127.0.0.1"
+
+# Authentication (required variables from vault)
+# squid_auth_username: "uptime"
+# squid_auth_password: "<from-vault>"
+
+# Cache settings
+squid_cache_mem: "64 MB"
+squid_maximum_object_size_in_memory: "512 KB"
+squid_cache_dir_size: 1000  # MB on disk
+
+# Allowed ports for CONNECT method (HTTPS)
+squid_ssl_ports:
+  - 443
+  - 8443
+
+# Safe ports (HTTP)
+squid_safe_ports:
+  - 80
+  - 21
+  - 443
+  - 70
+  - 210
+  - 1025-65535
+  - 280
+  - 488
+  - 591
+  - 777
+
+# Logging
+squid_access_log: "/var/log/squid/access.log"
+squid_cache_log: "/var/log/squid/cache.log"
+
+# Visible hostname in error pages
+squid_visible_hostname: "proxy.mulliken.net"
