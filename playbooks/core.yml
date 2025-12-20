@@ -29,6 +29,8 @@
 #   - traefik: Traefik ingress controller
 #   - acme: ACME/Let's Encrypt configuration
 #   - tls: TLS/SSL configuration
+#   - gitops: GitOps components
+#   - argocd: ArgoCD continuous delivery
 
 # =============================================================================
 
@@ -51,3 +53,7 @@
     # Networking
     - role: core_traefik
       tags: [networking, traefik, acme, tls]
+
+    # GitOps
+    - role: core_argocd
+      tags: [gitops, argocd]

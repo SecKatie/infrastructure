@@ -6,14 +6,15 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Run a playbook (vault password file is set in ansible.cfg at ~/.ansible-vault-pass.sh)
-ansible-playbook -i inventory playbooks/<playbook>.yml -K
+# Note: -K (become password) is NOT needed - do not include it
+ansible-playbook -i inventory playbooks/<playbook>.yml
 
 # Deploy everything using the master playbook
-ansible-playbook -i inventory playbooks/deploy.yml -K
+ansible-playbook -i inventory playbooks/deploy.yml
 
 # Deploy specific components using tags
-ansible-playbook -i inventory playbooks/deploy.yml --tags applications -K
-ansible-playbook -i inventory playbooks/deploy.yml --tags jellyfin -K
+ansible-playbook -i inventory playbooks/deploy.yml --tags applications
+ansible-playbook -i inventory playbooks/deploy.yml --tags jellyfin
 
 # Test a single role with Molecule
 cd roles/<role_name>
@@ -33,7 +34,7 @@ kubeseal --format yaml < my-secrets.yaml > sealedsecrets.yaml
 Playbooks are organized by category in `playbooks/`:
 - `deploy.yml` - Master orchestration playbook (imports all others)
 - `applications.yml` - User apps (jellyfin, media, paperless, immich, agate, personal_site)
-- `core.yml` - Core K8s components (cert-manager, traefik, longhorn)
+- `core.yml` - Core K8s components (cert-manager, traefik, longhorn, argocd)
 - `dashboards.yml` - Dashboard UIs (homepage, headlamp, kubernetes-dashboard)
 - `infrastructure.yml` - Infrastructure setup (rpi_setup, NFS)
 - `k3s.yml` - K3s cluster agent configuration
@@ -48,6 +49,9 @@ ansible-playbook -i inventory playbooks/applications.yml --tags media
 
 # Deploy only jellyfin
 ansible-playbook -i inventory playbooks/applications.yml --tags jellyfin
+
+# Deploy ArgoCD
+ansible-playbook -i inventory playbooks/core.yml --tags argocd
 ```
 
 ### Role Naming Conventions

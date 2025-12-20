@@ -1,0 +1,139 @@
+---
+- name: Check if ArgoCD release exists
+  ansible.builtin.command:
+    cmd: helm status {{ argocd_release_name }} -n {{ argocd_namespace }}
+  register: helm_status
+  failed_when: false
+  changed_when: false
+
+- name: Install ArgoCD using Helm OCI
+  ansible.builtin.command:
+    cmd: >
+      helm install {{ argocd_release_name }} {{ argocd_helm_chart }}
+      --version {{ argocd_helm_version }}
+      --namespace {{ argocd_namespace }}
+      --create-namespace
+      --set 'server.extraArgs={--insecure}'
+      --set server.resources.limits.cpu={{ argocd_server_resources.limits.cpu }}
+      --set server.resources.limits.memory={{ argocd_server_resources.limits.memory }}
+      --set server.resources.requests.cpu={{ argocd_server_resources.requests.cpu }}
+      --set server.resources.requests.memory={{ argocd_server_resources.requests.memory }}
+      --set repoServer.resources.limits.cpu={{ argocd_repo_server_resources.limits.cpu }}
+      --set repoServer.resources.limits.memory={{ argocd_repo_server_resources.limits.memory }}
+      --set repoServer.resources.requests.cpu={{ argocd_repo_server_resources.requests.cpu }}
+      --set repoServer.resources.requests.memory={{ argocd_repo_server_resources.requests.memory }}
+      --set controller.resources.limits.cpu={{ argocd_controller_resources.limits.cpu }}
+      --set controller.resources.limits.memory={{ argocd_controller_resources.limits.memory }}
+      --set controller.resources.requests.cpu={{ argocd_controller_resources.requests.cpu }}
+      --set controller.resources.requests.memory={{ argocd_controller_resources.requests.memory }}
+      --wait
+      --timeout 10m
+  when: helm_status.rc != 0
+  register: helm_install
+
+- name: Upgrade ArgoCD using Helm OCI
+  ansible.builtin.command:
+    cmd: >
+      helm upgrade {{ argocd_release_name }} {{ argocd_helm_chart }}
+      --version {{ argocd_helm_version }}
+      --namespace {{ argocd_namespace }}
+      --set 'server.extraArgs={--insecure}'
+      --set server.resources.limits.cpu={{ argocd_server_resources.limits.cpu }}
+      --set server.resources.limits.memory={{ argocd_server_resources.limits.memory }}
+      --set server.resources.requests.cpu={{ argocd_server_resources.requests.cpu }}
+      --set server.resources.requests.memory={{ argocd_server_resources.requests.memory }}
+      --set repoServer.resources.limits.cpu={{ argocd_repo_server_resources.limits.cpu }}
+      --set repoServer.resources.limits.memory={{ argocd_repo_server_resources.limits.memory }}
+      --set repoServer.resources.requests.cpu={{ argocd_repo_server_resources.requests.cpu }}
+      --set repoServer.resources.requests.memory={{ argocd_repo_server_resources.requests.memory }}
+      --set controller.resources.limits.cpu={{ argocd_controller_resources.limits.cpu }}
+      --set controller.resources.limits.memory={{ argocd_controller_resources.limits.memory }}
+      --set controller.resources.requests.cpu={{ argocd_controller_resources.requests.cpu }}
+      --set controller.resources.requests.memory={{ argocd_controller_resources.requests.memory }}
+      --wait
+      --timeout 10m
+  when: helm_status.rc == 0
+  register: helm_upgrade
+
+- name: Wait for ArgoCD server pods to be ready
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Pod
+    namespace: "{{ argocd_namespace }}"
+    label_selectors:
+      - "app.kubernetes.io/name=argocd-server"
+  register: pod_info
+  until: >
+    pod_info.resources | length > 0 and
+    pod_info.resources | selectattr('status.phase', 'equalto', 'Running') | list | length == (pod_info.resources | length)
+  retries: 30
+  delay: 10
+
+- name: Get ArgoCD initial admin password
+  kubernetes.core.k8s_info:
+    api_version: v1
+    kind: Secret
+    name: argocd-initial-admin-secret
+    namespace: "{{ argocd_namespace }}"
+  register: admin_secret
+
+- name: Decode admin password
+  ansible.builtin.set_fact:
+    argocd_admin_password: "{{ admin_secret.resources[0].data.password | b64decode }}"
+  when: admin_secret.resources | length > 0
+
+- name: Create TLS certificate for ArgoCD
+  include_role:
+    name: common_k8s
+    tasks_from: certificate
+  vars:
+    k8s_namespace: "{{ argocd_namespace }}"
+    k8s_cert_name: "{{ argocd_tls_secret_name }}"
+    k8s_cert_secret_name: "{{ argocd_tls_secret_name }}"
+    k8s_cert_dns_names:
+      - "{{ argocd_ingress_host }}"
+  when: argocd_ingress_enabled
+
+- name: Create Ingress for ArgoCD UI
+  include_role:
+    name: common_k8s
+    tasks_from: ingress
+  vars:
+    k8s_namespace: "{{ argocd_namespace }}"
+    k8s_ingress_name: argocd-server
+    k8s_ingress_host: "{{ argocd_ingress_host }}"
+    k8s_ingress_tls_secret: "{{ argocd_tls_secret_name }}"
+    k8s_ingress_service_name: "{{ argocd_release_name }}-server"
+    k8s_ingress_service_port: 80
+    k8s_labels:
+      app.kubernetes.io/name: argocd
+      app.kubernetes.io/component: server
+  when: argocd_ingress_enabled
+
+- name: Display ArgoCD information
+  ansible.builtin.debug:
+    msg:
+      - "ArgoCD has been installed successfully!"
+      - ""
+      - "Installation details:"
+      - "  - Namespace: {{ argocd_namespace }}"
+      - "  - Helm release: {{ argocd_release_name }}"
+      - "  - Version: {{ argocd_helm_version }}"
+      - ""
+      - "Access the ArgoCD UI:"
+      - "  URL: https://{{ argocd_ingress_host }}"
+      - "  Username: admin"
+      - "  Password: {{ argocd_admin_password | default('(check argocd-initial-admin-secret)') }}"
+      - ""
+      - "Or via port-forward:"
+      - "  kubectl port-forward svc/{{ argocd_release_name }}-server -n {{ argocd_namespace }} 8080:443"
+      - "  https://localhost:8080"
+      - ""
+      - "CLI login:"
+      - "  argocd login {{ argocd_ingress_host }} --username admin --password <password>"
+      - ""
+      - "Next steps:"
+      - "  1. Change the admin password"
+      - "  2. Create k8s-apps/ directory in your repo"
+      - "  3. Set argocd_app_of_apps_enabled: true"
+      - "  4. Re-run this role to deploy App of Apps"
