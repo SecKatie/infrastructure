@@ -5,6 +5,9 @@
 # Network Settings
 #
 http_port {{ squid_bind_address }}:{{ squid_port }}
+{% if squid_tls_enabled | default(false) %}
+https_port {{ squid_bind_address }}:{{ squid_tls_port }} tls-cert={{ squid_tls_cert }} tls-key={{ squid_tls_key }}
+{% endif %}
 
 #
 # Authentication

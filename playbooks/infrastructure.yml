@@ -132,15 +132,15 @@
     - role: infra_squid
       tags: [squid]
 
-- name: Deploy Cloudflared Tunnel for Squid Proxy
+- name: Deploy Cloudflare DDNS for Squid Proxy
   hosts: super6c_node_4
   become: true
   gather_facts: true
-  tags: [infrastructure, squid, cloudflared]
+  tags: [infrastructure, squid, ddns]
+  vars_files:
+    - vars/squid_secrets.yml
   vars:
-    cloudflared_tunnel_name: "squid-proxy-tunnel"
-    cloudflared_hostname: "proxy.mulliken.net"
-    cloudflared_service_url: "http://localhost:3128"
+    cloudflare_ddns_hostname: "proxy.mulliken.net"
   roles:
-    - role: infra_cloudflared
-      tags: [cloudflared]
+    - role: infra_cloudflare_ddns
+      tags: [ddns]

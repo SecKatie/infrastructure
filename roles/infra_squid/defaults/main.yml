@@ -4,8 +4,8 @@
 # Port Squid listens on
 squid_port: 3128
 
-# Bind address (localhost = only cloudflared can connect)
-squid_bind_address: "127.0.0.1"
+# Bind address (0.0.0.0 = externally accessible via port forward)
+squid_bind_address: "0.0.0.0"
 
 # Authentication (required variables from vault)
 # squid_auth_username: "uptime"
@@ -40,3 +40,13 @@ squid_cache_log: "/var/log/squid/cache.log"
 
 # Visible hostname in error pages
 squid_visible_hostname: "proxy.mulliken.net"
+
+# TLS Configuration
+squid_tls_enabled: true
+squid_tls_port: 3129
+squid_tls_hostname: "proxy.mulliken.net"
+squid_tls_email: "admin@mulliken.net"
+
+# Certificate paths (managed by certbot)
+squid_tls_cert: "/etc/letsencrypt/live/{{ squid_tls_hostname }}/fullchain.pem"
+squid_tls_key: "/etc/letsencrypt/live/{{ squid_tls_hostname }}/privkey.pem"

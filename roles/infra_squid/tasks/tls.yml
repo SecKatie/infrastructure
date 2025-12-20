@@ -1,0 +1,91 @@
+---
+# TLS setup for Squid using Let's Encrypt with Cloudflare DNS challenge
+
+- name: Validate TLS variables
+  ansible.builtin.assert:
+    that:
+      - cloudflare_api_token is defined
+      - cloudflare_api_token | length > 0
+    fail_msg: "cloudflare_api_token must be defined for TLS certificate provisioning"
+
+- name: Install certbot and Cloudflare plugin
+  ansible.builtin.apt:
+    name:
+      - certbot
+      - python3-certbot-dns-cloudflare
+    state: present
+    update_cache: true
+  become: true
+
+- name: Create Cloudflare credentials directory
+  ansible.builtin.file:
+    path: /etc/letsencrypt/cloudflare
+    state: directory
+    owner: root
+    group: root
+    mode: "0700"
+  become: true
+
+- name: Deploy Cloudflare credentials for certbot
+  ansible.builtin.copy:
+    content: |
+      dns_cloudflare_api_token = {{ cloudflare_api_token }}
+    dest: /etc/letsencrypt/cloudflare/credentials.ini
+    owner: root
+    group: root
+    mode: "0600"
+  become: true
+  no_log: true
+
+- name: Check if certificate already exists
+  ansible.builtin.stat:
+    path: "{{ squid_tls_cert }}"
+  register: cert_exists
+  become: true
+
+- name: Obtain Let's Encrypt certificate
+  ansible.builtin.command:
+    cmd: >
+      certbot certonly
+      --dns-cloudflare
+      --dns-cloudflare-credentials /etc/letsencrypt/cloudflare/credentials.ini
+      --dns-cloudflare-propagation-seconds 30
+      -d {{ squid_tls_hostname }}
+      --email {{ squid_tls_email }}
+      --agree-tos
+      --non-interactive
+  become: true
+  when: not cert_exists.stat.exists
+  notify: Restart squid
+
+- name: Set certificate permissions for Squid
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/live/{{ squid_tls_hostname }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Set archive permissions for Squid
+  ansible.builtin.file:
+    path: "/etc/letsencrypt/archive/{{ squid_tls_hostname }}"
+    state: directory
+    mode: "0755"
+  become: true
+
+- name: Deploy certbot renewal hook for Squid
+  ansible.builtin.copy:
+    content: |
+      #!/bin/bash
+      systemctl reload squid
+    dest: /etc/letsencrypt/renewal-hooks/post/squid-reload
+    owner: root
+    group: root
+    mode: "0755"
+  become: true
+
+- name: Ensure certbot timer is enabled
+  ansible.builtin.systemd:
+    name: certbot.timer
+    state: started
+    enabled: true
+  become: true

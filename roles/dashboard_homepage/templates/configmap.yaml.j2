@@ -290,17 +290,6 @@ data:
                 namespace: headlamp
                 app: headlamp
 
-        - Networking:
-            - Traefik:
-                icon: traefik
-                href: https://{{ homepage_traefik_host | default('traefik.corp.mulliken.net') }}
-                description: Ingress controller
-                namespace: kube-system
-                app: traefik
-                widget:
-                  type: traefik
-                  url: http://traefik.kube-system.svc.cluster.local:8080
-
         - Monitoring:
             - Grafana:
                 icon: grafana

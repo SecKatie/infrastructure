@@ -52,6 +52,10 @@
   notify: Restart squid
   tags: [update_credentials]
 
+- name: Import TLS tasks
+  ansible.builtin.import_tasks: tls.yml
+  when: squid_tls_enabled | default(false)
+
 - name: Deploy Squid configuration
   ansible.builtin.template:
     src: squid.conf.j2
@@ -83,6 +87,8 @@
   ansible.builtin.debug:
     msg: |
       Squid proxy deployed successfully!
-      Listening on: {{ squid_bind_address }}:{{ squid_port }}
+      HTTP:  {{ squid_bind_address }}:{{ squid_port }}
+      {% if squid_tls_enabled | default(false) %}
+      HTTPS: {{ squid_bind_address }}:{{ squid_tls_port }}
+      {% endif %}
       Authentication: Basic auth enabled
-      Note: External access via Cloudflare tunnel only

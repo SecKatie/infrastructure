@@ -1,0 +1,12 @@
+---
+# Cloudflare Dynamic DNS Configuration (via ddclient)
+
+# Required variables (from vault):
+# cloudflare_api_token: "<api-token-with-dns-edit-permissions>"
+# cloudflare_zone_name: "mulliken.net"
+
+# DNS record to update
+cloudflare_ddns_hostname: "proxy.mulliken.net"
+
+# Update interval in seconds (default: 5 minutes)
+cloudflare_ddns_interval: 300

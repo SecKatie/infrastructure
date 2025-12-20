@@ -35,6 +35,21 @@ spec:
         {{ key }}: "{{ value }}"
 {% endfor %}
 {% endif %}
+      initContainers:
+        # Create required download directories on NFS share
+        - name: create-dirs
+          image: busybox:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /media/downloads/complete /media/downloads/incomplete
+              chown -R {{ media_puid }}:{{ media_pgid }} /media/downloads
+              chmod -R 775 /media/downloads
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: media
+              mountPath: /media
       containers:
         # Gluetun VPN container - all traffic routes through this
         - name: gluetun
