@@ -31,7 +31,7 @@ spec:
     spec:
       project: default
       source:
-        repoURL: https://github.com/SecKatie/ansible-playbooks.git
+        repoURL: https://github.com/SecKatie/infrastructure.git
         path: '{{.path.path}}'
         targetRevision: main
       destination:
