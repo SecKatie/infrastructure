@@ -1,0 +1,135 @@
+---
+# NFS Persistent Volume for media (shared with Jellyfin)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sonarr-media-pv
+  labels:
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-media
+  nfs:
+    server: 172.16.10.248
+    path: /volume2/media
+---
+# PVC for NFS media (shared with Jellyfin)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-media-pvc
+  namespace: sonarr
+  labels:
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-media
+  resources:
+    requests:
+      storage: 1Ti
+---
+# Sonarr config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sonarr-config-pvc
+  namespace: sonarr
+  labels:
+    app.kubernetes.io/name: sonarr
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Radarr config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: radarr-config-pvc
+  namespace: sonarr
+  labels:
+    app.kubernetes.io/name: radarr
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+---
+# qBittorrent config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: qbittorrent-config-pvc
+  namespace: sonarr
+  labels:
+    app.kubernetes.io/name: qbittorrent
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 10Gi
+---
+# Jackett config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: jackett-config-pvc
+  namespace: sonarr
+  labels:
+    app.kubernetes.io/name: jackett
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
+---
+# SABnzbd config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sabnzbd-config-pvc
+  namespace: sonarr
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi

@@ -1,0 +1,44 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: apps
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: applicationset
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/managed-by: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/SecKatie/ansible-playbooks.git
+        revision: main
+        directories:
+          - path: k8s-apps/*
+          # Exclude the applicationset.yaml itself
+          - path: k8s-apps/applicationset.yaml
+            exclude: true
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+      labels:
+        app.kubernetes.io/name: '{{.path.basename}}'
+        app.kubernetes.io/managed-by: applicationset
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: default
+      source:
+        repoURL: https://github.com/SecKatie/ansible-playbooks.git
+        path: '{{.path.path}}'
+        targetRevision: main
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
