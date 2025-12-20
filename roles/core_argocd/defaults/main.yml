@@ -23,6 +23,9 @@ argocd_repo_branch: "main"
 # App of Apps configuration
 argocd_app_of_apps_enabled: false  # Enable once you have k8s-apps/ directory
 
+# Kustomize configuration (enable Helm for helmCharts generator)
+argocd_kustomize_build_options: "--enable-helm"
+
 # Resource limits (reasonable for Raspberry Pi)
 argocd_server_resources:
   limits:

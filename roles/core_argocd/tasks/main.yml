@@ -14,6 +14,7 @@
       --namespace {{ argocd_namespace }}
       --create-namespace
       --set 'server.extraArgs={--insecure}'
+      --set 'configs.cm.kustomize\.buildOptions={{ argocd_kustomize_build_options }}'
       --set server.resources.limits.cpu={{ argocd_server_resources.limits.cpu }}
       --set server.resources.limits.memory={{ argocd_server_resources.limits.memory }}
       --set server.resources.requests.cpu={{ argocd_server_resources.requests.cpu }}
@@ -38,6 +39,7 @@
       --version {{ argocd_helm_version }}
       --namespace {{ argocd_namespace }}
       --set 'server.extraArgs={--insecure}'
+      --set 'configs.cm.kustomize\.buildOptions={{ argocd_kustomize_build_options }}'
       --set server.resources.limits.cpu={{ argocd_server_resources.limits.cpu }}
       --set server.resources.limits.memory={{ argocd_server_resources.limits.memory }}
       --set server.resources.requests.cpu={{ argocd_server_resources.requests.cpu }}
