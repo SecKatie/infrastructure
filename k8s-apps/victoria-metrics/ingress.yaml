@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: victoria-metrics
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: victoria-metrics
+    app.kubernetes.io/instance: victoria-metrics
+    app.kubernetes.io/part-of: observability
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/managed-by: argocd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - prometheus.corp.mulliken.net
+      secretName: victoria-metrics-tls
+  rules:
+    - host: prometheus.corp.mulliken.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: victoria-metrics
+                port:
+                  number: 8428
