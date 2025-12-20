@@ -1,0 +1,56 @@
+---
+# NFS Persistent Volume for media (shared with other media apps)
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: sabnzbd-media-pv
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  capacity:
+    storage: 1Ti
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-media-sabnzbd
+  nfs:
+    server: 172.16.10.248
+    path: /volume2/media
+---
+# PVC for NFS media
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sabnzbd-media-pvc
+  namespace: sabnzbd
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteMany
+  storageClassName: nfs-media-sabnzbd
+  resources:
+    requests:
+      storage: 1Ti
+---
+# SABnzbd config PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: sabnzbd-config-pvc
+  namespace: sabnzbd
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi

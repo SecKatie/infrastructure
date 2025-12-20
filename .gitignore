@@ -64,3 +64,11 @@ kubeconfig
 
 # Role secrets (raw secrets before sealing)
 roles/*/files/secrets.yml
+
+# AI assistant configs (synced separately)
+.claude/
+.cursor/
+.gemini/
+.opencode/
+AGENTS.md
+GEMINI.md

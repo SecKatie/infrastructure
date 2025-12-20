@@ -1,0 +1,168 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: sabnzbd
+  namespace: sabnzbd
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/instance: sabnzbd
+    app.kubernetes.io/component: downloader
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "SABnzbd with ProtonVPN protection"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: sabnzbd
+      app.kubernetes.io/instance: sabnzbd
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: sabnzbd
+        app.kubernetes.io/instance: sabnzbd
+        app.kubernetes.io/component: downloader
+        app.kubernetes.io/managed-by: argocd
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: "amd64"
+      initContainers:
+        # Create required download directories on NFS share
+        - name: create-dirs
+          image: busybox:latest
+          command: ["/bin/sh", "-c"]
+          args:
+            - |
+              mkdir -p /media/downloads/complete /media/downloads/incomplete
+              chown -R 1000:1000 /media/downloads
+              chmod -R 775 /media/downloads
+          securityContext:
+            runAsUser: 0
+          volumeMounts:
+            - name: media
+              mountPath: /media
+      containers:
+        # Gluetun VPN container - all traffic routes through this
+        - name: gluetun
+          image: qmcgaw/gluetun:latest
+          lifecycle:
+            postStart:
+              exec:
+                command: ["/bin/sh", "-c", "(ip rule del table 51820; ip -6 rule del table 51820) || true"]
+          securityContext:
+            capabilities:
+              add:
+                - NET_ADMIN
+            runAsUser: 0
+          env:
+            - name: VPN_SERVICE_PROVIDER
+              value: "protonvpn"
+            - name: VPN_TYPE
+              value: "wireguard"
+            - name: WIREGUARD_PRIVATE_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: sabnzbd-vpn-secrets
+                  key: WIREGUARD_PRIVATE_KEY
+            - name: SERVER_COUNTRIES
+              value: "USA"
+            - name: TZ
+              value: "America/New_York"
+            - name: FIREWALL_VPN_INPUT_PORTS
+              value: "8085"
+            - name: FIREWALL_OUTBOUND_SUBNETS
+              value: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
+            # Use K8s DNS instead of Gluetun's loopback DNS server
+            - name: DNS_KEEP_NAMESERVER
+              value: "on"
+          ports:
+            - containerPort: 8000
+              name: gluetun-http
+              protocol: TCP
+            - containerPort: 8085
+              name: sabnzbd-http
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 384Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 30
+            periodSeconds: 30
+            timeoutSeconds: 5
+            failureThreshold: 3
+          readinessProbe:
+            tcpSocket:
+              port: 8000
+            initialDelaySeconds: 15
+            periodSeconds: 10
+            timeoutSeconds: 5
+            failureThreshold: 3
+        # SABnzbd Usenet download client container
+        - name: sabnzbd
+          image: linuxserver/sabnzbd:latest
+          env:
+            - name: PUID
+              value: "1000"
+            - name: PGID
+              value: "1000"
+            - name: TZ
+              value: "America/New_York"
+          resources:
+            requests:
+              cpu: 100m
+              memory: 512Mi
+            limits:
+              cpu: 2000m
+              memory: 2Gi
+          volumeMounts:
+            - name: config
+              mountPath: /config
+            - name: media
+              mountPath: /media
+          readinessProbe:
+            httpGet:
+              path: /
+              port: 8085
+            initialDelaySeconds: 30
+            periodSeconds: 15
+            timeoutSeconds: 10
+            failureThreshold: 6
+      volumes:
+        - name: config
+          persistentVolumeClaim:
+            claimName: sabnzbd-config-pvc
+        - name: media
+          persistentVolumeClaim:
+            claimName: sabnzbd-media-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: sabnzbd
+  namespace: sabnzbd
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/instance: sabnzbd
+    app.kubernetes.io/component: downloader
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "SABnzbd download service"
+spec:
+  type: ClusterIP
+  ports:
+    - port: 8085
+      targetPort: 8085
+      protocol: TCP
+      name: http
+  selector:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/instance: sabnzbd

@@ -1,0 +1,16 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: sabnzbd-tls
+  namespace: sabnzbd
+  labels:
+    app.kubernetes.io/name: sabnzbd
+    app.kubernetes.io/managed-by: argocd
+spec:
+  secretName: sabnzbd-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - sabnzbd.corp.mulliken.net
