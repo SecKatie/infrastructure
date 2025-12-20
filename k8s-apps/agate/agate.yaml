@@ -65,14 +65,13 @@ spec:
           volumeMounts:
             - name: content
               mountPath: /gmi
-              subPath: data
             - name: certs
               mountPath: /certs
               subPath: data
       volumes:
         - name: content
-          persistentVolumeClaim:
-            claimName: agate-content-pvc
+          configMap:
+            name: agate-content
         - name: certs
           persistentVolumeClaim:
             claimName: agate-certs-pvc
