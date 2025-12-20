@@ -1,0 +1,10 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: gemini
+  labels:
+    app.kubernetes.io/name: agate
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "Agate Gemini server namespace"

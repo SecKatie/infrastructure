@@ -1,0 +1,101 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: agate
+  namespace: gemini
+  labels:
+    app.kubernetes.io/name: agate
+    app.kubernetes.io/instance: agate
+    app.kubernetes.io/component: server
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "Agate Gemini protocol server"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: agate
+      app.kubernetes.io/instance: agate
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: agate
+        app.kubernetes.io/instance: agate
+        app.kubernetes.io/component: server
+        app.kubernetes.io/managed-by: argocd
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: DoesNotExist
+      securityContext:
+        fsGroup: 1000
+        runAsUser: 1000
+        runAsGroup: 1000
+      containers:
+        - name: agate
+          image: ghcr.io/mbrubeck/agate:latest
+          args:
+            - --hostname
+            - "gemini.mulliken.net"
+            - --lang
+            - "en-US"
+          ports:
+            - containerPort: 1965
+              name: gemini
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 100m
+              memory: 64Mi
+            limits:
+              cpu: 500m
+              memory: 256Mi
+          securityContext:
+            runAsUser: 1000
+            runAsNonRoot: true
+            allowPrivilegeEscalation: false
+          volumeMounts:
+            - name: content
+              mountPath: /gmi
+              subPath: data
+            - name: certs
+              mountPath: /certs
+              subPath: data
+      volumes:
+        - name: content
+          persistentVolumeClaim:
+            claimName: agate-content-pvc
+        - name: certs
+          persistentVolumeClaim:
+            claimName: agate-certs-pvc
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: agate
+  namespace: gemini
+  labels:
+    app.kubernetes.io/name: agate
+    app.kubernetes.io/instance: agate
+    app.kubernetes.io/component: server
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "Agate Gemini server service"
+spec:
+  type: LoadBalancer
+  ports:
+    - port: 1965
+      targetPort: 1965
+      protocol: TCP
+      name: gemini
+  selector:
+    app.kubernetes.io/name: agate
+    app.kubernetes.io/instance: agate

@@ -1,0 +1,86 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: personal-site
+  namespace: personal-site
+  labels:
+    app.kubernetes.io/name: personal-site
+    app.kubernetes.io/part-of: personal-site
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "Personal landing page - mulliken.net"
+spec:
+  replicas: 1
+  strategy:
+    type: RollingUpdate
+    rollingUpdate:
+      maxUnavailable: 0
+      maxSurge: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: personal-site
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: personal-site
+        app.kubernetes.io/part-of: personal-site
+        app.kubernetes.io/managed-by: argocd
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: DoesNotExist
+      containers:
+        - name: nginx
+          image: quay.io/kmulliken/personal-site:latest
+          imagePullPolicy: Always
+          ports:
+            - name: http
+              containerPort: 80
+              protocol: TCP
+          resources:
+            requests:
+              cpu: 10m
+              memory: 32Mi
+            limits:
+              cpu: 100m
+              memory: 64Mi
+          readinessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 5
+            periodSeconds: 10
+          livenessProbe:
+            httpGet:
+              path: /
+              port: http
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          securityContext:
+            runAsNonRoot: false
+            readOnlyRootFilesystem: false
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: personal-site
+  namespace: personal-site
+  labels:
+    app.kubernetes.io/name: personal-site
+    app.kubernetes.io/part-of: personal-site
+    app.kubernetes.io/managed-by: argocd
+spec:
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: personal-site
+  ports:
+    - name: http
+      port: 80
+      targetPort: 80
+      protocol: TCP

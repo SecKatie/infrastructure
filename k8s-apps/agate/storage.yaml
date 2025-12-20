@@ -1,0 +1,38 @@
+---
+# PVC for Agate content (Gemini pages)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agate-content-pvc
+  namespace: gemini
+  labels:
+    app.kubernetes.io/name: agate
+    app.kubernetes.io/instance: agate
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
+---
+# PVC for Agate certificates (auto-generated TLS certs)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: agate-certs-pvc
+  namespace: gemini
+  labels:
+    app.kubernetes.io/name: agate
+    app.kubernetes.io/instance: agate
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 100Mi
