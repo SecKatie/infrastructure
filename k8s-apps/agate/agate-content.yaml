@@ -12,19 +12,23 @@ data:
   index.gmi: |
     # About Me
 
-    I'm a Security Engineer dedicated to making technology safer and more accessible. I specialize in blending security with automation and open source development. When I'm not tackling complex security challenges, you might find me experimenting with smart home tech or diving into the latest research on Large Language Models.
+    I'm a Security Engineer dedicated to making technology safer and more accessible.
+    I specialize in blending security with automation and open source development.
+    When I'm not tackling complex security challenges, you might find me experimenting with smart home tech or diving into the latest research on Large Language Models.
 
     ## Featured Projects
 
     ### ha-wyzeapi
 
-    A robust API implementation that bridges Wyze devices with Home Assistant. This project empowers users to integrate their Wyze devices into their home automation setup while upholding stringent security practices.
+    A robust API implementation that bridges Wyze devices with Home Assistant.
+    This project empowers users to integrate their Wyze devices into their home automation setup while upholding stringent security practices.
 
     => https://github.com/SecKatie/ha-wyzeapi View on GitHub
 
     ### FalkorDB-MCPServer
 
-    A powerful MCP server implementation that enables AI assistants to interact with FalkorDB graph databases. This project allows seamless integration of graph database operations into AI workflows.
+    A powerful MCP server implementation that enables AI assistants to interact with FalkorDB graph databases.
+    This project allows seamless integration of graph database operations into AI workflows.
 
     => https://github.com/SecKatie/FalkorDB-MCPServer View on GitHub
 
@@ -43,7 +47,8 @@ data:
 
     ## Professional Interests
 
-    I'm passionate about developing robust security systems that prevent breaches and safeguard data in our interconnected world. My core interests include:
+    I'm passionate about developing robust security systems that prevent breaches and safeguard data in our interconnected world.
+    My core interests include:
 
     * Application Security
     * Cloud Security
