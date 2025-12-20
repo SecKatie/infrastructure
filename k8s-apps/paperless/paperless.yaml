@@ -331,42 +331,6 @@ spec:
           value: "/usr/src/paperless/consume"
         - name: PAPERLESS_EXPORT_DIR
           value: "/usr/src/paperless/export"
-        # Email configuration (via Proton Mail Bridge sidecar)
-        - name: PAPERLESS_EMAIL_HOST
-          value: "localhost"
-        - name: PAPERLESS_EMAIL_PORT
-          value: "1025"
-        - name: PAPERLESS_EMAIL_HOST_USER
-          valueFrom:
-            secretKeyRef:
-              name: paperless-secrets
-              key: proton-email
-        - name: PAPERLESS_EMAIL_HOST_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: paperless-secrets
-              key: proton-bridge-password
-        - name: PAPERLESS_EMAIL_USE_TLS
-          value: "false"
-        - name: PAPERLESS_EMAIL_USE_SSL
-          value: "false"
-        # IMAP configuration for email consumption
-        - name: PAPERLESS_EMAIL_TASK_CRON
-          value: "*/5 * * * *"
-        - name: PAPERLESS_EMAIL_IMAP_HOST
-          value: "localhost"
-        - name: PAPERLESS_EMAIL_IMAP_PORT
-          value: "1143"
-        - name: PAPERLESS_EMAIL_IMAP_USER
-          valueFrom:
-            secretKeyRef:
-              name: paperless-secrets
-              key: proton-email
-        - name: PAPERLESS_EMAIL_IMAP_PASSWORD
-          valueFrom:
-            secretKeyRef:
-              name: paperless-secrets
-              key: proton-bridge-password
         resources:
           requests:
             cpu: 200m
@@ -401,45 +365,10 @@ spec:
           initialDelaySeconds: 30
           periodSeconds: 10
           timeoutSeconds: 5
-      # Proton Mail Bridge sidecar for IMAP/SMTP
-      - name: proton-bridge
-        image: shenxn/protonmail-bridge:build
-        ports:
-        - containerPort: 1143
-          name: imap
-          protocol: TCP
-        - containerPort: 1025
-          name: smtp
-          protocol: TCP
-        resources:
-          requests:
-            cpu: 50m
-            memory: 128Mi
-          limits:
-            cpu: 500m
-            memory: 512Mi
-        volumeMounts:
-        - name: proton-bridge-data
-          mountPath: /root
-        - name: proton-bridge-updates-block
-          mountPath: /root/.local/share/protonmail/bridge-v3/updates
-          readOnly: true
-        livenessProbe:
-          tcpSocket:
-            port: 1143
-          initialDelaySeconds: 60
-          periodSeconds: 30
-          timeoutSeconds: 10
-          failureThreshold: 3
       volumes:
       - name: paperless-data
         persistentVolumeClaim:
           claimName: paperless-nfs-pvc
-      - name: proton-bridge-data
-        persistentVolumeClaim:
-          claimName: proton-bridge-pvc
-      - name: proton-bridge-updates-block
-        emptyDir: {}
 ---
 # Paperless Service
 apiVersion: v1
