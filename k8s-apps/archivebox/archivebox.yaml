@@ -1,0 +1,119 @@
+---
+# ArchiveBox Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: archivebox
+  namespace: archivebox
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/instance: archivebox
+    app.kubernetes.io/part-of: archiving
+    app.kubernetes.io/component: app
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "ArchiveBox self-hosted internet archiving solution"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: archivebox
+      app.kubernetes.io/instance: archivebox
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: archivebox
+        app.kubernetes.io/instance: archivebox
+        app.kubernetes.io/part-of: archiving
+        app.kubernetes.io/component: app
+        app.kubernetes.io/managed-by: argocd
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: DoesNotExist
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      securityContext:
+        fsGroup: 911
+      containers:
+      - name: archivebox
+        image: archivebox/archivebox:latest
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        env:
+        - name: PUID
+          value: "911"
+        - name: PGID
+          value: "911"
+        - name: TZ
+          value: "America/New_York"
+        - name: ALLOWED_HOSTS
+          value: "*"
+        - name: PUBLIC_INDEX
+          value: "True"
+        - name: PUBLIC_SNAPSHOTS
+          value: "True"
+        - name: PUBLIC_ADD_VIEW
+          value: "False"
+        - name: SEARCH_BACKEND_ENGINE
+          value: "ripgrep"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+        volumeMounts:
+        - name: archivebox-data
+          mountPath: /data
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: archivebox-data
+        persistentVolumeClaim:
+          claimName: archivebox-data-pvc
+---
+# ArchiveBox Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: archivebox
+  namespace: archivebox
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/instance: archivebox
+    app.kubernetes.io/part-of: archiving
+    app.kubernetes.io/component: app
+    app.kubernetes.io/managed-by: argocd
+spec:
+  type: ClusterIP
+  ports:
+  - port: 8000
+    targetPort: 8000
+    protocol: TCP
+    name: http
+  selector:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/instance: archivebox
