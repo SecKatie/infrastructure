@@ -1,0 +1,19 @@
+---
+# ArchiveBox Data PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: archivebox-data-pvc
+  namespace: archivebox
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/part-of: archiving
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 50Gi
