@@ -19,10 +19,21 @@ data:
     security:
       readonly: false
       enable_auth: false
+      # Encryption key for securing sensitive data (32 bytes, base64 encoded)
+      # For production, this should be managed via a Secret
+      encryption_key: "cGVyc2VzLWVuY3J5cHRpb24ta2V5LTMyLWJ5dGVz"
       authorization:
         guest_permissions:
           - actions: ["read"]
             scopes: ["*"]
+
+    # Schema paths - required for Kubernetes deployments
+    # Schemas are bundled in the image at /etc/perses/cue/schemas/
+    schemas:
+      panels_path: "/etc/perses/cue/schemas/panels"
+      queries_path: "/etc/perses/cue/schemas/queries"
+      datasources_path: "/etc/perses/cue/schemas/datasources"
+      variables_path: "/etc/perses/cue/schemas/variables"
 
     # Database configuration - file-based storage
     database:
