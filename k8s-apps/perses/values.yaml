@@ -111,8 +111,3 @@ readinessProbe:
   timeoutSeconds: 3
   successThreshold: 1
   failureThreshold: 5
-
-# Secret configuration - use external SealedSecret instead of creating one
-secret:
-  create: false
-  name: perses-config-secret
