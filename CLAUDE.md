@@ -157,7 +157,7 @@ Roles follow a prefix scheme indicating their purpose:
 | `core_*` | Core K8s components | `core_cert_manager`, `core_traefik`, `core_longhorn`, `core_argocd` |
 | `app_*` | Applications | `app_jellyfin`, `app_media`, `app_paperless`, `app_immich`, `app_personal_site`, `app_uptime_kuma` |
 | `dashboard_*` | Dashboard UIs | `dashboard_kubernetes`, `dashboard_headlamp`, `dashboard_homepage` |
-| `observability_*` | Monitoring | `observability_victoria_metrics`, `observability_node_exporter`, `observability_perses` |
+| `observability_*` | Monitoring | `observability_victoria_metrics`, `observability_node_exporter`, `observability_grafana` |
 | `util_*` | Utilities | `util_reboot`, `util_ntfy_notify`, `util_cloudflare_tunnel` |
 | `common_*` | Library roles | `common_k8s` |
 | `install_*` | Single-purpose installers | `install_agate` |
@@ -239,6 +239,7 @@ Secrets are stored as encrypted ansible-vault files in `playbooks/vars/`:
 | `media_secrets.yml` | Media stack secrets |
 | `paperless_secrets.yml` | Paperless secrets |
 | `homepage_secrets.yml` | Homepage dashboard config |
+| `grafana_secrets.yml` | Grafana admin credentials |
 | `squid_secrets.yml` | Squid proxy config |
 | `ngrok_secrets.yml` | ngrok tunnel config |
 
