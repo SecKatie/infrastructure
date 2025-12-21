@@ -2,25 +2,25 @@
 apiVersion: networking.k8s.io/v1
 kind: Ingress
 metadata:
-  name: posthog
-  namespace: posthog
+  name: umami
+  namespace: umami
   labels:
-    app.kubernetes.io/name: posthog
+    app.kubernetes.io/name: umami
     app.kubernetes.io/managed-by: argocd
 spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - posthog.corp.mulliken.net
-      secretName: posthog-tls
+        - umami.corp.mulliken.net
+      secretName: umami-tls
   rules:
-    - host: posthog.corp.mulliken.net
+    - host: umami.corp.mulliken.net
       http:
         paths:
           - path: /
             pathType: Prefix
             backend:
               service:
-                name: posthog-web
+                name: umami
                 port:
-                  number: 8000
+                  number: 3000
