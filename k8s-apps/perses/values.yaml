@@ -3,12 +3,6 @@
 
 replicas: 1
 
-image:
-  registry: docker.io
-  name: persesdev/perses
-  version: v0.50.0-distroless
-  pullPolicy: IfNotPresent
-
 service:
   type: ClusterIP
   port: 8080
@@ -38,6 +32,8 @@ config:
   security:
     readonly: false
     enable_auth: false
+    # Encryption key is provided via SealedSecret (see sealedsecret.yaml)
+    # The key is loaded from the PERSES_SECURITY_ENCRYPTION_KEY environment variable
     authorization:
       guest_permissions:
         - actions: ["read"]
@@ -52,7 +48,7 @@ config:
   # Database configuration
   database:
     file:
-      folder: "/perses/data"
+      folder: "/perses"
       extension: "json"
 
   # Provisioning configuration
@@ -115,3 +111,8 @@ readinessProbe:
   timeoutSeconds: 3
   successThreshold: 1
   failureThreshold: 5
+
+# Secret configuration - use external SealedSecret instead of creating one
+secret:
+  create: false
+  name: perses-config-secret
