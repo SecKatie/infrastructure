@@ -57,11 +57,11 @@ config:
       - /etc/perses/provisioning
     interval: 10m
 
-# Datasources configuration (DEPRECATED: use sidecar for provisioning)
+# Datasources configuration
 datasources:
   - kind: GlobalDatasource
     metadata:
-      name: victoriametrics
+      name: VictoriaMetrics
     spec:
       default: true
       display:
@@ -69,31 +69,7 @@ datasources:
       plugin:
         kind: PrometheusDatasource
         spec:
-          proxy:
-            kind: HTTPProxy
-            spec:
-              url: http://victoria-metrics.monitoring.svc.cluster.local:8428
-              allowedEndpoints:
-                - endpointPattern: "/api/v1/labels"
-                  method: "POST"
-                - endpointPattern: "/api/v1/labels"
-                  method: "GET"
-                - endpointPattern: "/api/v1/series"
-                  method: "POST"
-                - endpointPattern: "/api/v1/series"
-                  method: "GET"
-                - endpointPattern: "/api/v1/metadata"
-                  method: "GET"
-                - endpointPattern: "/api/v1/query"
-                  method: "POST"
-                - endpointPattern: "/api/v1/query"
-                  method: "GET"
-                - endpointPattern: "/api/v1/query_range"
-                  method: "POST"
-                - endpointPattern: "/api/v1/query_range"
-                  method: "GET"
-                - endpointPattern: "/api/v1/label/([a-zA-Z0-9_-]+)/values"
-                  method: "GET"
+          directUrl: http://victoria-metrics.monitoring.svc.cluster.local:8428
 
 # Probes configuration
 livenessProbe:
