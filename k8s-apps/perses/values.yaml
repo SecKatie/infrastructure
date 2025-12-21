@@ -4,8 +4,7 @@
 replicas: 1
 
 image:
-  registry: docker.io
-  name: persesdev/perses
+  name: docker.io/persesdev/perses
   version: v0.50.0-distroless
   pullPolicy: IfNotPresent
 
@@ -28,12 +27,9 @@ persistence:
   size: 5Gi
   accessModes:
     - ReadWriteOnce
-  # Security context for persistent volume
+  # Security context for persistent volume (only fsGroup is supported)
   securityContext:
     fsGroup: 65534
-    runAsUser: 65534
-    runAsGroup: 65534
-    runAsNonRoot: true
 
 # Perses configuration
 config:
@@ -44,10 +40,10 @@ config:
     datasources_path: "/etc/perses/cue/schemas/datasources"
     variables_path: "/etc/perses/cue/schemas/variables"
 
-  # Security configuration
+  # Security configuration (use camelCase property names)
   security:
-    readonly: false
-    enable_auth: false
+    readOnly: false
+    enableAuth: false
     authorization:
       guest_permissions:
         - actions: ["read"]
@@ -59,19 +55,8 @@ config:
       folder: "/perses/data"
       extension: "json"
 
-  # Frontend configuration
-  frontend:
-    explorer:
-      enable: true
-    information: |
-      ## Welcome to Perses
-
-      Perses is a CNCF sandbox project for observability visualization.
-
-      **Configured Datasources:**
-      - VictoriaMetrics (Prometheus-compatible)
-
-      **Documentation:** [perses.dev](https://perses.dev)
+  # Important dashboards (frontend configuration moved here)
+  important_dashboards: []
 
 # Datasources configuration
 datasources:
@@ -108,15 +93,6 @@ datasources:
                 method: "GET"
               - endpointPattern: "/api/v1/label/([a-zA-Z0-9_-]+)/values"
                 method: "GET"
-
-# Projects configuration
-projects:
-  - name: default
-    display:
-      name: Default Project
-
-# Node selector - prefer non-control-plane nodes
-nodeSelector: {}
 
 # Probes configuration
 livenessProbe:
