@@ -1,0 +1,114 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: perses-config
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: perses
+    app.kubernetes.io/instance: perses
+    app.kubernetes.io/part-of: observability
+    app.kubernetes.io/component: configuration
+    app.kubernetes.io/managed-by: argocd
+data:
+  config.yaml: |
+    # Perses Server Configuration
+    # https://perses.dev
+
+    # Security configuration - anonymous read access enabled
+    security:
+      readonly: false
+      enable_auth: false
+      authorization:
+        guest_permissions:
+          - actions: ["read"]
+            scopes: ["*"]
+
+    # Database configuration - file-based storage
+    database:
+      file:
+        folder: "/perses/data"
+        extension: "json"
+
+    # Provisioning - load datasources and dashboards from files
+    provisioning:
+      folders:
+        - "/perses/provisioning"
+
+    # Frontend configuration
+    frontend:
+      explorer:
+        enable: true
+      information: |
+        ## Welcome to Perses
+
+        Perses is a CNCF sandbox project for observability visualization.
+
+        **Configured Datasources:**
+        - VictoriaMetrics (Prometheus-compatible)
+
+        **Documentation:** [perses.dev](https://perses.dev)
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: perses-provisioning
+  namespace: monitoring
+  labels:
+    app.kubernetes.io/name: perses
+    app.kubernetes.io/instance: perses
+    app.kubernetes.io/part-of: observability
+    app.kubernetes.io/component: provisioning
+    app.kubernetes.io/managed-by: argocd
+data:
+  # Default project
+  project.json: |
+    {
+      "kind": "Project",
+      "metadata": {
+        "name": "default"
+      },
+      "spec": {
+        "display": {
+          "name": "Default Project"
+        }
+      }
+    }
+  # Victoria Metrics datasource
+  datasource.json: |
+    {
+      "kind": "Datasource",
+      "metadata": {
+        "name": "victoriametrics",
+        "project": "default"
+      },
+      "spec": {
+        "default": true,
+        "display": {
+          "name": "VictoriaMetrics"
+        },
+        "plugin": {
+          "kind": "PrometheusDatasource",
+          "spec": {
+            "proxy": {
+              "kind": "HTTPProxy",
+              "spec": {
+                "url": "http://victoria-metrics.monitoring.svc.cluster.local:8428",
+                "allowedEndpoints": [
+                  {"endpointPattern": "/api/v1/labels", "method": "POST"},
+                  {"endpointPattern": "/api/v1/labels", "method": "GET"},
+                  {"endpointPattern": "/api/v1/series", "method": "POST"},
+                  {"endpointPattern": "/api/v1/series", "method": "GET"},
+                  {"endpointPattern": "/api/v1/metadata", "method": "GET"},
+                  {"endpointPattern": "/api/v1/query", "method": "POST"},
+                  {"endpointPattern": "/api/v1/query", "method": "GET"},
+                  {"endpointPattern": "/api/v1/query_range", "method": "POST"},
+                  {"endpointPattern": "/api/v1/query_range", "method": "GET"},
+                  {"endpointPattern": "/api/v1/label/([a-zA-Z0-9_-]+)/values", "method": "GET"}
+                ]
+              }
+            }
+          }
+        }
+      }
+    }

@@ -291,12 +291,12 @@ data:
                 app: headlamp
 
         - Monitoring:
-            - Grafana:
-                icon: grafana
-                href: https://grafana.corp.mulliken.net
-                description: Dashboards
+            - Perses:
+                icon: mdi-chart-box-outline
+                href: https://perses.corp.mulliken.net
+                description: Dashboards (CNCF)
                 namespace: monitoring
-                app: grafana
+                app: perses
             - Victoria Metrics:
                 icon: victoriametrics
                 href: https://prometheus.corp.mulliken.net
