@@ -5,7 +5,10 @@
 # This playbook deploys the complete observability and monitoring stack:
 #   - Victoria Metrics (Prometheus-compatible metrics storage)
 #   - Node Exporter (System metrics collection)
-#   - Perses (CNCF observability dashboard - Grafana replacement)
+#   - Grafana (Metrics visualization and dashboards)
+#
+# Prerequisites:
+#   - vars/grafana_secrets.yml must exist and be encrypted with ansible-vault
 #
 # Usage:
 #   ansible-playbook -i inventory/hosts.yml playbooks/observability.yml
@@ -13,8 +16,8 @@
 #   # Deploy only Victoria Metrics
 #   ansible-playbook -i inventory/hosts.yml playbooks/observability.yml --tags victoria_metrics
 #
-#   # Deploy only Perses
-#   ansible-playbook -i inventory/hosts.yml playbooks/observability.yml --tags perses
+#   # Deploy only Grafana
+#   ansible-playbook -i inventory/hosts.yml playbooks/observability.yml --tags grafana
 #
 # Tags:
 #   - observability: All observability components
@@ -22,7 +25,7 @@
 #   - victoria_metrics: Victoria Metrics deployment
 #   - prometheus: Prometheus-compatible components
 #   - node_exporter: Node Exporter DaemonSet
-#   - perses: Perses dashboard (CNCF)
+#   - grafana: Grafana dashboard
 # =============================================================================
 
 - name: Deploy observability stack
@@ -30,6 +33,8 @@
   connection: local
   gather_facts: false
   tags: [observability, monitoring]
+  vars_files:
+    - vars/grafana_secrets.yml
   roles:
     - role: observability_victoria_metrics
       tags: [victoria_metrics, prometheus]
@@ -37,5 +42,5 @@
     - role: observability_node_exporter
       tags: [node_exporter]
 
-    - role: observability_perses
-      tags: [perses]
+    - role: observability_grafana
+      tags: [grafana]
