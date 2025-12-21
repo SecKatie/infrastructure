@@ -6,5 +6,6 @@ namespace: personal-site
 
 resources:
   - namespace.yaml
+  - nginx-config.yaml
   - personal-site.yaml
   - cloudflare-tunnel.yaml
