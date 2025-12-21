@@ -1,0 +1,32 @@
+---
+# Perses Configuration
+# CNCF sandbox project for observability visualization
+# https://perses.dev
+
+# Namespace
+perses_namespace: monitoring
+
+# Image - using distroless for security
+perses_image: persesdev/perses:v0.50.0-distroless
+
+# Resource limits (lightweight, suitable for Raspberry Pi)
+perses_cpu_request: 50m
+perses_cpu_limit: 200m
+perses_memory_request: 64Mi
+perses_memory_limit: 128Mi
+
+# Storage
+perses_storage_size: 5Gi
+perses_storage_class: longhorn
+
+# Ingress
+perses_ingress_enabled: true
+perses_ingress_host: perses.corp.mulliken.net
+perses_tls_secret_name: perses-tls
+
+# Datasource - Victoria Metrics (Prometheus-compatible)
+perses_prometheus_url: http://victoria-metrics.monitoring.svc.cluster.local:8428
+perses_prometheus_name: VictoriaMetrics
+
+# Security - anonymous access for read operations (no login required for viewing)
+perses_anonymous_access: true

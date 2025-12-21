@@ -1,0 +1,19 @@
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: perses-data-pvc
+  namespace: {{ perses_namespace }}
+  labels:
+    app.kubernetes.io/name: perses
+    app.kubernetes.io/instance: perses
+    app.kubernetes.io/part-of: observability
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: ansible
+spec:
+  accessModes:
+    - ReadWriteOnce
+  resources:
+    requests:
+      storage: {{ perses_storage_size }}
+  storageClassName: {{ perses_storage_class }}
