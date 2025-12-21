@@ -4,7 +4,8 @@
 replicas: 1
 
 image:
-  name: docker.io/persesdev/perses
+  registry: docker.io
+  name: persesdev/perses
   version: v0.50.0-distroless
   pullPolicy: IfNotPresent
 
@@ -33,21 +34,20 @@ persistence:
 
 # Perses configuration
 config:
-  # Schemas configuration for distroless image
-  schemas:
-    panels_path: "/etc/perses/cue/schemas/panels"
-    queries_path: "/etc/perses/cue/schemas/queries"
-    datasources_path: "/etc/perses/cue/schemas/datasources"
-    variables_path: "/etc/perses/cue/schemas/variables"
-
-  # Security configuration (use camelCase property names)
+  # Security configuration
   security:
-    readOnly: false
-    enableAuth: false
+    readonly: false
+    enable_auth: false
     authorization:
       guest_permissions:
         - actions: ["read"]
           scopes: ["*"]
+
+  # Frontend configuration
+  frontend:
+    explorer:
+      enable: true
+    important_dashboards: []
 
   # Database configuration
   database:
@@ -55,44 +55,49 @@ config:
       folder: "/perses/data"
       extension: "json"
 
-  # Important dashboards (frontend configuration moved here)
-  important_dashboards: []
+  # Provisioning configuration
+  provisioning:
+    folders:
+      - /etc/perses/provisioning
+    interval: 10m
 
-# Datasources configuration
+# Datasources configuration (DEPRECATED: use sidecar for provisioning)
 datasources:
-  - name: victoriametrics
-    project: default
-    default: true
-    display:
-      name: VictoriaMetrics
-    plugin:
-      kind: PrometheusDatasource
-      spec:
-        proxy:
-          kind: HTTPProxy
-          spec:
-            url: http://victoria-metrics.monitoring.svc.cluster.local:8428
-            allowedEndpoints:
-              - endpointPattern: "/api/v1/labels"
-                method: "POST"
-              - endpointPattern: "/api/v1/labels"
-                method: "GET"
-              - endpointPattern: "/api/v1/series"
-                method: "POST"
-              - endpointPattern: "/api/v1/series"
-                method: "GET"
-              - endpointPattern: "/api/v1/metadata"
-                method: "GET"
-              - endpointPattern: "/api/v1/query"
-                method: "POST"
-              - endpointPattern: "/api/v1/query"
-                method: "GET"
-              - endpointPattern: "/api/v1/query_range"
-                method: "POST"
-              - endpointPattern: "/api/v1/query_range"
-                method: "GET"
-              - endpointPattern: "/api/v1/label/([a-zA-Z0-9_-]+)/values"
-                method: "GET"
+  - kind: GlobalDatasource
+    metadata:
+      name: victoriametrics
+    spec:
+      default: true
+      display:
+        name: VictoriaMetrics
+      plugin:
+        kind: PrometheusDatasource
+        spec:
+          proxy:
+            kind: HTTPProxy
+            spec:
+              url: http://victoria-metrics.monitoring.svc.cluster.local:8428
+              allowedEndpoints:
+                - endpointPattern: "/api/v1/labels"
+                  method: "POST"
+                - endpointPattern: "/api/v1/labels"
+                  method: "GET"
+                - endpointPattern: "/api/v1/series"
+                  method: "POST"
+                - endpointPattern: "/api/v1/series"
+                  method: "GET"
+                - endpointPattern: "/api/v1/metadata"
+                  method: "GET"
+                - endpointPattern: "/api/v1/query"
+                  method: "POST"
+                - endpointPattern: "/api/v1/query"
+                  method: "GET"
+                - endpointPattern: "/api/v1/query_range"
+                  method: "POST"
+                - endpointPattern: "/api/v1/query_range"
+                  method: "GET"
+                - endpointPattern: "/api/v1/label/([a-zA-Z0-9_-]+)/values"
+                  method: "GET"
 
 # Probes configuration
 livenessProbe:
