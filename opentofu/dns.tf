@@ -215,6 +215,15 @@ resource "cloudflare_dns_record" "cname_tools" {
   zone_id = "d582f580d9be2bc746c9e26410228219"
 }
 
+resource "cloudflare_dns_record" "cname_umami" {
+  content = "8a278e71-2282-4dd4-8f9c-10afd38740d8.cfargotunnel.com"
+  name    = "umami"
+  proxied = true
+  ttl     = 1
+  type    = "CNAME"
+  zone_id = "d582f580d9be2bc746c9e26410228219"
+}
+
 resource "cloudflare_dns_record" "mx_apex" {
   content  = "mail.tutanota.de"
   name     = "mulliken.net"

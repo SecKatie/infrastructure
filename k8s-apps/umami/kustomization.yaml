@@ -10,3 +10,5 @@ resources:
   - umami.yaml
   - certificate.yaml
   - ingress.yaml
+  - cloudflare-tunnel.yaml
+  - sealedsecret.yaml
