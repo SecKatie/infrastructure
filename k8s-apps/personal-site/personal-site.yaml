@@ -54,7 +54,7 @@ spec:
             limits:
               cpu: 200m
               memory: 128Mi
-        # Build the Astro site
+        # Build the Vite site
         - name: build
           image: node:24-alpine
           command:

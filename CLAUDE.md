@@ -22,8 +22,8 @@ ansible-playbook -i inventory playbooks/<playbook>.yml
 ansible-playbook -i inventory playbooks/deploy.yml
 
 # Deploy specific components using tags
-ansible-playbook -i inventory playbooks/deploy.yml --tags applications
-ansible-playbook -i inventory playbooks/deploy.yml --tags jellyfin
+ansible-playbook -i inventory playbooks/deploy.yml --tags infrastructure
+ansible-playbook -i inventory playbooks/deploy.yml --tags core
 ansible-playbook -i inventory playbooks/deploy.yml --tags "infrastructure,core"
 
 # Test a single role with Molecule
@@ -56,14 +56,11 @@ infrastructure/
 ├── requirements.yml         # Ansible collection dependencies
 ├── .python-version          # Python version specification
 │
-├── playbooks/               # Ansible playbooks by category
+├── playbooks/               # Ansible playbooks (infrastructure only)
 │   ├── deploy.yml           # Master orchestration playbook
-│   ├── applications.yml     # User apps deployment
-│   ├── core.yml             # Core K8s components
-│   ├── dashboards.yml       # Dashboard UIs
-│   ├── infrastructure.yml   # Infrastructure setup
+│   ├── core.yml             # Core K8s components (Longhorn, cert-manager, Traefik, ArgoCD)
+│   ├── infrastructure.yml   # Infrastructure setup (Pi config, NFS)
 │   ├── k3s.yml              # K3s cluster configuration
-│   ├── observability.yml    # Monitoring stack
 │   ├── static_ip.yml        # Static IP configuration
 │   ├── update.yml           # System updates
 │   ├── uptime-kuma.yml      # Uptime Kuma deployment
@@ -125,11 +122,10 @@ infrastructure/
 | `infrastructure.yml` | Pi setup, NFS support, static IP | `infrastructure`, `rpi`, `nfs` |
 | `k3s.yml` | K3s cluster agent configuration | `k3s`, `k3s_agents` |
 | `core.yml` | Longhorn, cert-manager, Traefik, ArgoCD | `core`, `storage`, `security`, `networking`, `gitops` |
-| `observability.yml` | Victoria Metrics, Node Exporter | `observability`, `metrics` |
-| `dashboards.yml` | K8s Dashboard, Headlamp, Homepage | `dashboards` |
-| `applications.yml` | Jellyfin, Media stack, Paperless, Immich, Agate | `applications`, `jellyfin`, `media`, `paperless` |
 | `update.yml` | System package updates | `update` |
 | `static_ip.yml` | Static IP configuration for nodes | `static_ip` |
+
+**Note:** Applications, dashboards, and monitoring are managed by ArgoCD via `k8s-apps/`.
 
 ### Usage Examples
 
@@ -137,11 +133,8 @@ infrastructure/
 # Deploy only core infrastructure
 ansible-playbook -i inventory playbooks/core.yml
 
-# Deploy only Jellyfin
-ansible-playbook -i inventory playbooks/applications.yml --tags jellyfin
-
-# Deploy multiple specific components
-ansible-playbook -i inventory playbooks/deploy.yml --tags "core,applications"
+# Deploy infrastructure and core together
+ansible-playbook -i inventory playbooks/deploy.yml --tags "infrastructure,core"
 
 # Skip IPv6 disabling
 ansible-playbook -i inventory playbooks/deploy.yml --skip-tags ipv6
@@ -153,14 +146,13 @@ Roles follow a prefix scheme indicating their purpose:
 
 | Prefix | Purpose | Examples |
 |--------|---------|----------|
-| `infra_*` | Infrastructure setup | `infra_rpi_setup`, `infra_k3s_agent`, `infra_static_ip`, `infra_cloudflared`, `infra_cloudflare_ddns`, `infra_squid` |
+| `infra_*` | Infrastructure setup | `infra_rpi_setup`, `infra_k3s_agent`, `infra_static_ip`, `infra_cloudflared`, `infra_cloudflare_ddns`, `infra_squid`, `infra_system_update` |
 | `core_*` | Core K8s components | `core_cert_manager`, `core_traefik`, `core_longhorn`, `core_argocd` |
-| `app_*` | Applications | `app_jellyfin`, `app_media`, `app_paperless`, `app_immich`, `app_personal_site`, `app_uptime_kuma` |
-| `dashboard_*` | Dashboard UIs | `dashboard_kubernetes`, `dashboard_headlamp`, `dashboard_homepage` |
-| `observability_*` | Monitoring | `observability_victoria_metrics`, `observability_node_exporter`, `observability_grafana` |
+| `app_*` | Applications (non-K8s) | `app_uptime_kuma` |
 | `util_*` | Utilities | `util_reboot`, `util_ntfy_notify`, `util_cloudflare_tunnel` |
 | `common_*` | Library roles | `common_k8s` |
-| `install_*` | Single-purpose installers | `install_agate` |
+
+**Note:** Most applications are now managed by ArgoCD via `k8s-apps/` rather than Ansible roles.
 
 ## common_k8s Library Role
 
@@ -285,9 +277,14 @@ See `MOLECULE_TESTING.md` for detailed testing documentation.
 
 ## Creating New Applications
 
-For K8s applications:
+For K8s applications, add manifests to `k8s-apps/<name>/` for GitOps management via ArgoCD:
 
-1. **Option A - Ansible Role**: Create `app_<name>` role using `common_k8s` library
-2. **Option B - ArgoCD**: Add manifests to `k8s-apps/<name>/` for GitOps management
+1. Create a new directory under `k8s-apps/` (e.g., `k8s-apps/my-app/`)
+2. Add Kubernetes manifests (Deployment, Service, Ingress, etc.)
+3. Include a `kustomization.yaml` if using Kustomize
+4. Commit and push - ArgoCD will automatically sync
 
-Both approaches can be combined - use Ansible for initial setup/secrets, ArgoCD for ongoing management.
+For secrets, use SealedSecrets:
+```bash
+kubeseal --format yaml < my-secrets.yaml > sealedsecrets.yaml
+```
