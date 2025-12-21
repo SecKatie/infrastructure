@@ -15,6 +15,13 @@ data:
     # Perses Server Configuration
     # https://perses.dev
 
+    # Schemas configuration - specify paths for CUE schemas in distroless image
+    schemas:
+      panels_path: "/etc/perses/cue/schemas/panels"
+      queries_path: "/etc/perses/cue/schemas/queries"
+      datasources_path: "/etc/perses/cue/schemas/datasources"
+      variables_path: "/etc/perses/cue/schemas/variables"
+
     # Security configuration - anonymous read access enabled
     security:
       readonly: false
