@@ -40,24 +40,10 @@ spec:
                     operator: DoesNotExist
       nodeSelector:
         kubernetes.io/arch: amd64
-      initContainers:
-      - name: archivebox-init
-        image: archivebox/archivebox:latest
-        args: ["init", "--setup"]
-        env:
-        - name: TZ
-          value: "America/New_York"
-        - name: ALLOWED_HOSTS
-          value: "*"
-        - name: SEARCH_BACKEND_ENGINE
-          value: "ripgrep"
-        volumeMounts:
-        - name: archivebox-data
-          mountPath: /data
       containers:
       - name: archivebox
         image: archivebox/archivebox:latest
-        args: ["server", "0.0.0.0:8000"]
+        args: ["server", "--quick-init", "0.0.0.0:8000"]
         ports:
         - containerPort: 8000
           name: http
