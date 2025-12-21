@@ -7,7 +7,7 @@ namespace: monitoring
 helmCharts:
   - name: perses
     repo: https://perses.github.io/helm-charts
-    version: 0.6.1
+    version: 0.19.2
     releaseName: perses
     namespace: monitoring
     valuesFile: values.yaml
