@@ -40,17 +40,11 @@ spec:
                     operator: DoesNotExist
       nodeSelector:
         kubernetes.io/arch: amd64
-      securityContext:
-        fsGroup: 911
       initContainers:
       - name: archivebox-init
         image: archivebox/archivebox:latest
         args: ["init", "--setup"]
         env:
-        - name: PUID
-          value: "911"
-        - name: PGID
-          value: "911"
         - name: TZ
           value: "America/New_York"
         - name: ALLOWED_HOSTS
@@ -69,14 +63,12 @@ spec:
           name: http
           protocol: TCP
         env:
-        - name: PUID
-          value: "911"
-        - name: PGID
-          value: "911"
         - name: TZ
           value: "America/New_York"
         - name: ALLOWED_HOSTS
           value: "*"
+        - name: CSRF_TRUSTED_ORIGINS
+          value: "https://archivebox.corp.mulliken.net"
         - name: PUBLIC_INDEX
           value: "True"
         - name: PUBLIC_SNAPSHOTS
