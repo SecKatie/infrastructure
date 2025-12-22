@@ -24,6 +24,7 @@ spec:
       containers:
         - name: archivebox
           image: archivebox/archivebox:latest
+          command: ["archivebox"]
           args: ["server", "--quick-init", "0.0.0.0:8000"]
           ports:
             - containerPort: 8000
