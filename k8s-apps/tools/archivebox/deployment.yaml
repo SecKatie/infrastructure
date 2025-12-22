@@ -1,0 +1,42 @@
+---
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: archivebox
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/component: server
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: archivebox
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: archivebox
+        app.kubernetes.io/component: server
+    spec:
+      containers:
+        - name: archivebox
+          image: archivebox/archivebox:latest
+          args: ["server", "--quick-init", "0.0.0.0:8000"]
+          ports:
+            - containerPort: 8000
+              protocol: TCP
+              name: http
+          volumeMounts:
+            - name: data
+              mountPath: /data
+          resources:
+            requests:
+              memory: "256Mi"
+              cpu: "100m"
+            limits:
+              memory: "1Gi"
+              cpu: "1000m"
+      restartPolicy: Always
+      volumes:
+        - name: data
+          persistentVolumeClaim:
+            claimName: archivebox-data

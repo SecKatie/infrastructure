@@ -1,0 +1,36 @@
+---
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: archivebox-data-pv
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  capacity:
+    storage: 100Gi
+  accessModes:
+    - ReadWriteOnce
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: ""
+  nfs:
+    server: 172.16.10.248
+    path: /volume2/archivebox
+---
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: archivebox-data
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: ""
+  volumeName: archivebox-data-pv
+  resources:
+    requests:
+      storage: 100Gi

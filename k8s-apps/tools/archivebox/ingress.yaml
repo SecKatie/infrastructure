@@ -1,0 +1,26 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: archivebox
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/component: ingress
+    app.kubernetes.io/managed-by: argocd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - archivebox.corp.mulliken.net
+      secretName: archivebox-tls
+  rules:
+    - host: archivebox.corp.mulliken.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: archivebox
+                port:
+                  number: 8000
