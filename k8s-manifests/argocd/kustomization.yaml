@@ -6,11 +6,13 @@ resources:
   - projects/media.yaml
   - projects/monitoring.yaml
   - projects/utilities.yaml
+  - projects/tools.yaml
 
   # ApplicationSets (generate Applications from repo paths)
   - applicationsets/media.yaml
   - applicationsets/monitoring.yaml
   - applicationsets/utilities.yaml
+  - applicationsets/tools.yaml
 
   # Standalone Applications (external repos, one-offs)
   - applications/personal-site.yaml
