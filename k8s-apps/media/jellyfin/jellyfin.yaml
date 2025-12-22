@@ -65,7 +65,7 @@ spec:
               cpu: 500m
               memory: 1Gi
             limits:
-              cpu: 2000m
+              cpu: "4"
               memory: 6Gi
           securityContext:
             runAsUser: 1000
