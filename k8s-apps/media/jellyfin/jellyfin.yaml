@@ -65,8 +65,8 @@ spec:
               cpu: 500m
               memory: 1Gi
             limits:
-              cpu: "4"
-              memory: 4Gi
+              cpu: 2000m
+              memory: 6Gi
           securityContext:
             runAsUser: 1000
             runAsNonRoot: true
@@ -82,14 +82,15 @@ spec:
               port: 8096
             initialDelaySeconds: 30
             periodSeconds: 30
-            timeoutSeconds: 10
+            timeoutSeconds: 30
+            failureThreshold: 5
           readinessProbe:
             httpGet:
               path: /health
               port: 8096
             initialDelaySeconds: 15
             periodSeconds: 10
-            timeoutSeconds: 5
+            timeoutSeconds: 15
           startupProbe:
             httpGet:
               path: /health
