@@ -17,6 +17,10 @@ spec:
         app.kubernetes.io/name: archivebox
         app.kubernetes.io/component: server
     spec:
+      securityContext:
+        runAsUser: 911
+        runAsGroup: 911
+        fsGroup: 911
       containers:
         - name: archivebox
           image: archivebox/archivebox:latest
