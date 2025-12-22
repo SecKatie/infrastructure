@@ -1,0 +1,22 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: media
+  namespace: argocd
+spec:
+  description: Media applications (streaming, downloads, management)
+  sourceRepos:
+    - https://github.com/SecKatie/infrastructure.git
+  destinations:
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: ""
+      kind: PersistentVolume
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+

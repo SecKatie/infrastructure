@@ -1,0 +1,49 @@
+apiVersion: argoproj.io/v1alpha1
+kind: ApplicationSet
+metadata:
+  name: media-apps
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: applicationset-media
+    app.kubernetes.io/part-of: argocd
+    app.kubernetes.io/managed-by: argocd
+spec:
+  goTemplate: true
+  goTemplateOptions: ["missingkey=error"]
+  generators:
+    - git:
+        repoURL: https://github.com/SecKatie/infrastructure.git
+        revision: main
+        directories:
+          - path: k8s-apps/media/*
+  template:
+    metadata:
+      name: '{{.path.basename}}'
+      labels:
+        app.kubernetes.io/name: '{{.path.basename}}'
+        app.kubernetes.io/part-of: media
+        app.kubernetes.io/managed-by: applicationset
+      finalizers:
+        - resources-finalizer.argocd.argoproj.io
+    spec:
+      project: media
+      source:
+        repoURL: https://github.com/SecKatie/infrastructure.git
+        path: '{{.path.path}}'
+        targetRevision: main
+      destination:
+        server: https://kubernetes.default.svc
+      syncPolicy:
+        automated:
+          prune: true
+          selfHeal: true
+        syncOptions:
+          - CreateNamespace=true
+        retry:
+          limit: 5
+          backoff:
+            duration: 5s
+            factor: 2
+            maxDuration: 3m
+
+

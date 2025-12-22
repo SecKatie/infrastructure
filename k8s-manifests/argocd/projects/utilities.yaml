@@ -1,0 +1,31 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: utilities
+  namespace: argocd
+spec:
+  description: Utility applications (dashboards, tools, infrastructure)
+  sourceRepos:
+    - https://github.com/SecKatie/infrastructure.git
+    - https://github.com/SecKatie/personal-site.git
+    - https://kubernetes-sigs.github.io/headlamp/
+    - https://bitnami-labs.github.io/sealed-secrets
+    - https://charts.perses.dev
+    - https://kubernetes.github.io/dashboard/
+  destinations:
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: ""
+      kind: Namespace
+    - group: ""
+      kind: PersistentVolume
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRole
+    - group: rbac.authorization.k8s.io
+      kind: ClusterRoleBinding
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"
+
+

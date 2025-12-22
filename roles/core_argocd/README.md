@@ -73,13 +73,13 @@ image: "{{ homepage_image }}"
 
 **After (plain YAML for ArgoCD):**
 ```yaml
-# k8s-apps/homepage/deployment.yaml
+# k8s-apps/utilities/homepage/deployment.yaml
 image: ghcr.io/gethomepage/homepage:v0.8.0
 ```
 
 **ArgoCD Application:**
 ```yaml
-# k8s-apps/homepage/application.yaml
+# k8s-apps/utilities/homepage/application.yaml
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -89,7 +89,7 @@ spec:
   project: default
   source:
     repoURL: https://github.com/your-user/ansible-playbooks
-    path: k8s-apps/homepage
+    path: k8s-apps/utilities/homepage
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc

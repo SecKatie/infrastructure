@@ -70,24 +70,18 @@ infrastructure/
 │
 ├── roles/                   # Ansible roles (see Role Naming below)
 │
-├── k8s-apps/                # ArgoCD-managed K8s manifests
-│   ├── applicationset.yaml  # ArgoCD ApplicationSet for GitOps
-│   ├── agate/               # Gemini protocol server
-│   ├── headlamp/            # Kubernetes web UI
-│   ├── homepage/            # Dashboard homepage
-│   ├── immich/              # Photo management
-│   ├── jackett/             # Indexer proxy
-│   ├── jellyfin/            # Media server
-│   ├── kubernetes-dashboard/
-│   ├── node-exporter/       # Prometheus node exporter
-│   ├── paperless/           # Document management
-│   ├── personal-site/       # Static landing page
-│   ├── qbittorrent/         # BitTorrent client
-│   ├── radarr/              # Movie management
-│   ├── sabnzbd/             # Usenet downloader
-│   ├── sealed-secrets/      # SealedSecrets controller
-│   ├── sonarr/              # TV management
-│   └── victoria-metrics/    # Metrics storage
+├── k8s-manifests/           # Manually-applied / bootstrap manifests (kustomize)
+│   ├── kustomization.yaml   # Apply everything in this folder
+│   └── argocd/              # ArgoCD bootstrap (projects, ApplicationSets, external apps)
+│       ├── kustomization.yaml
+│       ├── projects/
+│       ├── applicationsets/
+│       └── applications/
+│
+├── k8s-apps/                # ArgoCD-managed application manifests (watched by ApplicationSets)
+│   ├── media/               # Media stack
+│   ├── monitoring/          # Monitoring/observability
+│   └── utilities/           # Dashboards and misc apps
 │
 ├── inventory/
 │   ├── hosts.yml            # Host definitions
@@ -194,10 +188,10 @@ See `roles/common_k8s/README.md` for full variable documentation and validation 
 
 ## ArgoCD / GitOps
 
-The `k8s-apps/` directory contains Kubernetes manifests managed by ArgoCD:
+ArgoCD is bootstrapped from manifests in `k8s-manifests/`, and then manages application manifests in `k8s-apps/`:
 
-- Each subdirectory is an application (e.g., `k8s-apps/jellyfin/`)
-- `applicationset.yaml` defines the ArgoCD ApplicationSet that watches this directory
+- App manifests live under `k8s-apps/<domain>/<app>/` (e.g., `k8s-apps/media/jellyfin/`)
+- `k8s-manifests/argocd/applicationsets/` defines the ArgoCD ApplicationSets that watch `k8s-apps/<domain>/*`
 - Changes to manifests in `k8s-apps/` are automatically synced by ArgoCD
 
 ## Inventory Structure
@@ -277,9 +271,9 @@ See `MOLECULE_TESTING.md` for detailed testing documentation.
 
 ## Creating New Applications
 
-For K8s applications, add manifests to `k8s-apps/<name>/` for GitOps management via ArgoCD:
+For K8s applications, add manifests to `k8s-apps/<domain>/<name>/` for GitOps management via ArgoCD:
 
-1. Create a new directory under `k8s-apps/` (e.g., `k8s-apps/my-app/`)
+1. Create a new directory under the right domain (e.g., `k8s-apps/utilities/my-app/`)
 2. Add Kubernetes manifests (Deployment, Service, Ingress, etc.)
 3. Include a `kustomization.yaml` if using Kustomize
 4. Commit and push - ArgoCD will automatically sync
