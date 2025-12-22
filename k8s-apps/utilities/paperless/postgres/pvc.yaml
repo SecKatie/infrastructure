@@ -1,0 +1,21 @@
+---
+# PostgreSQL PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: paperless-postgres-pvc
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless-postgres
+    app.kubernetes.io/part-of: documents
+    app.kubernetes.io/component: database
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
+
+

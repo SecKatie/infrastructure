@@ -1,0 +1,25 @@
+---
+# Redis Service
+apiVersion: v1
+kind: Service
+metadata:
+  name: paperless-redis
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless-redis
+    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/part-of: documents
+    app.kubernetes.io/component: cache
+    app.kubernetes.io/managed-by: argocd
+spec:
+  type: ClusterIP
+  ports:
+  - port: 6379
+    targetPort: 6379
+    protocol: TCP
+    name: redis
+  selector:
+    app.kubernetes.io/name: paperless-redis
+    app.kubernetes.io/instance: paperless
+
+

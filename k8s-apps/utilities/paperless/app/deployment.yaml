@@ -1,0 +1,152 @@
+---
+# Paperless-ngx Deployment
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: paperless
+  namespace: paperless
+  labels:
+    app.kubernetes.io/name: paperless
+    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/part-of: documents
+    app.kubernetes.io/component: app
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    app.kubernetes.io/description: "Paperless-ngx document management system"
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: paperless
+      app.kubernetes.io/instance: paperless
+  replicas: 1
+  strategy:
+    type: Recreate
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: paperless
+        app.kubernetes.io/instance: paperless
+        app.kubernetes.io/part-of: documents
+        app.kubernetes.io/component: app
+        app.kubernetes.io/managed-by: argocd
+    spec:
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: node-role.kubernetes.io/control-plane
+                    operator: DoesNotExist
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+      - name: paperless
+        image: ghcr.io/paperless-ngx/paperless-ngx:latest
+        ports:
+        - containerPort: 8000
+          name: http
+          protocol: TCP
+        env:
+        # Override Kubernetes service injection
+        - name: PAPERLESS_PORT
+          value: "8000"
+        # Database configuration
+        - name: PAPERLESS_DBENGINE
+          value: "postgresql"
+        - name: PAPERLESS_DBHOST
+          value: "paperless-postgres.paperless.svc.cluster.local"
+        - name: PAPERLESS_DBPORT
+          value: "5432"
+        - name: PAPERLESS_DBNAME
+          value: "paperless"
+        - name: PAPERLESS_DBUSER
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: postgres-user
+        - name: PAPERLESS_DBPASS
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: postgres-password
+        # Redis configuration
+        - name: PAPERLESS_REDIS
+          value: "redis://paperless-redis.paperless.svc.cluster.local:6379"
+        # Admin user configuration
+        - name: PAPERLESS_ADMIN_USER
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: admin-user
+        - name: PAPERLESS_ADMIN_PASSWORD
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: admin-password
+        - name: PAPERLESS_ADMIN_MAIL
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: admin-email
+        # Application configuration
+        - name: PAPERLESS_URL
+          value: "https://paperless.mulliken.net"
+        - name: PAPERLESS_SECRET_KEY
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: secret-key
+        - name: PAPERLESS_TIME_ZONE
+          value: "America/New_York"
+        - name: PAPERLESS_OCR_LANGUAGE
+          value: "eng"
+        # Data directories
+        - name: PAPERLESS_DATA_DIR
+          value: "/usr/src/paperless/data"
+        - name: PAPERLESS_MEDIA_ROOT
+          value: "/usr/src/paperless/media"
+        - name: PAPERLESS_CONSUMPTION_DIR
+          value: "/usr/src/paperless/consume"
+        - name: PAPERLESS_EXPORT_DIR
+          value: "/usr/src/paperless/export"
+        resources:
+          requests:
+            cpu: 200m
+            memory: 512Mi
+          limits:
+            cpu: 2000m
+            memory: 2Gi
+        volumeMounts:
+        - name: paperless-data
+          mountPath: /usr/src/paperless/data
+          subPath: data
+        - name: paperless-data
+          mountPath: /usr/src/paperless/media
+          subPath: media
+        - name: paperless-data
+          mountPath: /usr/src/paperless/consume
+          subPath: consume
+        - name: paperless-data
+          mountPath: /usr/src/paperless/export
+          subPath: export
+        livenessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 60
+          periodSeconds: 30
+          timeoutSeconds: 10
+        readinessProbe:
+          httpGet:
+            path: /
+            port: 8000
+          initialDelaySeconds: 30
+          periodSeconds: 10
+          timeoutSeconds: 5
+      volumes:
+      - name: paperless-data
+        persistentVolumeClaim:
+          claimName: paperless-nfs-pvc
+
+

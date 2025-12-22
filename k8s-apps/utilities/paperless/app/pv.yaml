@@ -1,0 +1,25 @@
+---
+# NFS PersistentVolume for Paperless documents and data
+apiVersion: v1
+kind: PersistentVolume
+metadata:
+  name: paperless-nfs-pv
+  labels:
+    app.kubernetes.io/name: paperless
+    app.kubernetes.io/instance: paperless
+    app.kubernetes.io/part-of: documents
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  capacity:
+    storage: 500Gi
+  volumeMode: Filesystem
+  accessModes:
+    - ReadWriteMany
+  persistentVolumeReclaimPolicy: Retain
+  storageClassName: nfs-paperless
+  nfs:
+    server: 172.16.10.248
+    path: /volume2/paperless
+
+

@@ -6,7 +6,8 @@ namespace: paperless
 
 resources:
   - namespace.yaml
-  - sealedsecrets.yaml
-  - storage.yaml
-  - paperless.yaml
-  - cloudflare-tunnel.yaml
+  - secrets
+  - postgres
+  - redis
+  - app
+  - tunnel
