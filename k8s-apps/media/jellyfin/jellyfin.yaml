@@ -37,7 +37,7 @@ spec:
         runAsGroup: 1000
       containers:
         - name: jellyfin
-          image: jellyfin/jellyfin:10.11.1
+          image: jellyfin/jellyfin:latest
           ports:
             - containerPort: 8096
               name: http
@@ -54,6 +54,10 @@ spec:
           env:
             - name: JELLYFIN_PublishedServerUrl
               value: "https://jellyfin.mulliken.net"
+            - name: DOTNET_SYSTEM_GC_SERVER
+              value: "true"
+            - name: DOTNET_SYSTEM_GC_CONCURRENT
+              value: "true"
           resources:
             requests:
               cpu: 500m
