@@ -58,6 +58,8 @@ spec:
               value: "true"
             - name: DOTNET_SYSTEM_GC_CONCURRENT
               value: "true"
+            - name: MALLOC_TRIM_THRESHOLD_
+              value: "100000"
           resources:
             requests:
               cpu: 500m
