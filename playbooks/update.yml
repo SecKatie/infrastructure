@@ -18,9 +18,9 @@
       debug:
         msg: |
           Updating packages on {{ inventory_hostname }}
-          OS: {{ ansible_distribution }} {{ ansible_distribution_version }}
-          Architecture: {{ ansible_architecture }}
-          Package Manager: {{ ansible_pkg_mgr }}
+          OS: {{ ansible_facts['distribution'] }} {{ ansible_facts['distribution_version'] }}
+          Architecture: {{ ansible_facts['architecture'] }}
+          Package Manager: {{ ansible_facts['pkg_mgr'] }}
 
   tasks:
     - block:
@@ -32,12 +32,29 @@
           debug:
             msg: "Package update completed on {{ inventory_hostname }}"
             
-        - name: Reboot notification
+        - name: Reboot notification (manual reboot needed)
           debug:
             msg: |
               ⚠️  ATTENTION: {{ inventory_hostname }} requires a reboot to complete the update.
-              You can reboot manually or run the reboot playbook: ansible-playbook playbooks/maintenance-reboot-systems.yml
-          when: reboot_required is defined and reboot_required|bool
+              You can reboot manually or run with -e auto_reboot=true to reboot automatically.
+          when:
+            - reboot_required is defined and reboot_required|bool
+            - not auto_reboot|bool
+
+        - name: Reboot system
+          reboot:
+            reboot_timeout: 600
+            connect_timeout: 20
+            pre_reboot_delay: "{{ reboot_delay }}"
+          when:
+            - auto_reboot|bool
+            - reboot_required is defined and reboot_required|bool
+          register: reboot_result
+
+        - name: Set rebooted fact
+          set_fact:
+            was_rebooted: true
+          when: reboot_result is changed
 
       rescue:
         - name: Display update failure
@@ -47,14 +64,6 @@
         - name: Re-raise the failure
           fail:
             msg: "Update failed on {{ inventory_hostname }}"
-
-  handlers:
-    - name: reboot system
-      reboot:
-        reboot_timeout: 600
-        connect_timeout: 20
-        test_command: uptime
-      when: auto_reboot|bool and (reboot_required is defined and reboot_required|bool)
 
 # Summary play (runs after all hosts are processed)
 - name: Display update summary
@@ -70,13 +79,26 @@
 
           Total servers: {{ groups['all'] | length }}
           Completed: {{ ansible_play_hosts_all | default([]) | length }}
-          Time: {{ ansible_date_time.iso8601 }}
+          Time: {{ ansible_facts['date_time']['iso8601'] }}
 
-          {% if hostvars | dict2items | selectattr('value.reboot_required', 'defined') | selectattr('value.reboot_required') | list | length > 0 %}
-          Servers requiring reboot:
+          {% set rebooted = [] %}
+          {% set needs_reboot = [] %}
           {% for host in groups['all'] %}
-          {% if hostvars[host].reboot_required is defined and hostvars[host].reboot_required %}
-          - {{ host }}
+          {% if hostvars[host].was_rebooted is defined and hostvars[host].was_rebooted %}
+          {% set _ = rebooted.append(host) %}
+          {% elif hostvars[host].reboot_required is defined and hostvars[host].reboot_required %}
+          {% set _ = needs_reboot.append(host) %}
           {% endif %}
+          {% endfor %}
+          {% if rebooted %}
+          Servers rebooted:
+          {% for host in rebooted %}
+          - {{ host }}
+          {% endfor %}
+          {% endif %}
+          {% if needs_reboot %}
+          Servers requiring reboot:
+          {% for host in needs_reboot %}
+          - {{ host }}
           {% endfor %}
           {% endif %} 

@@ -8,7 +8,7 @@
   apt:
     update_cache: yes
     cache_valid_time: 3600
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
   become: yes
 
 - name: Upgrade all packages (Debian/Ubuntu)
@@ -16,21 +16,21 @@
     upgrade: dist
     autoremove: yes
     autoclean: yes
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
   become: yes
   register: apt_upgrade_result
 
 - name: Update package cache (RHEL/CentOS/Fedora)
   yum:
     update_cache: yes
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int < 8
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int < 8
   become: yes
 
 - name: Upgrade all packages (RHEL/CentOS 7 and older)
   yum:
     name: "*"
     state: latest
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int < 8
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int < 8
   become: yes
   register: yum_upgrade_result
 
@@ -38,42 +38,15 @@
   dnf:
     name: "*"
     state: latest
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int >= 8
   become: yes
   register: dnf_upgrade_result
-
-- name: Update package cache (Arch Linux)
-  pacman:
-    update_cache: yes
-  when: ansible_os_family == "Archlinux"
-  become: yes
-
-- name: Upgrade all packages (Arch Linux)
-  pacman:
-    upgrade: yes
-  when: ansible_os_family == "Archlinux"
-  become: yes
-  register: pacman_upgrade_result
-
-- name: Update package cache (SUSE)
-  zypper:
-    update_cache: yes
-  when: ansible_os_family == "Suse"
-  become: yes
-
-- name: Upgrade all packages (SUSE)
-  zypper:
-    name: "*"
-    state: latest
-  when: ansible_os_family == "Suse"
-  become: yes
-  register: zypper_upgrade_result
 
 - name: Display upgrade results for Debian/Ubuntu
   debug:
     msg: "{{ apt_upgrade_result.stdout_lines }}"
   when: 
-    - ansible_os_family == "Debian"
+    - ansible_facts['os_family'] == "Debian"
     - apt_upgrade_result is defined
     - apt_upgrade_result.stdout_lines is defined
 
@@ -81,36 +54,36 @@
   debug:
     msg: "{{ yum_upgrade_result.results }}"
   when: 
-    - ansible_os_family == "RedHat" 
-    - ansible_distribution_major_version|int < 8
+    - ansible_facts['os_family'] == "RedHat" 
+    - ansible_facts['distribution_major_version']|int < 8
     - yum_upgrade_result is defined
 
 - name: Display upgrade results for RHEL/CentOS 8+ and Fedora
   debug:
     msg: "{{ dnf_upgrade_result.results }}"
   when: 
-    - ansible_os_family == "RedHat" 
-    - ansible_distribution_major_version|int >= 8
+    - ansible_facts['os_family'] == "RedHat" 
+    - ansible_facts['distribution_major_version']|int >= 8
     - dnf_upgrade_result is defined
 
 - name: Check if reboot is required (Debian/Ubuntu)
   stat:
     path: /var/run/reboot-required
   register: reboot_required_file
-  when: ansible_os_family == "Debian"
+  when: ansible_facts['os_family'] == "Debian"
 
 - name: Set reboot required fact (Debian/Ubuntu)
   set_fact:
     reboot_required: true
   when: 
-    - ansible_os_family == "Debian"
+    - ansible_facts['os_family'] == "Debian"
     - reboot_required_file.stat.exists
 
 - name: Install yum-utils for reboot detection (RHEL/CentOS 7 and older)
   yum:
     name: yum-utils
     state: present
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int < 8
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int < 8
   become: yes
   ignore_errors: yes
 
@@ -118,7 +91,7 @@
   dnf:
     name: dnf-utils
     state: present
-  when: ansible_os_family == "RedHat" and ansible_distribution_major_version|int >= 8
+  when: ansible_facts['os_family'] == "RedHat" and ansible_facts['distribution_major_version']|int >= 8
   become: yes
   ignore_errors: yes
 
@@ -127,7 +100,7 @@
   register: needs_restarting_check
   failed_when: false
   changed_when: false
-  when: ansible_os_family == "RedHat"
+  when: ansible_facts['os_family'] == "RedHat"
 
 - name: Check if reboot is required (RHEL/CentOS/Fedora) - using needs-restarting
   shell: needs-restarting -r
@@ -135,14 +108,14 @@
   failed_when: needs_restart.rc not in [0, 1]
   changed_when: false
   when: 
-    - ansible_os_family == "RedHat"
+    - ansible_facts['os_family'] == "RedHat"
     - needs_restarting_check.rc == 0
 
 - name: Set reboot required fact (RHEL/CentOS/Fedora) - needs-restarting method
   set_fact:
     reboot_required: true
   when: 
-    - ansible_os_family == "RedHat"
+    - ansible_facts['os_family'] == "RedHat"
     - needs_restarting_check.rc == 0
     - needs_restart.rc == 1
 
@@ -158,14 +131,14 @@
   register: kernel_check
   changed_when: false
   when: 
-    - ansible_os_family == "RedHat"
+    - ansible_facts['os_family'] == "RedHat"
     - needs_restarting_check.rc != 0
 
 - name: Set reboot required fact (RHEL/CentOS/Fedora) - fallback method
   set_fact:
     reboot_required: true
   when: 
-    - ansible_os_family == "RedHat"
+    - ansible_facts['os_family'] == "RedHat"
     - needs_restarting_check.rc != 0
     - kernel_check.stdout == "reboot_needed"
 
@@ -177,6 +150,6 @@
 - name: Save update completion timestamp
   lineinfile:
     path: /var/log/ansible-updates.log
-    line: "{{ ansible_date_time.iso8601 }} - System packages updated via Ansible on {{ inventory_hostname }}"
+    line: "{{ ansible_facts['date_time']['iso8601'] }} - System packages updated via Ansible on {{ inventory_hostname }}"
     create: yes
   become: yes 

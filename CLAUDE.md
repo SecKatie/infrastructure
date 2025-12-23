@@ -4,281 +4,125 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ## Repository Overview
 
-This is an Ansible-based infrastructure automation repository for managing a Kubernetes (K3s) cluster running on Raspberry Pi and RHEL nodes. It handles:
-- Cluster provisioning and configuration
-- Application deployments to Kubernetes
-- Secret management with SealedSecrets
-- TLS certificates via cert-manager
-- GitOps with ArgoCD
+Ansible-based infrastructure automation for a K3s cluster running on Raspberry Pi and RHEL nodes. Manages cluster provisioning, application deployments (via ArgoCD GitOps), secrets (SealedSecrets), and TLS (cert-manager).
 
 ## Common Commands
 
 ```bash
-# Run a playbook (vault password file is set in ansible.cfg at ~/.ansible-vault-pass.sh)
-# Note: -K (become password) is NOT needed - do not include it
+# Ansible playbooks (vault password auto-loaded from ~/.ansible-vault-pass.sh)
+# Note: -K (become password) is NOT needed
 ansible-playbook -i inventory playbooks/<playbook>.yml
+ansible-playbook -i inventory playbooks/deploy.yml                    # Deploy everything
+ansible-playbook -i inventory playbooks/deploy.yml --tags core        # Deploy by tag
+ansible-playbook -i inventory playbooks/deploy.yml --skip-tags ipv6   # Skip specific tags
 
-# Deploy everything using the master playbook
-ansible-playbook -i inventory playbooks/deploy.yml
-
-# Deploy specific components using tags
-ansible-playbook -i inventory playbooks/deploy.yml --tags infrastructure
-ansible-playbook -i inventory playbooks/deploy.yml --tags core
-ansible-playbook -i inventory playbooks/deploy.yml --tags "infrastructure,core"
-
-# Test a single role with Molecule
+# Molecule testing (run from role directory)
 cd roles/<role_name>
-molecule test
+molecule test      # Full test cycle
+molecule converge  # Apply without teardown (for iterating)
+molecule verify    # Run verification only
 
-# Run Molecule converge (apply without teardown, useful for iterating)
-cd roles/<role_name>
-molecule converge
-
-# Encrypt secrets with Kubeseal
+# Secrets
 kubeseal --format yaml < my-secrets.yaml > sealedsecrets.yaml
 
-# Get Kubernetes Dashboard token (requires just command runner)
-just dashboard-token
+# OpenTofu (DNS management)
+just tf-plan   # Preview changes
+just tf-apply  # Apply changes
+
+# Utilities
+just dashboard-token  # Copy K8s dashboard token to clipboard
 ```
 
-## Project Structure
+## Architecture
 
-```
-infrastructure/
-├── ansible.cfg              # Ansible configuration (vault password, paths)
-├── CLAUDE.md                # This file - AI assistant guidance
-├── AGENTS.md                # Lola skills reference
-├── MOLECULE_TESTING.md      # Molecule testing documentation
-├── README.md                # Project overview
-├── galaxy.yml               # Ansible Galaxy collection metadata
-├── justfile                 # Task runner commands
-├── requirements.txt         # Python dependencies
-├── requirements.yml         # Ansible collection dependencies
-├── .python-version          # Python version specification
-│
-├── playbooks/               # Ansible playbooks (infrastructure only)
-│   ├── deploy.yml           # Master orchestration playbook
-│   ├── core.yml             # Core K8s components (Longhorn, cert-manager, Traefik, ArgoCD)
-│   ├── infrastructure.yml   # Infrastructure setup (Pi config, NFS)
-│   ├── k3s.yml              # K3s cluster configuration
-│   ├── static_ip.yml        # Static IP configuration
-│   ├── update.yml           # System updates
-│   ├── uptime-kuma.yml      # Uptime Kuma deployment
-│   ├── vars/                # Encrypted secrets (ansible-vault)
-│   ├── utilities/           # Utility playbooks
-│   └── archive/             # Deprecated playbooks
-│
-├── roles/                   # Ansible roles (see Role Naming below)
-│
-├── k8s-manifests/           # Manually-applied / bootstrap manifests (kustomize)
-│   ├── kustomization.yaml   # Apply everything in this folder
-│   └── argocd/              # ArgoCD bootstrap (projects, ApplicationSets, external apps)
-│       ├── kustomization.yaml
-│       ├── projects/
-│       ├── applicationsets/
-│       └── applications/
-│
-├── k8s-apps/                # ArgoCD-managed application manifests (watched by ApplicationSets)
-│   ├── media/               # Media stack
-│   ├── monitoring/          # Monitoring/observability
-│   └── utilities/           # Dashboards and misc apps
-│
-├── inventory/
-│   ├── hosts.yml            # Host definitions
-│   └── group_vars/          # Group-specific variables
-│       ├── all_raspberry_pi.yml
-│       ├── k3s_control_plane.yml
-│       ├── pi_k3s_agents.yml
-│       ├── rhel_k3s_agents.yml
-│       ├── super6c_standalone.yml
-│       └── vps_servers.yml
-│
-├── collections/             # Ansible collections (community.general)
-└── scripts/                 # Utility scripts
-    ├── configure_openbao.sh
-    ├── homepage-add-icon.sh
-    ├── sonarr-proxies.sh
-    └── start-dashboard.sh
-```
+### Directory Layout
 
-## Playbooks
+| Directory | Purpose |
+|-----------|---------|
+| `playbooks/` | Ansible playbooks for infrastructure provisioning |
+| `roles/` | Ansible roles (prefixed: `infra_*`, `core_*`, `app_*`, `util_*`, `common_*`) |
+| `k8s-apps/` | **ArgoCD-managed** K8s manifests (media/, monitoring/, utilities/) |
+| `k8s-manifests/` | Bootstrap manifests (ArgoCD projects, ApplicationSets) |
+| `opentofu/` | DNS infrastructure as code |
+| `inventory/` | Ansible inventory and group variables |
+| `playbooks/vars/` | Encrypted ansible-vault secrets |
 
-### Master Deployment
+### Key Playbooks
 
-| Playbook | Description |
-|----------|-------------|
-| `deploy.yml` | Imports all other playbooks, orchestrates full deployment |
-
-### Component Playbooks
-
-| Playbook | Description | Key Tags |
-|----------|-------------|----------|
-| `infrastructure.yml` | Pi setup, NFS support, static IP | `infrastructure`, `rpi`, `nfs` |
-| `k3s.yml` | K3s cluster agent configuration | `k3s`, `k3s_agents` |
-| `core.yml` | Longhorn, cert-manager, Traefik, ArgoCD | `core`, `storage`, `security`, `networking`, `gitops` |
-| `update.yml` | System package updates | `update` |
-| `static_ip.yml` | Static IP configuration for nodes | `static_ip` |
-
-**Note:** Applications, dashboards, and monitoring are managed by ArgoCD via `k8s-apps/`.
-
-### Usage Examples
-
-```bash
-# Deploy only core infrastructure
-ansible-playbook -i inventory playbooks/core.yml
-
-# Deploy infrastructure and core together
-ansible-playbook -i inventory playbooks/deploy.yml --tags "infrastructure,core"
-
-# Skip IPv6 disabling
-ansible-playbook -i inventory playbooks/deploy.yml --skip-tags ipv6
-```
+| Playbook | Tags | Purpose |
+|----------|------|---------|
+| `deploy.yml` | all | Master orchestration |
+| `infrastructure.yml` | `infrastructure`, `rpi`, `nfs` | Pi setup, NFS, static IP |
+| `core.yml` | `core`, `storage`, `networking`, `gitops` | Longhorn, cert-manager, Traefik, ArgoCD |
+| `k3s.yml` | `k3s`, `k3s_agents` | K3s cluster agent configuration |
 
 ## Role Naming Conventions
 
-Roles follow a prefix scheme indicating their purpose:
+| Prefix | Purpose |
+|--------|---------|
+| `infra_*` | Infrastructure setup (Pi config, K3s agents, static IP, Cloudflare) |
+| `core_*` | Core K8s components (cert-manager, Traefik, Longhorn, ArgoCD) |
+| `app_*` | Applications deployed via Ansible (not ArgoCD) |
+| `util_*` | Utilities (reboot, ntfy notifications, Cloudflare tunnel) |
+| `common_*` | Library roles (`common_k8s` for reusable K8s resources) |
 
-| Prefix | Purpose | Examples |
-|--------|---------|----------|
-| `infra_*` | Infrastructure setup | `infra_rpi_setup`, `infra_k3s_agent`, `infra_static_ip`, `infra_cloudflared`, `infra_cloudflare_ddns`, `infra_squid`, `infra_system_update` |
-| `core_*` | Core K8s components | `core_cert_manager`, `core_traefik`, `core_longhorn`, `core_argocd` |
-| `app_*` | Applications (non-K8s) | `app_uptime_kuma` |
-| `util_*` | Utilities | `util_reboot`, `util_ntfy_notify`, `util_cloudflare_tunnel` |
-| `common_*` | Library roles | `common_k8s` |
-
-**Note:** Most applications are now managed by ArgoCD via `k8s-apps/` rather than Ansible roles.
+**Note:** Most applications are managed by ArgoCD via `k8s-apps/`, not Ansible roles.
 
 ## common_k8s Library Role
 
-The `common_k8s` role provides reusable task files for Kubernetes resources. **Always use it for new K8s apps** instead of duplicating templates:
+Reusable task files for K8s resources. **Always use for new K8s apps**:
 
 ```yaml
-# Usage pattern - include specific task files
 - include_role:
     name: common_k8s
-    tasks_from: namespace  # or certificate, ingress, ingressroute, cloudflare, storage
+    tasks_from: namespace  # or: certificate, ingress, ingressroute, cloudflare, storage
   vars:
     k8s_namespace: my-app
-    # ... other required vars
 ```
 
-### Available Task Files
+Available: `namespace`, `certificate`, `ingress`, `ingressroute`, `cloudflare`, `storage`. See `roles/common_k8s/README.md` for variables.
 
-| Task File | Purpose | Key Variables |
-|-----------|---------|---------------|
-| `namespace` | Create namespace | `k8s_namespace`, `k8s_labels` |
-| `certificate` | cert-manager Certificate | `k8s_cert_name`, `k8s_cert_secret_name`, `k8s_cert_dns_names` |
-| `ingress` | Standard K8s Ingress | `k8s_ingress_name`, `k8s_ingress_host`, `k8s_ingress_service_name` |
-| `ingressroute` | Traefik IngressRoute (HTTPS backends) | `k8s_ingressroute_name`, `k8s_ingressroute_host`, `k8s_ingressroute_service_name` |
-| `cloudflare` | Cloudflare tunnel deployment | `k8s_cloudflare_tunnel_name`, `k8s_cloudflare_external_hostname`, `k8s_cloudflare_internal_service` |
-| `storage` | PersistentVolumeClaim | `k8s_pvc_name`, `k8s_pvc_size` |
+## Kubernetes Patterns
 
-See `roles/common_k8s/README.md` for full variable documentation and validation rules.
+| Resource | Solution |
+|----------|----------|
+| TLS | cert-manager with `letsencrypt-prod` ClusterIssuer |
+| Ingress | Traefik (use `ingressroute` for HTTPS backends) |
+| Storage | Longhorn (default), NFS for shared media |
+| External Access | Cloudflare tunnels |
+| Secrets | SealedSecrets (`kubeseal`) |
+| GitOps | ArgoCD with ApplicationSets |
 
-## Kubernetes Resource Patterns
+## ArgoCD GitOps
 
-| Resource Type | Solution | Notes |
-|---------------|----------|-------|
-| TLS Certificates | cert-manager with `letsencrypt-prod` ClusterIssuer | Auto-renewal via ACME |
-| Ingress | Traefik ingress controller | Use `ingressroute` for HTTPS backends |
-| Storage | Longhorn (distributed), NFS (shared media) | Longhorn is default StorageClass |
-| External Access | Cloudflare tunnels | For public-facing apps |
-| Secrets | SealedSecrets (kubeseal) | Never commit plaintext secrets |
-| GitOps | ArgoCD with ApplicationSet | Manifests in `k8s-apps/` directory |
+- **App manifests**: `k8s-apps/<domain>/<app>/` (e.g., `k8s-apps/media/jellyfin/`)
+- **ApplicationSets**: `k8s-manifests/argocd/applicationsets/`
+- Changes pushed to `k8s-apps/` auto-sync via ArgoCD
 
-## ArgoCD / GitOps
+## Network
 
-ArgoCD is bootstrapped from manifests in `k8s-manifests/`, and then manages application manifests in `k8s-apps/`:
+- Ansible connects via **Tailscale** (100.x.x.x)
+- Cluster uses **static IPs** on 172.16.10.x subnet
+- **Internal domain**: `*.corp.mulliken.net`
+- **External domain**: `*.mulliken.net` (via Cloudflare)
 
-- App manifests live under `k8s-apps/<domain>/<app>/` (e.g., `k8s-apps/media/jellyfin/`)
-- `k8s-manifests/argocd/applicationsets/` defines the ArgoCD ApplicationSets that watch `k8s-apps/<domain>/*`
-- Changes to manifests in `k8s-apps/` are automatically synced by ArgoCD
+## Host Groups
 
-## Inventory Structure
-
-### Host Groups
-
-| Group | Description |
-|-------|-------------|
-| `k3s_control_plane` | K3s master node (super6c_node_1) |
-| `pi_k3s_agents` | Raspberry Pi worker nodes |
-| `rhel_k3s_agents` | RHEL worker nodes |
-| `vps_servers` | Cloud/VPS servers |
-| `super6c_standalone` | Super6C nodes not in cluster |
-| `all_raspberry_pi` | All Raspberry Pi devices |
-| `all_rhel` | All RHEL devices |
-
-### Network Configuration
-
-- Ansible connects via Tailscale IPs (100.x.x.x)
-- Static IPs are configured on 172.16.10.x subnet for cluster communication
-- Each host has `infra_static_ip_address` variable for static IP assignment
-
-## Secrets Management
-
-Secrets are stored as encrypted ansible-vault files in `playbooks/vars/`:
-
-| File | Purpose |
-|------|---------|
-| `cloudflare_secrets.yml` | Cloudflare API tokens |
-| `immich_secrets.yml` | Immich app secrets |
-| `media_secrets.yml` | Media stack secrets |
-| `paperless_secrets.yml` | Paperless secrets |
-| `homepage_secrets.yml` | Homepage dashboard config |
-| `grafana_secrets.yml` | Grafana admin credentials |
-| `squid_secrets.yml` | Squid proxy config |
-| `ngrok_secrets.yml` | ngrok tunnel config |
-
-The vault password file is configured in `ansible.cfg` at `~/.ansible-vault-pass.sh`.
-
-## Testing
-
-Each role can have Molecule tests in `roles/<role>/molecule/default/`:
-
-```bash
-# Full test (create, converge, verify, destroy)
-cd roles/<role_name>
-molecule test
-
-# Apply role without destroy (for iterating)
-molecule converge
-
-# Run only verification tests
-molecule verify
-
-# Cleanup
-molecule destroy
-```
-
-See `MOLECULE_TESTING.md` for detailed testing documentation.
-
-## Key Domain Notes
-
-- **Target Infrastructure**: Raspberry Pi (ARM64) and RHEL nodes running K3s
-- **Internal Domain**: `*.corp.mulliken.net` (via internal DNS)
-- **External Domain**: `*.mulliken.net` (via Cloudflare)
-- **Notifications**: ntfy service for alerts
-- **License**: GPL-2.0-or-later
-
-## Creating New Roles
-
-1. Create role directory: `roles/<prefix>_<name>/`
-2. Add `tasks/main.yml`, `defaults/main.yml`, `templates/` as needed
-3. Use `common_k8s` for standard K8s resources
-4. Add Molecule tests in `molecule/default/`
-5. Add role to appropriate playbook with tags
-6. Document in role's `README.md`
+| Group | Nodes |
+|-------|-------|
+| `k3s_control_plane` | K3s master (super6c_node_1) |
+| `pi_k3s_agents` | Raspberry Pi workers |
+| `rhel_k3s_agents` | RHEL workers |
 
 ## Creating New Applications
 
-For K8s applications, add manifests to `k8s-apps/<domain>/<name>/` for GitOps management via ArgoCD:
+**For ArgoCD-managed apps** (preferred):
+1. Create `k8s-apps/<domain>/<app>/` directory
+2. Add K8s manifests + `kustomization.yaml`
+3. Commit and push - ArgoCD syncs automatically
 
-1. Create a new directory under the right domain (e.g., `k8s-apps/utilities/my-app/`)
-2. Add Kubernetes manifests (Deployment, Service, Ingress, etc.)
-3. Include a `kustomization.yaml` if using Kustomize
-4. Commit and push - ArgoCD will automatically sync
-
-For secrets, use SealedSecrets:
-```bash
-kubeseal --format yaml < my-secrets.yaml > sealedsecrets.yaml
-```
+**For Ansible-deployed apps**:
+1. Create role: `roles/<prefix>_<name>/`
+2. Use `common_k8s` for standard resources
+3. Add Molecule tests in `molecule/default/`
+4. Add role to playbook with tags
