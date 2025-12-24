@@ -19,10 +19,6 @@ resources:
   - applications/argocd.yaml
   - applications/personal-site.yaml
 
-  # Notifications (sync failure alerts via ntfy)
-  - notifications/configmap.yaml
-  - notifications/sealedsecret.yaml
-
   # Ingress and TLS for ArgoCD
   - ingress.yaml
   - certificate.yaml
