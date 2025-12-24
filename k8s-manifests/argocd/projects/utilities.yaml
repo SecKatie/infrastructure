@@ -8,12 +8,18 @@ spec:
   sourceRepos:
     - https://github.com/SecKatie/infrastructure.git
     - https://github.com/SecKatie/personal-site.git
-    - https://kubernetes-sigs.github.io/headlamp/
     - https://bitnami-labs.github.io/sealed-secrets
-    - https://charts.perses.dev
-    - https://kubernetes.github.io/dashboard/
   destinations:
-    - namespace: "*"
+    # Explicitly list allowed namespaces instead of wildcard
+    - namespace: umami
+      server: https://kubernetes.default.svc
+    - namespace: paperless
+      server: https://kubernetes.default.svc
+    - namespace: gemini
+      server: https://kubernetes.default.svc
+    - namespace: kube-system
+      server: https://kubernetes.default.svc
+    - namespace: personal-site
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: ""
