@@ -1,8 +1,0 @@
----
-# Ensure the open-iscsi package is installed
-- name: Install open-iscsi package
-  ansible.builtin.apt:
-    name: open-iscsi
-    state: present
-    update_cache: true
-  become: true

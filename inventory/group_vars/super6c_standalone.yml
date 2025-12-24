@@ -1,9 +1,0 @@
----
-# =============================================================================
-# Super6C Standalone Nodes Group Variables
-# =============================================================================
-# These variables apply to all standalone Super6C Raspberry Pi nodes
-# that are not part of the k3s cluster.
-# =============================================================================
-
-ansible_user: root

@@ -1,7 +1,0 @@
----
-longhorn_version: "1.10.1"
-longhorn_namespace: "longhorn-system"
-
-# Default settings
-longhorn_default_replica_count: 2
-longhorn_upgrade_checker: false

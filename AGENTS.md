@@ -56,3 +56,115 @@ to learn the detailed instructions and workflows.
 **Instructions:** Read `.lola/modules/katies-ai-skills/module/skills/yt-dlp/SKILL.md` for detailed guidance.
 
 <!-- lola:skills:end -->
+
+## Build/Lint/Test Commands
+
+### Ansible Playbooks
+```bash
+# Install dependencies
+pip install -r requirements.txt
+
+# Lint playbooks and roles
+ansible-lint
+
+# Run single Ansible role test with Molecule
+cd roles/<role_name>
+molecule test
+
+# Molecule: keep container running for debugging
+cd roles/<role_name>
+molecule converge
+
+# Run all role tests
+for role in roles/*/; do (cd "$role" && molecule test); done
+```
+
+### OpenTofu/Terraform (DNS Infrastructure)
+```bash
+# Initialize providers
+cd opentofu && tofu init
+
+# Validate configuration
+tofu validate
+
+# Format configuration files
+tofu fmt
+
+# Plan infrastructure changes
+tofu plan
+
+# Apply infrastructure changes
+tofu apply
+```
+
+### Kubernetes Manifests
+```bash
+# Validate kustomization
+kustomize build k8s-apps/<app> --dry-run=client
+
+# Apply to cluster
+kubectl apply -k k8s-apps/<app>
+```
+
+## Code Style Guidelines
+
+### YAML (Kubernetes, Kustomization, Ansible)
+- **Indentation**: 2 spaces (no tabs)
+- **Comments**: Use `#` for single-line comments, place above content
+- **Naming**: Use kebab-case for resource names and labels
+- **Multi-doc files**: Separate resources with `---`
+- **Kubernetes labels**: Follow `app.kubernetes.io/*` label conventions
+
+### Kubernetes Resources
+- **Labels**: Always include `app.kubernetes.io/name`, `app.kubernetes.io/instance`, `app.kubernetes.io/part-of`, `app.kubernetes.io/component`, `app.kubernetes.io/managed-by`
+- **Annotations**: Include `app.kubernetes.io/description` for resources
+- **Ports**: Always include `name` and `protocol` fields
+- **Resources**: Set both `requests` and `limits` for all containers
+- **Probes**: Include `livenessProbe`, `readinessProbe`, and `startupProbe` where applicable
+
+### Kustomization
+- List resources in dependency order (namespace → secrets → storage → deployment → ingress)
+- Include namespace declaration at top
+- Use 2-space indentation consistently
+
+### Bash Scripts
+- **Shebang**: `#!/bin/bash` at top of file
+- **Error handling**: Use `set -e` to exit on errors
+- **Variables**: Use uppercase for constants (e.g., `NAMESPACE`, `POD_LABEL`)
+- **Functions**: Use lowercase with underscores (e.g., `get_pod()`, `list_assets()`)
+- **Usage**: Include usage function with examples at top
+- **Colors**: Define color variables for output (GREEN, RED, YELLOW, CYAN, NC)
+
+### OpenTofu/Terraform
+- **Resource naming**: `terraform_type_descriptive_name` (snake_case)
+- **Block ordering**: metadata, spec/config, then nested blocks
+- **Indentation**: 2 spaces
+- **Comments**: Use `#` for inline comments
+- **Providers**: Pin versions in versions.tf using `~>` for minor version constraints
+
+### Ansible Roles
+- **Playbook naming**: `{category}-{action}-{target}.yml`
+- Categories: infrastructure, maintenance, monitoring, testing
+- Use FQCN for modules: `ansible.builtin.`, `community.kubernetes.`, etc.
+- Variables in `defaults/main.yml` for role defaults
+- Keep tasks modular and idempotent
+
+## Version Control
+
+- **VCS**: Use `jj` (Jujutsu) for version control
+- **Commit messages**: Write clear, concise commit messages describing the "why" not just the "what"
+- **Branching**: Follow jj's working-copy-as-a-commit model
+
+## Security
+
+- **Never commit secrets**: Use Kubeseal for Kubernetes secrets
+- **SSH keys**: Use key-based authentication where possible
+- **Sensitive data**: Store in SealedSecrets or external secret management
+
+## Testing Requirements
+
+When creating or modifying code:
+1. **Ansible roles**: Add/update Molecule tests in `roles/<role>/molecule/`
+2. **Kubernetes manifests**: Use `kubectl --dry-run=server` or `kustomize build` to validate
+3. **OpenTofu**: Run `tofu validate` and `tofu plan` before applying
+4. **Lint**: Run `ansible-lint` before committing Ansible changes

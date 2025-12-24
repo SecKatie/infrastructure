@@ -1,6 +1,0 @@
----
-- name: Restart ddclient
-  ansible.builtin.systemd:
-    name: ddclient
-    state: restarted
-  become: true

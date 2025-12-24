@@ -1,5 +1,0 @@
----
-- name: Reboot devices
-  hosts: servers
-  roles:
-    - util_reboot

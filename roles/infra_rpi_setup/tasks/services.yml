@@ -1,8 +1,0 @@
----
-# Enable and start the iscsid service
-- name: Enable and start iscsid service
-  ansible.builtin.systemd:
-    name: iscsid
-    state: started
-    enabled: true
-  become: true
