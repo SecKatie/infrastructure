@@ -3,6 +3,7 @@ kind: Kustomization
 
 resources:
   # AppProjects (authorization boundaries / allowed repos & destinations)
+  - projects/argocd.yaml
   - projects/media.yaml
   - projects/monitoring.yaml
   - projects/utilities.yaml
@@ -15,6 +16,7 @@ resources:
   - applicationsets/tools.yaml
 
   # Standalone Applications (external repos, one-offs)
+  - applications/argocd.yaml
   - applications/personal-site.yaml
 
   # Notifications (sync failure alerts via ntfy)

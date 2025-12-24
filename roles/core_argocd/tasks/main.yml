@@ -112,6 +112,12 @@
       app.kubernetes.io/component: server
   when: argocd_ingress_enabled
 
+- name: Bootstrap ArgoCD self-management application
+  ansible.builtin.shell: |
+    kubectl apply -k {{ playbook_dir }}/../k8s-manifests/argocd/
+  register: bootstrap_result
+  changed_when: "'created' in bootstrap_result.stdout or 'configured' in bootstrap_result.stdout"
+
 - name: Display ArgoCD information
   ansible.builtin.debug:
     msg:
