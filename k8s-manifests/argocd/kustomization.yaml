@@ -21,4 +21,7 @@ resources:
   - notifications/configmap.yaml
   - notifications/sealedsecret.yaml
 
+  # GitHub webhook secret (for instant sync on push)
+  - notifications/webhook-sealedsecret.yaml
+
 
