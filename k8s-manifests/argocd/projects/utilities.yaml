@@ -11,6 +11,9 @@ spec:
     - https://bitnami-labs.github.io/sealed-secrets
   destinations:
     # Explicitly list allowed namespaces instead of wildcard
+    # Allow Applications that intentionally omit destination.namespace (cluster-scoped)
+    - namespace: ""
+      server: https://kubernetes.default.svc
     - namespace: umami
       server: https://kubernetes.default.svc
     - namespace: paperless
