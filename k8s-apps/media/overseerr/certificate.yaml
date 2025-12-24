@@ -1,0 +1,18 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: overseerr-tls
+  namespace: overseerr
+  labels:
+    app.kubernetes.io/name: overseerr
+    app.kubernetes.io/managed-by: argocd
+spec:
+  secretName: overseerr-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - overseerr.corp.mulliken.net
+
+

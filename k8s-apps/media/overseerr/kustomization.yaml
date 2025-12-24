@@ -1,0 +1,14 @@
+---
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: overseerr
+
+resources:
+  - namespace.yaml
+  - storage.yaml
+  - overseerr.yaml
+  - certificate.yaml
+  - ingress.yaml
+
+

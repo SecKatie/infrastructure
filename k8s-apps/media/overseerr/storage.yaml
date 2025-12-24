@@ -1,0 +1,20 @@
+---
+# Overseerr config PVC (SQLite DB lives here; keep on Longhorn, not SMB/NFS)
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: overseerr-config-pvc
+  namespace: overseerr
+  labels:
+    app.kubernetes.io/name: overseerr
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 5Gi
+
+
