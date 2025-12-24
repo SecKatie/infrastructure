@@ -31,6 +31,8 @@ spec:
         repoURL: https://github.com/SecKatie/infrastructure.git
         path: '{{.path.path}}'
         targetRevision: main
+        kustomize:
+          buildOptions: "--enable-helm"
       destination:
         server: https://kubernetes.default.svc
       syncPolicy:
