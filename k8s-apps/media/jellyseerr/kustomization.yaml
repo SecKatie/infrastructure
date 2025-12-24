@@ -10,5 +10,7 @@ resources:
   - jellyseerr.yaml
   - certificate.yaml
   - ingress.yaml
+  - sealedsecret.yaml
+  - cloudflare-tunnel.yaml
 
 

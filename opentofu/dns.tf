@@ -98,6 +98,16 @@ resource "cloudflare_dns_record" "cname_jellyfin" {
   zone_id = "d582f580d9be2bc746c9e26410228219"
 }
 
+resource "cloudflare_dns_record" "cname_jellyseerr" {
+  comment = "Jellyseerr (Cloudflare Tunnel)"
+  content = "dec97ed4-ca0a-4a28-8206-2cba39ad81e0.cfargotunnel.com"
+  name    = "jellyseerr"
+  proxied = true
+  ttl     = 1
+  type    = "CNAME"
+  zone_id = "d582f580d9be2bc746c9e26410228219"
+}
+
 resource "cloudflare_dns_record" "cname_links" {
   content = "my-link-blog.fly.dev"
   name    = "links"
