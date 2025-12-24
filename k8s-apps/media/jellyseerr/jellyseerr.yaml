@@ -2,28 +2,28 @@
 apiVersion: apps/v1
 kind: Deployment
 metadata:
-  name: overseerr
-  namespace: overseerr
+  name: jellyseerr
+  namespace: jellyseerr
   labels:
-    app.kubernetes.io/name: overseerr
-    app.kubernetes.io/instance: overseerr
+    app.kubernetes.io/name: jellyseerr
+    app.kubernetes.io/instance: jellyseerr
     app.kubernetes.io/component: requests
     app.kubernetes.io/managed-by: argocd
   annotations:
-    app.kubernetes.io/description: "Overseerr media request management"
+    app.kubernetes.io/description: "Jellyseerr media request management"
 spec:
   selector:
     matchLabels:
-      app.kubernetes.io/name: overseerr
-      app.kubernetes.io/instance: overseerr
+      app.kubernetes.io/name: jellyseerr
+      app.kubernetes.io/instance: jellyseerr
   replicas: 1
   strategy:
     type: Recreate
   template:
     metadata:
       labels:
-        app.kubernetes.io/name: overseerr
-        app.kubernetes.io/instance: overseerr
+        app.kubernetes.io/name: jellyseerr
+        app.kubernetes.io/instance: jellyseerr
         app.kubernetes.io/component: requests
         app.kubernetes.io/managed-by: argocd
     spec:
@@ -36,8 +36,8 @@ spec:
                   - key: node-role.kubernetes.io/control-plane
                     operator: DoesNotExist
       containers:
-        - name: overseerr
-          image: sctx/overseerr:latest
+        - name: jellyseerr
+          image: ghcr.io/fallenbagel/jellyseerr:latest
           env:
             - name: TZ
               value: "America/New_York"
@@ -74,20 +74,20 @@ spec:
       volumes:
         - name: config
           persistentVolumeClaim:
-            claimName: overseerr-config-pvc
+            claimName: jellyseerr-config-pvc
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: overseerr
-  namespace: overseerr
+  name: jellyseerr
+  namespace: jellyseerr
   labels:
-    app.kubernetes.io/name: overseerr
-    app.kubernetes.io/instance: overseerr
+    app.kubernetes.io/name: jellyseerr
+    app.kubernetes.io/instance: jellyseerr
     app.kubernetes.io/component: requests
     app.kubernetes.io/managed-by: argocd
   annotations:
-    app.kubernetes.io/description: "Overseerr service"
+    app.kubernetes.io/description: "Jellyseerr service"
 spec:
   type: ClusterIP
   ports:
@@ -96,7 +96,7 @@ spec:
       protocol: TCP
       name: http
   selector:
-    app.kubernetes.io/name: overseerr
-    app.kubernetes.io/instance: overseerr
+    app.kubernetes.io/name: jellyseerr
+    app.kubernetes.io/instance: jellyseerr
 
 
