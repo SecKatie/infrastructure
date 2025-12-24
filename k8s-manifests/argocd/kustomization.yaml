@@ -17,4 +17,8 @@ resources:
   # Standalone Applications (external repos, one-offs)
   - applications/personal-site.yaml
 
+  # Notifications (sync failure alerts via ntfy)
+  - notifications/configmap.yaml
+  - notifications/sealedsecret.yaml
+
 
