@@ -1,0 +1,12 @@
+---
+# Longhorn v1.8.0+ uses ConfigMap for backup target configuration
+# This patches the existing longhorn-default-resource ConfigMap
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: longhorn-default-resource
+  namespace: longhorn-system
+data:
+  default-resource.yaml: |
+    backup-target: "nfs://172.16.10.248:/volume2/longhorn-backup"
+    backupstore-poll-interval: "300"
