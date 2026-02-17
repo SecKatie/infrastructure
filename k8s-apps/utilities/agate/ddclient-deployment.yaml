@@ -10,7 +10,7 @@ metadata:
     app.kubernetes.io/component: dns-updater
     app.kubernetes.io/managed-by: argocd
 spec:
-  replicas: 1
+  replicas: 0
   selector:
     matchLabels:
       app.kubernetes.io/name: ddclient

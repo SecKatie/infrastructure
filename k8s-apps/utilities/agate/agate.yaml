@@ -16,7 +16,7 @@ spec:
     matchLabels:
       app.kubernetes.io/name: agate
       app.kubernetes.io/instance: agate
-  replicas: 1
+  replicas: 0
   strategy:
     type: Recreate
   template:

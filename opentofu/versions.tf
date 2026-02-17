@@ -6,6 +6,10 @@ terraform {
       source  = "cloudflare/cloudflare"
       version = "~> 5"
     }
+    dnsimple = {
+      source  = "dnsimple/dnsimple"
+      version = "~> 2.0"
+    }
   }
 }
 
