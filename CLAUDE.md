@@ -54,3 +54,9 @@ Services exposed externally use Cloudflare Tunnels:
 ### Secrets Management
 
 All secrets use Bitnami Sealed Secrets. Never commit plaintext secrets.
+
+## Active Technologies
+- Shell (POSIX sh for CronJob script), HCL (OpenTofu) + Traefik (ingress controller), cert-manager (001-dyndns-ingress-migration)
+
+## Recent Changes
+- 001-dyndns-ingress-migration: Added Shell (POSIX sh for CronJob script), HCL (OpenTofu) + Traefik (ingress controller), cert-manager

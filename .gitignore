@@ -72,3 +72,4 @@ roles/*/files/secrets.yml
 .opencode/
 AGENTS.md
 GEMINI.md
+.specify/
