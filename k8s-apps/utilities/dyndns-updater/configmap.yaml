@@ -1,0 +1,116 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: dyndns-updater-script
+  namespace: dyndns-updater
+  labels:
+    app.kubernetes.io/name: dyndns-updater
+    app.kubernetes.io/managed-by: argocd
+data:
+  update.sh: |
+    #!/bin/sh
+    set -eu
+
+    API_BASE="https://api.dnsimple.com/v2"
+    NOTIFY_URL="https://ntfy.sh/mulliken"
+    FAILED=0
+
+    notify_failure() {
+      local msg="$1"
+      echo "ERROR: ${msg}" >&2
+      curl -sf \
+        -H "Title: DynDNS Update Failed" \
+        -H "Priority: high" \
+        -H "Tags: warning" \
+        -d "${msg}" \
+        "${NOTIFY_URL}" || true
+      FAILED=1
+    }
+
+    # Detect public IP
+    PUBLIC_IP=""
+    PUBLIC_IP=$(curl -sf --max-time 5 https://ifconfig.me) || true
+    if [ -z "${PUBLIC_IP}" ]; then
+      PUBLIC_IP=$(curl -sf --max-time 5 https://icanhazip.com) || true
+    fi
+    if [ -z "${PUBLIC_IP}" ]; then
+      notify_failure "Failed to detect public IP from ifconfig.me and icanhazip.com"
+      exit 1
+    fi
+    echo "Detected public IP: ${PUBLIC_IP}"
+
+    update_record() {
+      local record_id="$1"
+      local record_name="$2"
+
+      # GET current record value
+      local response
+      local http_code
+      response=$(curl -sf \
+        -w "\n%{http_code}" \
+        -H "Authorization: Bearer ${DNSIMPLE_TOKEN}" \
+        -H "Accept: application/json" \
+        "${API_BASE}/${DNSIMPLE_ACCOUNT_ID}/zones/${DNSIMPLE_ZONE}/records/${record_id}") || {
+        notify_failure "Failed to GET ${record_name} record (record_id=${record_id}) from DNSimple"
+        return
+      }
+
+      http_code=$(echo "${response}" | tail -n1)
+      local body
+      body=$(echo "${response}" | head -n-1)
+
+      if [ "${http_code}" = "401" ]; then
+        notify_failure "DNSimple authentication failed (401) for ${record_name} record — check DNSIMPLE_TOKEN"
+        return
+      elif [ "${http_code}" = "404" ]; then
+        notify_failure "DNSimple record not found (404) for ${record_name} (record_id=${record_id})"
+        return
+      elif [ "${http_code}" != "200" ]; then
+        echo "WARN: DNSimple returned ${http_code} for ${record_name} — will retry next cycle"
+        return
+      fi
+
+      local current_ip
+      current_ip=$(echo "${body}" | grep -o '"content":"[^"]*"' | head -1 | cut -d'"' -f4)
+
+      if [ "${current_ip}" = "${PUBLIC_IP}" ]; then
+        echo "${record_name}: already up to date (${PUBLIC_IP})"
+        return
+      fi
+
+      echo "${record_name}: updating ${current_ip} -> ${PUBLIC_IP}"
+
+      local patch_code
+      patch_code=$(curl -sf \
+        -o /dev/null \
+        -w "%{http_code}" \
+        -X PATCH \
+        -H "Authorization: Bearer ${DNSIMPLE_TOKEN}" \
+        -H "Accept: application/json" \
+        -H "Content-Type: application/json" \
+        -d "{\"content\":\"${PUBLIC_IP}\"}" \
+        "${API_BASE}/${DNSIMPLE_ACCOUNT_ID}/zones/${DNSIMPLE_ZONE}/records/${record_id}") || {
+        notify_failure "Failed to PATCH ${record_name} record (record_id=${record_id}) in DNSimple"
+        return
+      }
+
+      if [ "${patch_code}" = "401" ]; then
+        notify_failure "DNSimple authentication failed (401) while updating ${record_name} — check DNSIMPLE_TOKEN"
+      elif [ "${patch_code}" = "429" ]; then
+        echo "WARN: DNSimple rate limited (429) for ${record_name} — will retry next cycle"
+      elif [ "${patch_code}" != "200" ]; then
+        notify_failure "DNSimple PATCH returned unexpected status ${patch_code} for ${record_name}"
+      else
+        echo "${record_name}: updated successfully to ${PUBLIC_IP}"
+      fi
+    }
+
+    update_record "${WILDCARD_RECORD_ID}" "wildcard (*)"
+    update_record "${APEX_RECORD_ID}" "apex (@)"
+
+    if [ "${FAILED}" -ne 0 ]; then
+      exit 1
+    fi
+
+    echo "Done."

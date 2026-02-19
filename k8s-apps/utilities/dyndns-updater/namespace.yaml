@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: dyndns-updater
+  labels:
+    app.kubernetes.io/name: dyndns-updater
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/managed-by: argocd
