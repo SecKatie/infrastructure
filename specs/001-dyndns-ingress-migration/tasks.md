@@ -36,9 +36,9 @@ changed and DNS propagation is confirmed.
 - [x] T004 Remove Cloudflare provider from opentofu/versions.tf (delete the `cloudflare` entry from `required_providers`). Remove Cloudflare provider block from opentofu/provider.tf.
 - [x] T005 Run `just tf-fmt` to format all OpenTofu files in opentofu/
 - [x] T006 Run `just tf-validate` and `just tf-plan` to preview changes. Verify plan shows only DNSimple resources and no Cloudflare resources.
-- [ ] T007 Run `just tf-apply` to create all DNSimple DNS records.
-- [ ] T008 Change nameservers for mulliken.net at the domain registrar from Cloudflare to DNSimple. This is a manual step. Document the nameserver values in a commit message.
-- [ ] T009 Validate DNS propagation: verify `dig mulliken.net` and `dig anything.mulliken.net` return the expected IP. Verify `dig MX mulliken.net` returns mail.tutanota.de. Verify external CNAMEs resolve correctly.
+- [x] T007 Run `just tf-apply` to create all DNSimple DNS records.
+- [x] T008 Change nameservers for mulliken.net at the domain registrar from Cloudflare to DNSimple. This is a manual step. Document the nameserver values in a commit message.
+- [x] T009 Validate DNS propagation: verify `dig mulliken.net` and `dig anything.mulliken.net` return the expected IP. Verify `dig MX mulliken.net` returns mail.tutanota.de. Verify external CNAMEs resolve correctly.
 
 **Checkpoint**: DNS fully managed by DNSimple. All records resolve. Email works.
 
@@ -85,7 +85,7 @@ for all 5 services.
 - [x] T020 [P] [US2] Create public-certificate.yaml and public-ingress.yaml for Paperless in k8s-apps/utilities/paperless/. Certificate for `paperless.mulliken.net`, ingress routing to service `paperless` port 8000. Update k8s-apps/utilities/paperless/kustomization.yaml to add both new files.
 - [x] T021 [US2] Create personal-site manifests in k8s-apps/utilities/personal-site/. Create: namespace.yaml (namespace `personal-site`), deployment.yaml (image `quay.io/kmulliken/personal-site` pinned by digest `sha256:8512e1451392ddf57adde2e20c808df2938fb15685172135502647f4ecf6346a`, port 80 named `http`, resources 10m/32Mi req 100m/64Mi limit, liveness `/health` 30s, readiness `/health` 10s, prefer non-control-plane), service.yaml (ClusterIP port 80 targetPort `http`), certificate.yaml (name `personal-site-tls`, dnsName `mulliken.net`, issuerRef `letsencrypt-prod`), ingress.yaml (host `mulliken.net`, ingressClassName `traefik`, websecure entrypoint, TLS secret `personal-site-tls`, backend `personal-site` port 80), kustomization.yaml listing all resources with `namespace: personal-site`.
 - [x] T022 [US2] Update ArgoCD application in k8s-manifests/argocd/applications/personal-site.yaml: change source repoURL to the infrastructure repo URL, change source path to `k8s-apps/utilities/personal-site`, keep all other settings (project, destination, syncPolicy).
-- [ ] T023 [US2] Validate public access per quickstart.md: `curl -sI https://jellyfin.mulliken.net`, `curl -sI https://jellyseerr.mulliken.net`, `curl -sI https://umami.mulliken.net`, `curl -sI https://paperless.mulliken.net`, `curl -sI https://mulliken.net`. Verify all return valid TLS certificates via `openssl s_client`. Run from outside the local network.
+- [x] T023 [US2] Validate public access per quickstart.md: `curl -sI https://jellyfin.mulliken.net`, `curl -sI https://jellyseerr.mulliken.net`, `curl -sI https://umami.mulliken.net`, `curl -sI https://paperless.mulliken.net`, `curl -sI https://mulliken.net`. Verify all return valid TLS certificates via `openssl s_client`. Run from outside the local network.
 
 **Checkpoint**: All 5 services accessible via public URLs with valid TLS.
 
@@ -106,7 +106,7 @@ cloudflared` returns nothing. All public services still accessible.
 - [x] T026 [P] [US3] Delete k8s-apps/utilities/umami/cloudflare-tunnel.yaml. Remove from k8s-apps/utilities/umami/kustomization.yaml. Remove tunnel-credentials SealedSecret.
 - [x] T027 [P] [US3] Delete k8s-apps/utilities/paperless/tunnel/ directory (configmap.yaml and deployment.yaml). Remove tunnel kustomization reference from k8s-apps/utilities/paperless/kustomization.yaml. Remove tunnel-credentials SealedSecret.
 - [x] T028 [US3] Remove cloudflared deployment from personal-site namespace. Since personal-site manifests are now in k8s-apps/utilities/personal-site/ (created in T021), ensure no cloudflared resources are included. ArgoCD prune will remove the orphaned cloudflared deployment automatically.
-- [ ] T029 [US3] Validate: `kubectl get pods --all-namespaces | grep cloudflared` returns nothing. `kubectl get configmaps --all-namespaces | grep cloudflared` returns nothing. `kubectl get secrets --all-namespaces | grep tunnel-credentials` returns nothing. All 5 public services remain accessible.
+- [x] T029 [US3] Validate: `kubectl get pods --all-namespaces | grep cloudflared` returns nothing. `kubectl get configmaps --all-namespaces | grep cloudflared` returns nothing. `kubectl get secrets --all-namespaces | grep tunnel-credentials` returns nothing. All 5 public services remain accessible.
 
 **Checkpoint**: Zero Cloudflare tunnel infrastructure in the cluster.
 
@@ -122,9 +122,9 @@ works. All external CNAMEs resolve.
 
 ### Implementation for User Story 4
 
-- [ ] T030 [US4] Run `just tf-plan` to verify no Cloudflare resources remain and state is clean. If any drift detected (e.g., from DynDNS updater changing A record values), verify it's expected and that lifecycle ignore_changes is working.
-- [ ] T031 [US4] Validate email by checking DNS records: `dig MX mulliken.net`, `dig TXT mulliken.net` (SPF), `dig TXT _dmarc.mulliken.net` (DMARC), `dig CNAME fm1._domainkey.mulliken.net` (DKIM). Optionally send a test email to verify delivery.
-- [ ] T032 [US4] Validate external services: `dig CNAME home.mulliken.net` (Nabu Casa), `dig CNAME links.mulliken.net` (Fly.dev), `dig CNAME tools.mulliken.net` (GitHub Pages). Verify each URL loads correctly.
+- [x] T030 [US4] Run `just tf-plan` to verify no Cloudflare resources remain and state is clean. If any drift detected (e.g., from DynDNS updater changing A record values), verify it's expected and that lifecycle ignore_changes is working. Applied TTL corrections (3 records TTL 1→3600). Plan now shows no changes.
+- [x] T031 [US4] Validate email by checking DNS records: `dig MX mulliken.net`, `dig TXT mulliken.net` (SPF), `dig TXT _dmarc.mulliken.net` (DMARC), `dig CNAME fm1._domainkey.mulliken.net` (DKIM). Optionally send a test email to verify delivery.
+- [x] T032 [US4] Validate external services: `dig CNAME home.mulliken.net` (Nabu Casa), `dig CNAME links.mulliken.net` (Fly.dev), `dig CNAME tools.mulliken.net` (GitHub Pages). Verify each URL loads correctly.
 
 **Checkpoint**: DNS fully migrated. Email works. All services operational.
 
@@ -134,9 +134,9 @@ works. All external CNAMEs resolve.
 
 **Purpose**: Documentation updates and final validation
 
-- [ ] T033 Update CLAUDE.md: replace "External Access" section describing Cloudflare Tunnels with the new architecture (DynDNS + Ingress). Update the Architecture section if needed. Remove any references to cloudflared or Cloudflare Tunnels.
-- [ ] T034 Run full validation per quickstart.md: DynDNS updater check, all 5 public services, zero cloudflared pods, clean tf-plan, email DNS, internal .corp.mulliken.net access unchanged.
-- [ ] T035 Run `kustomize build` on all modified app directories to verify manifests are valid: k8s-apps/media/jellyfin, k8s-apps/media/jellyseerr, k8s-apps/utilities/umami, k8s-apps/utilities/paperless, k8s-apps/utilities/dyndns-updater, k8s-apps/utilities/personal-site.
+- [x] T033 Update CLAUDE.md: replace "External Access" section describing Cloudflare Tunnels with the new architecture (DynDNS + Ingress). Update the Architecture section if needed. Remove any references to cloudflared or Cloudflare Tunnels.
+- [x] T034 Run full validation per quickstart.md: DynDNS updater check, all 5 public services, zero cloudflared pods, clean tf-plan, email DNS, internal .corp.mulliken.net access unchanged. Also deleted 5 stale Cloudflare tunnel CNAME records from DNSimple zone (jellyfin, jellyseerr, umami, paperless, owntracks) that were overriding the wildcard A record.
+- [x] T035 Run `kustomize build` on all modified app directories to verify manifests are valid: k8s-apps/media/jellyfin, k8s-apps/media/jellyseerr, k8s-apps/utilities/umami, k8s-apps/utilities/paperless, k8s-apps/utilities/dyndns-updater, k8s-apps/utilities/personal-site.
 
 ---
 
