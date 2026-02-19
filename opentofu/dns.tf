@@ -1,301 +1,304 @@
-resource "cloudflare_zone" "mulliken_net" {
-  account = {
-    id = "751a9e04a3fd32e066040d6bf45d1d47"
+locals {
+  zone = "mulliken.net"
+}
+
+# =============================================================================
+# Dynamic A Records (managed by DynDNS updater CronJob)
+# =============================================================================
+
+resource "dnsimple_zone_record" "a_wildcard" {
+  zone_name = local.zone
+  name      = "*"
+  value     = "136.57.83.9"
+  type      = "A"
+  ttl       = 300
+
+  lifecycle {
+    ignore_changes = [value]
   }
-  name = "mulliken.net"
-  type = "full"
 }
 
-resource "cloudflare_dns_record" "a_gemini" {
-  content = "136.57.83.9"
-  name    = "gemini"
-  proxied = false
-  ttl     = 1
-  type    = "A"
-  zone_id = cloudflare_zone.mulliken_net.id
+resource "dnsimple_zone_record" "a_apex" {
+  zone_name = local.zone
+  name      = ""
+  value     = "136.57.83.9"
+  type      = "A"
+  ttl       = 300
+
+  lifecycle {
+    ignore_changes = [value]
+  }
 }
 
-resource "cloudflare_dns_record" "a_proxy" {
-  content = "136.57.83.9"
-  name    = "proxy"
-  proxied = false
-  ttl     = 1
-  type    = "A"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+# =============================================================================
+# Static A Records
+# =============================================================================
+
+resource "dnsimple_zone_record" "a_gemini" {
+  zone_name = local.zone
+  name      = "gemini"
+  value     = "136.57.83.9"
+  type      = "A"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "a_status" {
-  content = "66.63.163.116"
-  name    = "status"
-  proxied = true
-  ttl     = 1
-  type    = "A"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "a_proxy" {
+  zone_name = local.zone
+  name      = "proxy"
+  value     = "136.57.83.9"
+  type      = "A"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_acme_challenge_home" {
-  comment = "Home Assistant Web (Nabu Casa)"
-  content = "_acme-challenge.65b1ny6hduhu0gpsrxp5c29gjnpa2305.ui.nabu.casa"
-  name    = "_acme-challenge.home"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "a_status" {
+  zone_name = local.zone
+  name      = "status"
+  value     = "66.63.163.116"
+  type      = "A"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_acme_challenge_links" {
-  content = "links.mulliken.net.np10w0.flydns.net"
-  name    = "_acme-challenge.links"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+# =============================================================================
+# MX Records — Mailbox.org
+# =============================================================================
+
+resource "dnsimple_zone_record" "mx_mailbox_mxext1" {
+  zone_name = local.zone
+  name      = ""
+  value     = "mxext1.mailbox.org"
+  type      = "MX"
+  ttl       = 3600
+  priority  = 10
 }
 
-resource "cloudflare_dns_record" "cname_dkim_fm1" {
-  content = "fm1.mulliken.net.dkim.fmhosted.com"
-  name    = "fm1._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "mx_mailbox_mxext2" {
+  zone_name = local.zone
+  name      = ""
+  value     = "mxext2.mailbox.org"
+  type      = "MX"
+  ttl       = 3600
+  priority  = 10
 }
 
-resource "cloudflare_dns_record" "cname_dkim_fm2" {
-  content = "fm2.mulliken.net.dkim.fmhosted.com"
-  name    = "fm2._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "mx_mailbox_mxext3" {
+  zone_name = local.zone
+  name      = ""
+  value     = "mxext3.mailbox.org"
+  type      = "MX"
+  ttl       = 3600
+  priority  = 20
 }
 
-resource "cloudflare_dns_record" "cname_dkim_fm3" {
-  content = "fm3.mulliken.net.dkim.fmhosted.com"
-  name    = "fm3._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+# =============================================================================
+# TXT Records
+# =============================================================================
+
+resource "dnsimple_zone_record" "txt_spf" {
+  zone_name = local.zone
+  name      = ""
+  value     = "v=spf1 include:mailbox.org ~all"
+  type      = "TXT"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_home" {
-  comment = "Home Assistant Web (Nabu Casa)"
-  content = "65b1ny6hduhu0gpsrxp5c29gjnpa2305.ui.nabu.casa"
-  name    = "home"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "txt_dmarc" {
+  zone_name = local.zone
+  name      = "_dmarc"
+  value     = "v=DMARC1; p=none; rua=mailto:postmaster@mulliken.net"
+  type      = "TXT"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_jellyfin" {
-  content = "6c709ddf-a098-47a2-9995-d05c512b486d.cfargotunnel.com"
-  name    = "jellyfin"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "txt_keyoxide" {
+  zone_name = local.zone
+  name      = ""
+  value     = "aspe:keyoxide.org:ZBLFRTNC4BO7DN674KOCI62DNU"
+  type      = "TXT"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_jellyseerr" {
-  comment = "Jellyseerr (Cloudflare Tunnel)"
-  content = "dec97ed4-ca0a-4a28-8206-2cba39ad81e0.cfargotunnel.com"
-  name    = "jellyseerr"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "txt_protonmail_verify" {
+  zone_name = local.zone
+  name      = ""
+  value     = "protonmail-verification=6291766c6f5111eb61ab8a1568be003b452a62e9"
+  type      = "TXT"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_links" {
-  content = "my-link-blog.fly.dev"
-  name    = "links"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "txt_dkim_krs" {
+  zone_name = local.zone
+  name      = "krs._domainkey"
+  value     = "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCzLd1TVdWvQIKqQcalekWGBq7AYwS1E9T/PTW2RxDRMO6D35EQVymrLNbiL03Ny8zM8BFSZB4K595XnI/hc0psTGsetjq3mUzP5ikSg7wZTSr/CxGcRL1W/dFDOoLTjGms2k7tDxlJDja2TfaW4uH9wVvhvS53gPgVJWpw3t8w6wIDAQAB"
+  type      = "TXT"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_mta_sts_underscore" {
-  content = "mta-sts.tutanota.de"
-  name    = "_mta-sts"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+# =============================================================================
+# CNAME Records — Email DKIM (Mailbox.org)
+# =============================================================================
+
+resource "dnsimple_zone_record" "cname_dkim_mbo0001" {
+  zone_name = local.zone
+  name      = "mbo0001._domainkey"
+  value     = "mbo0001._domainkey.mailbox.org"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_mta_sts" {
-  content = "mta-sts.tutanota.de"
-  name    = "mta-sts"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_mbo0002" {
+  zone_name = local.zone
+  name      = "mbo0002._domainkey"
+  value     = "mbo0002._domainkey.mailbox.org"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_apex" {
-  content = "00450a34-9cc0-4c4d-9e6b-a4578c66acd0.cfargotunnel.com"
-  name    = "mulliken.net"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_mbo0003" {
+  zone_name = local.zone
+  name      = "mbo0003._domainkey"
+  value     = "mbo0003._domainkey.mailbox.org"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_openpgpkey" {
-  content = "wkd.keys.openpgp.org"
-  name    = "openpgpkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_mbo0004" {
+  zone_name = local.zone
+  name      = "mbo0004._domainkey"
+  value     = "mbo0004._domainkey.mailbox.org"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_owntracks" {
-  content = "2830b5f4-6830-41ee-9ed5-450a1ebec991.cfargotunnel.com"
-  name    = "owntracks"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+# =============================================================================
+# CNAME Records — Email DKIM (Fastmail / Protonmail — legacy, from Cloudflare)
+# =============================================================================
+
+resource "dnsimple_zone_record" "cname_dkim_fm1" {
+  zone_name = local.zone
+  name      = "fm1._domainkey"
+  value     = "fm1.mulliken.net.dkim.fmhosted.com"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_paperless" {
-  content = "7b0a2b09-96f0-412e-b222-c28f715356e1.cfargotunnel.com"
-  name    = "paperless"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_fm2" {
+  zone_name = local.zone
+  name      = "fm2._domainkey"
+  value     = "fm2.mulliken.net.dkim.fmhosted.com"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_dkim_protonmail2" {
-  content = "protonmail2.domainkey.doqdlbrh5lwhunlleppnwksz6tomqano3as6iyomxrvdcjqi5qprq.domains.proton.ch"
-  name    = "protonmail2._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_fm3" {
+  zone_name = local.zone
+  name      = "fm3._domainkey"
+  value     = "fm3.mulliken.net.dkim.fmhosted.com"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_dkim_protonmail3" {
-  content = "protonmail3.domainkey.doqdlbrh5lwhunlleppnwksz6tomqano3as6iyomxrvdcjqi5qprq.domains.proton.ch"
-  name    = "protonmail3._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_protonmail" {
+  zone_name = local.zone
+  name      = "protonmail._domainkey"
+  value     = "protonmail.domainkey.doqdlbrh5lwhunlleppnwksz6tomqano3as6iyomxrvdcjqi5qprq.domains.proton.ch"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_dkim_protonmail" {
-  content = "protonmail.domainkey.doqdlbrh5lwhunlleppnwksz6tomqano3as6iyomxrvdcjqi5qprq.domains.proton.ch"
-  name    = "protonmail._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_protonmail2" {
+  zone_name = local.zone
+  name      = "protonmail2._domainkey"
+  value     = "protonmail2.domainkey.doqdlbrh5lwhunlleppnwksz6tomqano3as6iyomxrvdcjqi5qprq.domains.proton.ch"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_dkim_s1" {
-  content = "s1.domainkey.tutanota.de"
-  name    = "s1._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_dkim_protonmail3" {
+  zone_name = local.zone
+  name      = "protonmail3._domainkey"
+  value     = "protonmail3.domainkey.doqdlbrh5lwhunlleppnwksz6tomqano3as6iyomxrvdcjqi5qprq.domains.proton.ch"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_dkim_s2" {
-  content = "s2.domainkey.tutanota.de"
-  name    = "s2._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+# =============================================================================
+# CNAME Records — External Services
+# =============================================================================
+
+resource "dnsimple_zone_record" "cname_autoconfig" {
+  zone_name = local.zone
+  name      = "autoconfig"
+  value     = "autoconfig.mailbox.org"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_tools" {
-  content = "seckatie.github.io"
-  name    = "tools"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_home" {
+  zone_name = local.zone
+  name      = "home"
+  value     = "65b1ny6hduhu0gpsrxp5c29gjnpa2305.ui.nabu.casa"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "cname_umami" {
-  content = "8a278e71-2282-4dd4-8f9c-10afd38740d8.cfargotunnel.com"
-  name    = "umami"
-  proxied = true
-  ttl     = 1
-  type    = "CNAME"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_acme_challenge_home" {
+  zone_name = local.zone
+  name      = "_acme-challenge.home"
+  value     = "_acme-challenge.65b1ny6hduhu0gpsrxp5c29gjnpa2305.ui.nabu.casa"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "mx_apex" {
-  content  = "mail.tutanota.de"
-  name     = "mulliken.net"
-  priority = 10
-  proxied  = false
-  ttl      = 1
-  type     = "MX"
-  zone_id  = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_links" {
+  zone_name = local.zone
+  name      = "links"
+  value     = "my-link-blog.fly.dev"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "txt_dmarc" {
-  content = "\"v=DMARC1; p=quarantine; adkim=s\""
-  name    = "_dmarc"
-  proxied = false
-  ttl     = 1
-  type    = "TXT"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_acme_challenge_links" {
+  zone_name = local.zone
+  name      = "_acme-challenge.links"
+  value     = "links.mulliken.net.np10w0.flydns.net"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "txt_dkim_krs" {
-  content = "k=rsa; p=MIGfMA0GCSqGSIb3DQEBAQUAA4GNADCBiQKBgQCzLd1TVdWvQIKqQcalekWGBq7AYwS1E9T/PTW2RxDRMO6D35EQVymrLNbiL03Ny8zM8BFSZB4K595XnI/hc0psTGsetjq3mUzP5ikSg7wZTSr/CxGcRL1W/dFDOoLTjGms2k7tDxlJDja2TfaW4uH9wVvhvS53gPgVJWpw3t8w6wIDAQAB"
-  name    = "krs._domainkey"
-  proxied = false
-  ttl     = 1
-  type    = "TXT"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_tools" {
+  zone_name = local.zone
+  name      = "tools"
+  value     = "seckatie.github.io"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "txt_spf" {
-  content = "\"v=spf1 include:spf.tutanota.de -all\""
-  name    = "mulliken.net"
-  proxied = false
-  ttl     = 1
-  type    = "TXT"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "cname_openpgpkey" {
+  zone_name = local.zone
+  name      = "openpgpkey"
+  value     = "wkd.keys.openpgp.org"
+  type      = "CNAME"
+  ttl       = 3600
 }
 
-resource "cloudflare_dns_record" "txt_tutanota_verify" {
-  comment = "Tutanota"
-  content = "\"t-verify=7a47f8578a6896d111a38bb4a38a33d9\""
-  name    = "mulliken.net"
-  proxied = false
-  ttl     = 1
-  type    = "TXT"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+# =============================================================================
+# SRV Records — Mailbox.org autodiscovery
+# =============================================================================
+
+resource "dnsimple_zone_record" "srv_autodiscover" {
+  zone_name = local.zone
+  name      = "_autodiscover._tcp"
+  value     = "0 443 auto.mailbox.org."
+  type      = "SRV"
+  ttl       = 3600
+  priority  = 0
 }
 
-resource "cloudflare_dns_record" "txt_keyoxide" {
-  content = "aspe:keyoxide.org:ZBLFRTNC4BO7DN674KOCI62DNU"
-  name    = "mulliken.net"
-  proxied = false
-  ttl     = 1
-  type    = "TXT"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
+resource "dnsimple_zone_record" "srv_hkps" {
+  zone_name = local.zone
+  name      = "_hkps._tcp"
+  value     = "1 443 pgp.mailbox.org."
+  type      = "SRV"
+  ttl       = 3600
+  priority  = 1
 }
-
-resource "cloudflare_dns_record" "txt_protonmail_verify" {
-  content = "protonmail-verification=6291766c6f5111eb61ab8a1568be003b452a62e9"
-  name    = "mulliken.net"
-  proxied = false
-  ttl     = 1
-  type    = "TXT"
-  zone_id = "d582f580d9be2bc746c9e26410228219"
-}
-

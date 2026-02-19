@@ -25,7 +25,7 @@ tf-plan:
 
 # Apply infrastructure changes
 tf-apply:
-    cd opentofu && tofu apply
+    cd opentofu && tofu apply -auto-approve
 
 # Show current infrastructure state
 tf-show:
