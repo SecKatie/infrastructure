@@ -10,4 +10,5 @@ resources:
   - postgres
   - redis
   - app
-  - tunnel
+  - public-certificate.yaml
+  - public-ingress.yaml

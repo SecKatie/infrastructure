@@ -2,15 +2,11 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 
-namespace: jellyseerr
+namespace: personal-site
 
 resources:
   - namespace.yaml
-  - storage.yaml
-  - jellyseerr.yaml
+  - deployment.yaml
+  - service.yaml
   - certificate.yaml
   - ingress.yaml
-  - public-certificate.yaml
-  - public-ingress.yaml
-
-

@@ -8,5 +8,5 @@ resources:
   - namespace.yaml
   - postgresql.yaml
   - umami.yaml
-  - cloudflare-tunnel.yaml
-  - sealedsecret.yaml
+  - public-certificate.yaml
+  - public-ingress.yaml

@@ -1,0 +1,17 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: personal-site-tls
+  namespace: personal-site
+  labels:
+    app.kubernetes.io/name: personal-site
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/managed-by: argocd
+spec:
+  secretName: personal-site-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - mulliken.net

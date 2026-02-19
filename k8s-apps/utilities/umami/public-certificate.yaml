@@ -1,0 +1,16 @@
+---
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: umami-public-tls
+  namespace: umami
+  labels:
+    app.kubernetes.io/name: umami
+    app.kubernetes.io/managed-by: argocd
+spec:
+  secretName: umami-public-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - umami.mulliken.net

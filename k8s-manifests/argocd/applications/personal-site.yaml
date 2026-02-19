@@ -1,4 +1,3 @@
-# External Application: personal-site (from separate repo)
 apiVersion: argoproj.io/v1alpha1
 kind: Application
 metadata:
@@ -7,14 +6,14 @@ metadata:
   labels:
     app.kubernetes.io/name: personal-site
     app.kubernetes.io/part-of: utilities
-    app.kubernetes.io/managed-by: manual
+    app.kubernetes.io/managed-by: argocd
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
   project: utilities
   source:
-    repoURL: https://github.com/SecKatie/personal-site.git
-    path: k8s
+    repoURL: https://github.com/SecKatie/infrastructure.git
+    path: k8s-apps/utilities/personal-site
     targetRevision: main
   destination:
     server: https://kubernetes.default.svc
