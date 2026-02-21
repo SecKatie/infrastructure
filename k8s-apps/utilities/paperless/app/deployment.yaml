@@ -110,6 +110,25 @@ spec:
           value: "/usr/src/paperless/consume"
         - name: PAPERLESS_EXPORT_DIR
           value: "/usr/src/paperless/export"
+        # OIDC / Pocket-ID authentication
+        - name: PAPERLESS_APPS
+          value: "allauth.socialaccount.providers.openid_connect"
+        - name: PAPERLESS_SOCIALACCOUNT_ALLOW_SIGNUPS
+          value: "true"
+        - name: PAPERLESS_SOCIAL_AUTO_SIGNUP
+          value: "true"
+        - name: POCKET_ID_CLIENT_ID
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: pocket-id-client-id
+        - name: POCKET_ID_CLIENT_SECRET
+          valueFrom:
+            secretKeyRef:
+              name: paperless-secrets
+              key: pocket-id-client-secret
+        - name: PAPERLESS_SOCIALACCOUNT_PROVIDERS
+          value: '{"openid_connect":{"SCOPE":["openid","profile","email"],"OAUTH_PKCE_ENABLED":true,"APPS":[{"provider_id":"pocket-id","name":"Pocket ID","client_id":"$(POCKET_ID_CLIENT_ID)","secret":"$(POCKET_ID_CLIENT_SECRET)","settings":{"server_url":"https://auth.mulliken.net"}}]}}'
         resources:
           requests:
             cpu: 200m
