@@ -60,6 +60,20 @@ Internal services: accessible via *.corp.mulliken.net (unchanged)
 
 All secrets use Bitnami Sealed Secrets. Never commit plaintext secrets.
 
+When adding keys to an existing sealed secret, pipe `kubectl get secret` JSON through `jq` directly to `kubeseal` — do NOT use `kubectl apply --dry-run=client` in the pipeline as it strips newly-added keys:
+
+```bash
+kubectl get secret <name> -n <ns> -o json | \
+  jq '.data["new-key"] = "'$(echo -n "VALUE" | base64)'"' | \
+  kubeseal --format yaml \
+  --controller-name sealed-secrets \
+  --controller-namespace kube-system > path/to/sealedsecret.yaml
+```
+
+### OIDC/SSO via Pocket-ID
+
+Apps can authenticate against the Pocket-ID instance at `auth.mulliken.net`. Paperless-ngx uses django-allauth's `openid_connect` provider, configured via env vars in the deployment. Secret values (client ID/secret) are injected into the `PAPERLESS_SOCIALACCOUNT_PROVIDERS` JSON string using Kubernetes `$(ENV_VAR)` interpolation — the secret refs must be defined as env vars earlier in the list so they resolve at container startup.
+
 ## Active Technologies
 - HCL (OpenTofu) — DNSimple DNS management
 - Shell (POSIX sh) — DynDNS updater CronJob script
