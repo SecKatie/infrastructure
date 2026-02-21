@@ -114,8 +114,8 @@ client, and confirm the discovery endpoint returns valid metadata.
 > **PAUSE**: This phase is post-deployment manual validation. It requires
 > the manifests to be committed to main and ArgoCD to complete sync.
 
-- [ ] T017 [US3] Verify health endpoint responds at https://auth.mulliken.net/health
-- [ ] T018 [US3] Verify OIDC discovery endpoint returns valid metadata at https://auth.mulliken.net/.well-known/openid-configuration
+- [x] T017 [US3] Verify health endpoint responds at https://auth.mulliken.net/health
+- [x] T018 [US3] Verify OIDC discovery endpoint returns valid metadata at https://auth.mulliken.net/.well-known/openid-configuration
 - [ ] T019 [US3] Complete initial admin account setup and register a test OIDC client via https://auth.mulliken.net
 
 **Checkpoint**: Pocket-ID is fully operational. OIDC clients can be registered for service integration.
