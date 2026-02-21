@@ -1,0 +1,9 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: archivebox
+  labels:
+    app.kubernetes.io/name: archivebox
+    app.kubernetes.io/part-of: archiving
+    app.kubernetes.io/managed-by: argocd
