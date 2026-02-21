@@ -1,0 +1,16 @@
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+
+namespace: pocket-id
+
+resources:
+  - namespace.yaml
+  - configmap.yaml
+  - storage.yaml
+  - sealedsecret.yaml
+  - deployment.yaml
+  - service.yaml
+  - certificate.yaml
+  - ingress.yaml
+  - public-certificate.yaml
+  - public-ingress.yaml

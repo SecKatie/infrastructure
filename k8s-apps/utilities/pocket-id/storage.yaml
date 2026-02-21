@@ -1,0 +1,17 @@
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: pocket-id-data
+  namespace: pocket-id
+  labels:
+    app.kubernetes.io/name: pocket-id
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/component: storage
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 2Gi

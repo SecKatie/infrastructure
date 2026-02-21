@@ -65,3 +65,8 @@ All secrets use Bitnami Sealed Secrets. Never commit plaintext secrets.
 - Shell (POSIX sh) — DynDNS updater CronJob script
 - Traefik — Ingress controller for external and internal routing
 - cert-manager + DNSimple webhook — Automated TLS certificate management via DNS-01
+- YAML (Kubernetes manifests), Kustomize + Pocket-ID v2.2.0 (`ghcr.io/pocket-id/pocket-id:v2.2.0`) (002-install-pocket-id)
+- SQLite (embedded in Pocket-ID), persisted on Longhorn PVC (2Gi) (002-install-pocket-id)
+
+## Recent Changes
+- 002-install-pocket-id: Added YAML (Kubernetes manifests), Kustomize + Pocket-ID v2.2.0 (`ghcr.io/pocket-id/pocket-id:v2.2.0`)

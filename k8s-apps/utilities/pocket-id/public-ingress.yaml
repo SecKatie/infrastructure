@@ -1,0 +1,28 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: pocket-id-public
+  namespace: pocket-id
+  labels:
+    app.kubernetes.io/name: pocket-id
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/managed-by: argocd
+  annotations:
+    traefik.ingress.kubernetes.io/router.entrypoints: websecure
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - auth.mulliken.net
+      secretName: pocket-id-public-tls
+  rules:
+    - host: auth.mulliken.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: pocket-id
+                port:
+                  number: 80
