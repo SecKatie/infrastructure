@@ -10,4 +10,5 @@ metadata:
 data:
   APP_URL: "https://auth.mulliken.net"
   PORT: "1411"
+  TRUST_PROXY: "true"
   ALLOW_USER_SIGNUPS: "disabled"
