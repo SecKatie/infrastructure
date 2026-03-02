@@ -79,10 +79,10 @@ Apps can authenticate against the Pocket-ID instance at `auth.mulliken.net`. Pap
 - Shell (POSIX sh) — DynDNS updater CronJob script
 - Traefik — Ingress controller for external and internal routing
 - cert-manager + DNSimple webhook — Automated TLS certificate management via DNS-01
-- YAML (Kubernetes manifests), Kustomize + Pocket-ID v2.2.0 (`ghcr.io/pocket-id/pocket-id:v2.2.0`) (002-install-pocket-id)
+- YAML (Kubernetes manifests), Kustomize + Pocket-ID v2.3.0 (`ghcr.io/pocket-id/pocket-id:v2.3.0`) (002-install-pocket-id)
 - SQLite (embedded in Pocket-ID), persisted on Longhorn PVC (2Gi) (002-install-pocket-id)
 - YAML (Kubernetes manifests), Kustomize + Seerr v3.0.1 (`ghcr.io/seerr-team/seerr:v3.0.1`) (003-upgrade-jellyseerr-seerr)
 - SQLite (embedded in Seerr), persisted on existing Longhorn PVC (5Gi) (003-upgrade-jellyseerr-seerr)
 
 ## Recent Changes
-- 002-install-pocket-id: Added YAML (Kubernetes manifests), Kustomize + Pocket-ID v2.2.0 (`ghcr.io/pocket-id/pocket-id:v2.2.0`)
+- 002-install-pocket-id: Added YAML (Kubernetes manifests), Kustomize + Pocket-ID v2.3.0 (`ghcr.io/pocket-id/pocket-id:v2.3.0`)
