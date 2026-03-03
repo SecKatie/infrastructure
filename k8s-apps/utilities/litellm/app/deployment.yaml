@@ -20,6 +20,19 @@ spec:
       labels:
         app.kubernetes.io/name: litellm
     spec:
+      initContainers:
+        - name: copy-copilot-tokens
+          image: busybox:1.36
+          command:
+            - sh
+            - -c
+            - cp /secrets/github_copilot/* /tokens/
+          volumeMounts:
+            - name: copilot-token-secrets
+              mountPath: /secrets/github_copilot
+              readOnly: true
+            - name: copilot-tokens
+              mountPath: /tokens
       containers:
         - name: litellm
           image: docker.litellm.ai/berriai/litellm:main-latest
@@ -79,7 +92,7 @@ spec:
         - name: config
           configMap:
             name: litellm-config
-        - name: copilot-tokens
+        - name: copilot-token-secrets
           secret:
             secretName: litellm-secrets
             items:
@@ -87,6 +100,8 @@ spec:
                 path: access-token
               - key: github-copilot-api-key
                 path: api-key.json
+        - name: copilot-tokens
+          emptyDir: {}
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
