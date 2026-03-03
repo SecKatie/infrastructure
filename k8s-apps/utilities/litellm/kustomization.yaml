@@ -6,7 +6,7 @@ namespace: litellm
 resources:
   - namespace.yaml
   - configmap.yaml
-  - sealedsecret.yaml
+  - sealedsecrets.yaml
   - certificate.yaml
   - ingress.yaml
   - postgres
