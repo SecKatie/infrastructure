@@ -42,10 +42,18 @@ spec:
                 secretKeyRef:
                   name: litellm-secrets
                   key: database-url
+            - name: GITHUB_COPILOT_TOKEN_DIR
+              value: /root/.config/litellm/github_copilot
+            - name: GITHUB_COPILOT_ACCESS_TOKEN_FILE
+              value: access-token
+            - name: GITHUB_COPILOT_API_KEY_FILE
+              value: api-key.json
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml
               subPath: config.yaml
+            - name: copilot-tokens
+              mountPath: /root/.config/litellm/github_copilot
           resources:
             requests:
               cpu: 100m
@@ -71,6 +79,14 @@ spec:
         - name: config
           configMap:
             name: litellm-config
+        - name: copilot-tokens
+          secret:
+            secretName: litellm-secrets
+            items:
+              - key: github-copilot-access-token
+                path: access-token
+              - key: github-copilot-api-key
+                path: api-key.json
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
