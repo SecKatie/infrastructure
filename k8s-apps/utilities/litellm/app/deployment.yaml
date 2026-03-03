@@ -55,6 +55,10 @@ spec:
                 secretKeyRef:
                   name: litellm-secrets
                   key: database-url
+            - name: REDIS_HOST
+              value: litellm-redis.litellm.svc.cluster.local
+            - name: REDIS_PORT
+              value: "6379"
             - name: GITHUB_COPILOT_TOKEN_DIR
               value: /root/.config/litellm/github_copilot
             - name: GITHUB_COPILOT_ACCESS_TOKEN_FILE

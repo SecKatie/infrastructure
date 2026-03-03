@@ -1,0 +1,19 @@
+---
+# Redis PVC
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: litellm-redis-pvc
+  namespace: litellm
+  labels:
+    app.kubernetes.io/name: litellm-redis
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/component: cache
+    app.kubernetes.io/managed-by: argocd
+spec:
+  accessModes:
+    - ReadWriteOnce
+  storageClassName: longhorn
+  resources:
+    requests:
+      storage: 1Gi

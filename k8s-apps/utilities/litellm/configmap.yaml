@@ -11,6 +11,11 @@ data:
   config.yaml: |
     litellm_settings:
       drop_params: true
+      cache: true
+      cache_params:
+        type: redis
+        host: os.environ/REDIS_HOST
+        port: os.environ/REDIS_PORT
 
     general_settings:
       store_model_in_db: true
