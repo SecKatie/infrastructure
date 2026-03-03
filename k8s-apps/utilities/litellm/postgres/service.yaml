@@ -1,0 +1,18 @@
+apiVersion: v1
+kind: Service
+metadata:
+  name: litellm-postgres
+  namespace: litellm
+  labels:
+    app.kubernetes.io/name: litellm-postgres
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/component: database
+    app.kubernetes.io/managed-by: argocd
+spec:
+  selector:
+    app.kubernetes.io/name: litellm-postgres
+  ports:
+    - port: 5432
+      targetPort: 5432
+      protocol: TCP
+      name: postgres

@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: litellm
+  namespace: litellm
+  labels:
+    app.kubernetes.io/name: litellm
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/managed-by: argocd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - litellm.corp.mulliken.net
+      secretName: litellm-tls
+  rules:
+    - host: litellm.corp.mulliken.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: litellm
+                port:
+                  number: 4000

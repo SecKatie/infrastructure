@@ -1,0 +1,19 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litellm-config
+  namespace: litellm
+  labels:
+    app.kubernetes.io/name: litellm
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/managed-by: argocd
+data:
+  config.yaml: |
+    litellm_settings:
+      drop_params: true
+
+    general_settings:
+      store_model_in_db: true
+      store_prompts_in_spend_logs: true
+      master_key: os.environ/LITELLM_MASTER_KEY
+      database_url: os.environ/DATABASE_URL
