@@ -133,18 +133,9 @@ data:
       - model_name: gc/gpt-5-mini
         litellm_params:
           model: github_copilot/gpt-5-mini
-      - model_name: gc/gpt-4.1-2025-04-14
-        litellm_params:
-          model: github_copilot/gpt-4.1-2025-04-14
       - model_name: gc/gpt-4.1
         litellm_params:
           model: github_copilot/gpt-4.1
-      - model_name: gc/gpt-4o-2024-11-20
-        litellm_params:
-          model: github_copilot/gpt-4o-2024-11-20
-      - model_name: gc/gpt-4o-2024-08-06
-        litellm_params:
-          model: github_copilot/gpt-4o-2024-08-06
       - model_name: gc/gpt-4o
         litellm_params:
           model: github_copilot/gpt-4o
