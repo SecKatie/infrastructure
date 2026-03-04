@@ -65,6 +65,16 @@ spec:
               value: access-token
             - name: GITHUB_COPILOT_API_KEY_FILE
               value: api-key.json
+            - name: CHUTES_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: litellm-secrets
+                  key: chutes-api-key
+            - name: OLLAMA_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: litellm-secrets
+                  key: ollama-api-key
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml

@@ -22,3 +22,232 @@ data:
       store_prompts_in_spend_logs: true
       master_key: os.environ/LITELLM_MASTER_KEY
       database_url: os.environ/DATABASE_URL
+
+    model_list:
+      - model_name: c/zai-org/GLM-5-TEE
+        litellm_params:
+          model: chutes/zai-org/GLM-5-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/moonshotai/Kimi-K2.5-TEE
+        litellm_params:
+          model: chutes/moonshotai/Kimi-K2.5-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/MiniMaxAI/MiniMax-M2.5-TEE
+        litellm_params:
+          model: chutes/MiniMaxAI/MiniMax-M2.5-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/deepseek-ai/DeepSeek-V3.2-TEE
+        litellm_params:
+          model: chutes/deepseek-ai/DeepSeek-V3.2-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/deepseek-ai/DeepSeek-R1-0528-TEE
+        litellm_params:
+          model: chutes/deepseek-ai/DeepSeek-R1-0528-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/Qwen/Qwen3-235B-A22B-Instruct-2507-TEE
+        litellm_params:
+          model: chutes/Qwen/Qwen3-235B-A22B-Instruct-2507-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/Qwen/Qwen3-32B
+        litellm_params:
+          model: chutes/Qwen/Qwen3-32B
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/Qwen/Qwen3-Coder-Next-TEE
+        litellm_params:
+          model: chutes/Qwen/Qwen3-Coder-Next-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/chutesai/Mistral-Small-3.2-24B-Instruct-2506
+        litellm_params:
+          model: chutes/chutesai/Mistral-Small-3.2-24B-Instruct-2506
+          api_key: os.environ/CHUTES_API_KEY
+      - model_name: c/NousResearch/Hermes-4-405B-FP8-TEE
+        litellm_params:
+          model: chutes/NousResearch/Hermes-4-405B-FP8-TEE
+          api_key: os.environ/CHUTES_API_KEY
+      # GitHub Copilot models
+      - model_name: gc/claude-opus-4.6
+        litellm_params:
+          model: github_copilot/claude-opus-4.6
+      - model_name: gc/claude-sonnet-4.6
+        litellm_params:
+          model: github_copilot/claude-sonnet-4.6
+      - model_name: gc/claude-sonnet-4.5
+        litellm_params:
+          model: github_copilot/claude-sonnet-4.5
+      - model_name: gc/claude-sonnet-4
+        litellm_params:
+          model: github_copilot/claude-sonnet-4
+      - model_name: gc/claude-opus-4.5
+        litellm_params:
+          model: github_copilot/claude-opus-4.5
+      - model_name: gc/claude-haiku-4.5
+        litellm_params:
+          model: github_copilot/claude-haiku-4.5
+      - model_name: gc/gemini-3.1-pro-preview
+        litellm_params:
+          model: github_copilot/gemini-3.1-pro-preview
+      - model_name: gc/gemini-3-pro-preview
+        litellm_params:
+          model: github_copilot/gemini-3-pro-preview
+      - model_name: gc/gemini-3-flash-preview
+        litellm_params:
+          model: github_copilot/gemini-3-flash-preview
+      - model_name: gc/gemini-2.5-pro
+        litellm_params:
+          model: github_copilot/gemini-2.5-pro
+      - model_name: gc/gpt-5.3-codex
+        litellm_params:
+          model: github_copilot/gpt-5.3-codex
+      - model_name: gc/gpt-5.2-codex
+        litellm_params:
+          model: github_copilot/gpt-5.2-codex
+      - model_name: gc/gpt-5.2
+        litellm_params:
+          model: github_copilot/gpt-5.2
+      - model_name: gc/gpt-5.1-codex-max
+        litellm_params:
+          model: github_copilot/gpt-5.1-codex-max
+      - model_name: gc/gpt-5.1-codex
+        litellm_params:
+          model: github_copilot/gpt-5.1-codex
+      - model_name: gc/gpt-5.1-codex-mini
+        litellm_params:
+          model: github_copilot/gpt-5.1-codex-mini
+      - model_name: gc/gpt-5.1
+        litellm_params:
+          model: github_copilot/gpt-5.1
+      - model_name: gc/gpt-5-mini
+        litellm_params:
+          model: github_copilot/gpt-5-mini
+      - model_name: gc/gpt-4.1-2025-04-14
+        litellm_params:
+          model: github_copilot/gpt-4.1-2025-04-14
+      - model_name: gc/gpt-4.1
+        litellm_params:
+          model: github_copilot/gpt-4.1
+      - model_name: gc/gpt-4o-2024-11-20
+        litellm_params:
+          model: github_copilot/gpt-4o-2024-11-20
+      - model_name: gc/gpt-4o-2024-08-06
+        litellm_params:
+          model: github_copilot/gpt-4o-2024-08-06
+      - model_name: gc/gpt-4o
+        litellm_params:
+          model: github_copilot/gpt-4o
+      - model_name: gc/gpt-4o-mini
+        litellm_params:
+          model: github_copilot/gpt-4o-mini
+      - model_name: gc/grok-code-fast-1
+        litellm_params:
+          model: github_copilot/grok-code-fast-1
+      # Ollama Cloud models
+      - model_name: oc/mistral-large-3:675b
+        litellm_params:
+          model: ollama_chat/mistral-large-3:675b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/ministral-3:14b
+        litellm_params:
+          model: ollama_chat/ministral-3:14b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/devstral-2:123b
+        litellm_params:
+          model: ollama_chat/devstral-2:123b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/devstral-small-2:24b
+        litellm_params:
+          model: ollama_chat/devstral-small-2:24b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/deepseek-v3.2
+        litellm_params:
+          model: ollama_chat/deepseek-v3.2
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/qwen3.5:397b
+        litellm_params:
+          model: ollama_chat/qwen3.5:397b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/qwen3-coder:480b
+        litellm_params:
+          model: ollama_chat/qwen3-coder:480b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/qwen3-coder-next
+        litellm_params:
+          model: ollama_chat/qwen3-coder-next
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/qwen3-next:80b
+        litellm_params:
+          model: ollama_chat/qwen3-next:80b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/qwen3-vl:235b
+        litellm_params:
+          model: ollama_chat/qwen3-vl:235b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/qwen3-vl:235b-instruct
+        litellm_params:
+          model: ollama_chat/qwen3-vl:235b-instruct
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/gemma3:27b
+        litellm_params:
+          model: ollama_chat/gemma3:27b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/glm-5
+        litellm_params:
+          model: ollama_chat/glm-5
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/kimi-k2-thinking
+        litellm_params:
+          model: ollama_chat/kimi-k2-thinking
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/kimi-k2.5
+        litellm_params:
+          model: ollama_chat/kimi-k2.5
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/minimax-m2.5
+        litellm_params:
+          model: ollama_chat/minimax-m2.5
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/gpt-oss:120b
+        litellm_params:
+          model: ollama_chat/gpt-oss:120b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/gpt-oss:20b
+        litellm_params:
+          model: ollama_chat/gpt-oss:20b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/cogito-2.1:671b
+        litellm_params:
+          model: ollama_chat/cogito-2.1:671b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/nemotron-3-nano:30b
+        litellm_params:
+          model: ollama_chat/nemotron-3-nano:30b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/gemini-3-flash-preview
+        litellm_params:
+          model: ollama_chat/gemini-3-flash-preview
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
+      - model_name: oc/rnj-1:8b
+        litellm_params:
+          model: ollama_chat/rnj-1:8b
+          api_base: https://ollama.com
+          api_key: os.environ/OLLAMA_API_KEY
