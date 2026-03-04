@@ -30,54 +30,72 @@ data:
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 9.5e-7
           output_cost_per_token: 3.15e-6
+        model_info:
+          supports_function_calling: true
       - model_name: c/moonshotai/Kimi-K2.5-TEE
         litellm_params:
           model: chutes/moonshotai/Kimi-K2.5-TEE
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 4.5e-7
           output_cost_per_token: 2.2e-6
+        model_info:
+          supports_function_calling: true
       - model_name: c/MiniMaxAI/MiniMax-M2.5-TEE
         litellm_params:
           model: chutes/MiniMaxAI/MiniMax-M2.5-TEE
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 3.0e-7
           output_cost_per_token: 1.1e-6
+        model_info:
+          supports_function_calling: true
       - model_name: c/deepseek-ai/DeepSeek-V3.2-TEE
         litellm_params:
           model: chutes/deepseek-ai/DeepSeek-V3.2-TEE
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 2.8e-7
           output_cost_per_token: 4.2e-7
+        model_info:
+          supports_function_calling: true
       - model_name: c/deepseek-ai/DeepSeek-R1-0528-TEE
         litellm_params:
           model: chutes/deepseek-ai/DeepSeek-R1-0528-TEE
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 4.5e-7
           output_cost_per_token: 2.15e-6
+        model_info:
+          supports_function_calling: true
       - model_name: c/Qwen/Qwen3-32B
         litellm_params:
           model: chutes/Qwen/Qwen3-32B
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 8.0e-8
           output_cost_per_token: 2.4e-7
+        model_info:
+          supports_function_calling: true
       - model_name: c/Qwen/Qwen3-Coder-Next-TEE
         litellm_params:
           model: chutes/Qwen/Qwen3-Coder-Next-TEE
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 1.2e-7
           output_cost_per_token: 7.5e-7
+        model_info:
+          supports_function_calling: true
       - model_name: c/chutesai/Mistral-Small-3.2-24B-Instruct-2506
         litellm_params:
           model: chutes/chutesai/Mistral-Small-3.2-24B-Instruct-2506
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 6.0e-8
           output_cost_per_token: 1.8e-7
+        model_info:
+          supports_function_calling: true
       - model_name: c/NousResearch/Hermes-4-405B-FP8-TEE
         litellm_params:
           model: chutes/NousResearch/Hermes-4-405B-FP8-TEE
           api_key: os.environ/CHUTES_API_KEY
           input_cost_per_token: 3.0e-7
           output_cost_per_token: 1.2e-6
+        model_info:
+          supports_function_calling: true
       # GitHub Copilot models
       - model_name: gc/claude-opus-4.6
         litellm_params:
