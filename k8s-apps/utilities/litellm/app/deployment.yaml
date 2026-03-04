@@ -75,6 +75,11 @@ spec:
                 secretKeyRef:
                   name: litellm-secrets
                   key: ollama-api-key
+            - name: SYNTHETIC_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: litellm-secrets
+                  key: synthetic-api-key
           volumeMounts:
             - name: config
               mountPath: /app/config.yaml

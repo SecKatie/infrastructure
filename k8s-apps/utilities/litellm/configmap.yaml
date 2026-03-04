@@ -256,3 +256,84 @@ data:
           model: ollama_chat/rnj-1:8b
           api_base: https://ollama.com
           api_key: os.environ/OLLAMA_API_KEY
+      # Synthetic models
+      - model_name: sn/MiniMaxAI/MiniMax-M2.5
+        litellm_params:
+          model: openai/hf:MiniMaxAI/MiniMax-M2.5
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/Qwen/Qwen3.5-397B-A17B
+        litellm_params:
+          model: openai/hf:Qwen/Qwen3.5-397B-A17B
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/moonshotai/Kimi-K2.5
+        litellm_params:
+          model: openai/hf:moonshotai/Kimi-K2.5
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/nvidia/Kimi-K2.5-NVFP4
+        litellm_params:
+          model: openai/hf:nvidia/Kimi-K2.5-NVFP4
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/zai-org/GLM-4.7
+        litellm_params:
+          model: openai/hf:zai-org/GLM-4.7
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/zai-org/GLM-4.7-Flash
+        litellm_params:
+          model: openai/hf:zai-org/GLM-4.7-Flash
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/deepseek-ai/DeepSeek-V3.2
+        litellm_params:
+          model: openai/hf:deepseek-ai/DeepSeek-V3.2
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/MiniMaxAI/MiniMax-M2.1
+        litellm_params:
+          model: openai/hf:MiniMaxAI/MiniMax-M2.1
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/moonshotai/Kimi-K2-Instruct-0905
+        litellm_params:
+          model: openai/hf:moonshotai/Kimi-K2-Instruct-0905
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/moonshotai/Kimi-K2-Thinking
+        litellm_params:
+          model: openai/hf:moonshotai/Kimi-K2-Thinking
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/openai/gpt-oss-120b
+        litellm_params:
+          model: openai/hf:openai/gpt-oss-120b
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/deepseek-ai/DeepSeek-R1-0528
+        litellm_params:
+          model: openai/hf:deepseek-ai/DeepSeek-R1-0528
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/deepseek-ai/DeepSeek-V3
+        litellm_params:
+          model: openai/hf:deepseek-ai/DeepSeek-V3
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/meta-llama/Llama-3.3-70B-Instruct
+        litellm_params:
+          model: openai/hf:meta-llama/Llama-3.3-70B-Instruct
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/Qwen/Qwen3-235B-A22B-Thinking-2507
+        litellm_params:
+          model: openai/hf:Qwen/Qwen3-235B-A22B-Thinking-2507
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
+      - model_name: sn/Qwen/Qwen3-Coder-480B-A35B-Instruct
+        litellm_params:
+          model: openai/hf:Qwen/Qwen3-Coder-480B-A35B-Instruct
+          api_base: https://api.synthetic.new/openai/v1
+          api_key: os.environ/SYNTHETIC_API_KEY
