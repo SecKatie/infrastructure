@@ -41,6 +41,38 @@ data:
           model: anthropic/claude-haiku-4-5
         model_info:
           supports_function_calling: true
+      # Vertex AI models
+      - model_name: va/claude-opus-4-6
+        litellm_params:
+          model: vertex_ai/claude-opus-4-6
+          input_cost_per_token: 5.0e-6
+          output_cost_per_token: 2.5e-5
+        model_info:
+          supports_function_calling: true
+      - model_name: va/claude-sonnet-4-6
+        litellm_params:
+          model: vertex_ai/claude-sonnet-4-6
+          input_cost_per_token: 3.0e-6
+          output_cost_per_token: 1.5e-5
+        model_info:
+          supports_function_calling: true
+      - model_name: va/claude-haiku-4-5
+        litellm_params:
+          model: vertex_ai/claude-haiku-4-5
+          input_cost_per_token: 1.0e-6
+          output_cost_per_token: 5.0e-6
+        model_info:
+          supports_function_calling: true
+      - model_name: va/gemini-3.1-pro-preview
+        litellm_params:
+          model: vertex_ai/gemini-3.1-pro-preview
+        model_info:
+          supports_function_calling: true
+      - model_name: va/gemini-3-flash-preview
+        litellm_params:
+          model: vertex_ai/gemini-3-flash-preview
+        model_info:
+          supports_function_calling: true
       # Chutes models
       - model_name: c/zai-org/GLM-5-TEE
         litellm_params:
@@ -97,15 +129,6 @@ data:
       - model_name: gc/claude-sonnet-4.6
         litellm_params:
           model: github_copilot/claude-sonnet-4.6
-      - model_name: gc/claude-sonnet-4.5
-        litellm_params:
-          model: github_copilot/claude-sonnet-4.5
-      - model_name: gc/claude-sonnet-4
-        litellm_params:
-          model: github_copilot/claude-sonnet-4
-      - model_name: gc/claude-opus-4.5
-        litellm_params:
-          model: github_copilot/claude-opus-4.5
       - model_name: gc/claude-haiku-4.5
         litellm_params:
           model: github_copilot/claude-haiku-4.5
@@ -121,9 +144,6 @@ data:
       - model_name: gc/gpt-5.3-codex
         litellm_params:
           model: github_copilot/gpt-5.3-codex
-      - model_name: gc/gpt-5.2-codex
-        litellm_params:
-          model: github_copilot/gpt-5.2-codex
       - model_name: gc/gpt-5.2
         litellm_params:
           model: github_copilot/gpt-5.2
@@ -141,7 +161,7 @@ data:
           model: github_copilot/grok-code-fast-1
       - model_name: gc/claude-opus-4.6-fast
         litellm_params:
-          model: github_copilot/claude-opus-4.6-fast-preview
+          model: github_copilot/claude-opus-4-6-fast
       - model_name: gc/raptor-mini
         litellm_params:
           model: github_copilot/raptor-mini
@@ -152,11 +172,6 @@ data:
       - model_name: oc/mistral-large-3:675b
         litellm_params:
           model: ollama_chat/mistral-large-3:675b
-          api_base: https://ollama.com
-          api_key: os.environ/OLLAMA_API_KEY
-      - model_name: oc/ministral-3:14b
-        litellm_params:
-          model: ollama_chat/ministral-3:14b
           api_base: https://ollama.com
           api_key: os.environ/OLLAMA_API_KEY
       - model_name: oc/devstral-2:123b
@@ -187,11 +202,6 @@ data:
       - model_name: oc/qwen3-vl:235b-instruct
         litellm_params:
           model: ollama_chat/qwen3-vl:235b-instruct
-          api_base: https://ollama.com
-          api_key: os.environ/OLLAMA_API_KEY
-      - model_name: oc/gemma3:27b
-        litellm_params:
-          model: ollama_chat/gemma3:27b
           api_base: https://ollama.com
           api_key: os.environ/OLLAMA_API_KEY
       - model_name: oc/glm-5
