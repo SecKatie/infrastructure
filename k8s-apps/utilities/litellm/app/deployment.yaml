@@ -67,6 +67,12 @@ spec:
               value: access-token
             - name: GITHUB_COPILOT_API_KEY_FILE
               value: api-key.json
+            - name: VERTEXAI_PROJECT
+              value: itpc-gcp-prodsec-eng-claude
+            - name: VERTEXAI_LOCATION
+              value: us-east5
+            - name: GOOGLE_APPLICATION_CREDENTIALS
+              value: /gcp/adc.json
             - name: CHUTES_API_KEY
               valueFrom:
                 secretKeyRef:
@@ -88,6 +94,9 @@ spec:
               subPath: config.yaml
             - name: copilot-tokens
               mountPath: /root/.config/litellm/github_copilot
+            - name: gcp-adc
+              mountPath: /gcp
+              readOnly: true
           resources:
             requests:
               cpu: 100m
@@ -123,6 +132,12 @@ spec:
                 path: api-key.json
         - name: copilot-tokens
           emptyDir: {}
+        - name: gcp-adc
+          secret:
+            secretName: litellm-secrets
+            items:
+              - key: vertex-adc
+                path: adc.json
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
