@@ -45,6 +45,8 @@ spec:
             - containerPort: 4000
               name: http
           env:
+            - name: TZ
+              value: America/New_York
             - name: LITELLM_MASTER_KEY
               valueFrom:
                 secretKeyRef:
