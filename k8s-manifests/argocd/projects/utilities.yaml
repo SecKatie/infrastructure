@@ -26,8 +26,6 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: longhorn-system
       server: https://kubernetes.default.svc
-    - namespace: dyndns-updater
-      server: https://kubernetes.default.svc
     - namespace: pocket-id
       server: https://kubernetes.default.svc
     - namespace: litellm
