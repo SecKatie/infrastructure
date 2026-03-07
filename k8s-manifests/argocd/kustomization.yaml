@@ -20,7 +20,6 @@ resources:
 
   # Standalone Applications (external repos, one-offs)
   - applications/argocd.yaml
-  - applications/personal-site.yaml
 
   # Ingress and TLS for ArgoCD
   - ingress.yaml
