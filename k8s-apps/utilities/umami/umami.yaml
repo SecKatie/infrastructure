@@ -27,6 +27,8 @@ spec:
               value: postgresql://umami:umami@umami-postgresql:5432/umami
             - name: APP_SECRET
               value: replace-me-with-a-random-string
+            - name: TRUST_PROXY
+              value: "1"
           resources:
             requests:
               cpu: 100m
