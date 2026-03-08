@@ -1,21 +1,4 @@
 ---
-# ExternalName service to reach Umami from the jellyfin namespace
-apiVersion: v1
-kind: Service
-metadata:
-  name: umami-proxy
-  namespace: jellyfin
-  labels:
-    app.kubernetes.io/name: jellyfin
-    app.kubernetes.io/part-of: media
-    app.kubernetes.io/managed-by: argocd
-spec:
-  type: ExternalName
-  externalName: umami.umami.svc.cluster.local
-  ports:
-    - port: 3000
-      targetPort: 3000
----
 # Strip the /u prefix before forwarding to Umami
 apiVersion: traefik.io/v1alpha1
 kind: Middleware
@@ -51,7 +34,8 @@ spec:
         - name: umami-stripprefix
           namespace: jellyfin
       services:
-        - name: umami-proxy
+        - name: umami
+          namespace: umami
           port: 3000
   tls:
     secretName: jellyfin-public-tls
