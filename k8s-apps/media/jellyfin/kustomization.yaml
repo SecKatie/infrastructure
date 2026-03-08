@@ -8,7 +8,5 @@ resources:
   - namespace.yaml
   - storage.yaml
   - jellyfin.yaml
-  - certificate.yaml
-  - ingress.yaml
   - public-certificate.yaml
   - public-ingress-route.yaml
