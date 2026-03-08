@@ -8,5 +8,7 @@ resources:
   - namespace.yaml
   - postgresql.yaml
   - umami.yaml
+  - certificate.yaml
+  - ingress.yaml
   - public-certificate.yaml
   - public-ingress.yaml
