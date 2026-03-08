@@ -1,0 +1,57 @@
+---
+# ExternalName service to reach Umami from the jellyfin namespace
+apiVersion: v1
+kind: Service
+metadata:
+  name: umami-proxy
+  namespace: jellyfin
+  labels:
+    app.kubernetes.io/name: jellyfin
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/managed-by: argocd
+spec:
+  type: ExternalName
+  externalName: umami.umami.svc.cluster.local
+  ports:
+    - port: 3000
+      targetPort: 3000
+---
+# Strip the /u prefix before forwarding to Umami
+apiVersion: traefik.io/v1alpha1
+kind: Middleware
+metadata:
+  name: umami-stripprefix
+  namespace: jellyfin
+  labels:
+    app.kubernetes.io/name: jellyfin
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/managed-by: argocd
+spec:
+  stripPrefix:
+    prefixes:
+      - /u
+---
+# Proxy /u/* on jellyfin.mulliken.net to Umami for same-domain analytics tracking
+apiVersion: traefik.io/v1alpha1
+kind: IngressRoute
+metadata:
+  name: jellyfin-umami-proxy
+  namespace: jellyfin
+  labels:
+    app.kubernetes.io/name: jellyfin
+    app.kubernetes.io/part-of: media
+    app.kubernetes.io/managed-by: argocd
+spec:
+  entryPoints:
+    - websecure
+  routes:
+    - match: Host(`jellyfin.mulliken.net`) && PathPrefix(`/u/`)
+      kind: Rule
+      middlewares:
+        - name: umami-stripprefix
+          namespace: jellyfin
+      services:
+        - name: umami-proxy
+          port: 3000
+  tls:
+    secretName: jellyfin-public-tls
