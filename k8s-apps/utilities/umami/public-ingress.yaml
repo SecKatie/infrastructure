@@ -13,10 +13,10 @@ spec:
   ingressClassName: traefik
   tls:
     - hosts:
-        - umami.mulliken.net
+        - kgli.tc
       secretName: umami-public-tls
   rules:
-    - host: umami.mulliken.net
+    - host: kgli.tc
       http:
         paths:
           - path: /

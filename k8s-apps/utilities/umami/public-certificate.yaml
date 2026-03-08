@@ -13,4 +13,4 @@ spec:
     name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
-    - umami.mulliken.net
+    - kgli.tc
