@@ -35,6 +35,15 @@ spec:
         fsGroup: 1000
         runAsUser: 1000
         runAsGroup: 1000
+      initContainers:
+        - name: copy-web
+          image: jellyfin/jellyfin:latest
+          command: ["sh", "-c", "cp -a /jellyfin/jellyfin-web/. /web/ && chown -R 1000:1000 /web"]
+          volumeMounts:
+            - name: jellyfin-web
+              mountPath: /web
+          securityContext:
+            runAsUser: 0
       containers:
         - name: jellyfin
           image: jellyfin/jellyfin:latest
@@ -72,6 +81,8 @@ spec:
             runAsNonRoot: true
             allowPrivilegeEscalation: false
           volumeMounts:
+            - name: jellyfin-web
+              mountPath: /jellyfin/jellyfin-web
             - name: config
               mountPath: /config
             - name: media
@@ -99,6 +110,8 @@ spec:
             periodSeconds: 3
             timeoutSeconds: 30
       volumes:
+        - name: jellyfin-web
+          emptyDir: {}
         - name: config
           persistentVolumeClaim:
             claimName: jellyfin-config-pvc
