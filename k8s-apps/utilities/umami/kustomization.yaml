@@ -6,6 +6,7 @@ namespace: umami
 
 resources:
   - namespace.yaml
+  - sealedsecret.yaml
   - postgresql.yaml
   - umami.yaml
   - public-certificate.yaml

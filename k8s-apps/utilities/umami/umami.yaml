@@ -24,9 +24,15 @@ spec:
             - containerPort: 3000
           env:
             - name: DATABASE_URL
-              value: postgresql://umami:umami@umami-postgresql:5432/umami
+              valueFrom:
+                secretKeyRef:
+                  name: umami-secrets
+                  key: database-url
             - name: APP_SECRET
-              value: replace-me-with-a-random-string
+              valueFrom:
+                secretKeyRef:
+                  name: umami-secrets
+                  key: app-secret
             - name: TRUST_PROXY
               value: "1"
           resources:
