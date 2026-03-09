@@ -38,6 +38,12 @@ spec:
         - name: umami
           namespace: umami
           port: 3000
+    - match: Host(`jellyfin.mulliken.net`) && Path(`/api/send`)
+      kind: Rule
+      services:
+        - name: umami
+          namespace: umami
+          port: 3000
     - match: Host(`jellyfin.mulliken.net`)
       kind: Rule
       services:
