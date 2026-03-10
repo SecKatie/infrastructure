@@ -35,6 +35,8 @@ spec:
                   key: app-secret
             - name: TRUST_PROXY
               value: "1"
+            - name: CLIENT_IP_HEADER
+              value: "x-forwarded-for"
           resources:
             requests:
               cpu: 250m
