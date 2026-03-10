@@ -27,6 +27,10 @@ spec:
         app.kubernetes.io/component: downloader
         app.kubernetes.io/managed-by: argocd
     spec:
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
       nodeSelector:
         kubernetes.io/arch: "amd64"
       initContainers:
