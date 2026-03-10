@@ -27,6 +27,10 @@ spec:
         app.kubernetes.io/component: downloader
         app.kubernetes.io/managed-by: argocd
     spec:
+      dnsConfig:
+        options:
+          - name: ndots
+            value: "1"
       nodeSelector:
         kubernetes.io/arch: "amd64"
       initContainers:
@@ -48,10 +52,6 @@ spec:
         # Gluetun VPN container - all traffic routes through this
         - name: gluetun
           image: qmcgaw/gluetun:latest
-          lifecycle:
-            postStart:
-              exec:
-                command: ["/bin/sh", "-c", "(ip rule del table 51820; ip -6 rule del table 51820) || true"]
           securityContext:
             capabilities:
               add:
@@ -75,9 +75,6 @@ spec:
               value: "8080"
             - name: FIREWALL_OUTBOUND_SUBNETS
               value: "10.0.0.0/8,172.16.0.0/12,192.168.0.0/16"
-            # Use K8s DNS instead of Gluetun's loopback DNS server
-            - name: DNS_KEEP_NAMESERVER
-              value: "on"
           ports:
             - containerPort: 8000
               name: gluetun-http
