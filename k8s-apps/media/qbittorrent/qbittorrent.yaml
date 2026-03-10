@@ -131,10 +131,10 @@ spec:
           resources:
             requests:
               cpu: 50m
-              memory: 64Mi
+              memory: 256Mi
             limits:
               cpu: 500m
-              memory: 256Mi
+              memory: 1Gi
           volumeMounts:
             - name: config
               mountPath: /config
