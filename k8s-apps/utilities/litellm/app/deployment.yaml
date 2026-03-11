@@ -103,7 +103,7 @@ spec:
               memory: 256Mi
             limits:
               cpu: 1000m
-              memory: 1Gi
+              memory: 2Gi
           livenessProbe:
             tcpSocket:
               port: http
@@ -138,11 +138,5 @@ spec:
             items:
               - key: vertex-adc
                 path: adc.json
-      affinity:
-        nodeAffinity:
-          preferredDuringSchedulingIgnoredDuringExecution:
-            - weight: 100
-              preference:
-                matchExpressions:
-                  - key: node-role.kubernetes.io/control-plane
-                    operator: DoesNotExist
+      nodeSelector:
+        kubernetes.io/arch: amd64
