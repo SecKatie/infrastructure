@@ -35,6 +35,21 @@ spec:
                 matchExpressions:
                   - key: node-role.kubernetes.io/control-plane
                     operator: DoesNotExist
+      initContainers:
+        - name: pgadmin-init
+          image: busybox
+          command:
+            - sh
+            - -c
+            - |
+              mkdir -p /var/lib/pgadmin/sessions \
+                       /var/lib/pgadmin/storage \
+                       /var/lib/pgadmin/azurecredentialcache && \
+              chown -R 5050:5050 /var/lib/pgadmin && \
+              chmod 700 /var/lib/pgadmin
+          volumeMounts:
+            - name: pgadmin-data
+              mountPath: /var/lib/pgadmin
       containers:
         - name: pgadmin
           image: dpage/pgadmin4:9
