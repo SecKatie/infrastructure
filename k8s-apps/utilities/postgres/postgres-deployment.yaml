@@ -60,16 +60,17 @@ spec:
                 - pg_isready
                 - -U
                 - postgres
-            initialDelaySeconds: 30
+            initialDelaySeconds: 120
             periodSeconds: 30
             timeoutSeconds: 5
+            failureThreshold: 5
           readinessProbe:
             exec:
               command:
                 - pg_isready
                 - -U
                 - postgres
-            initialDelaySeconds: 10
+            initialDelaySeconds: 30
             periodSeconds: 10
             timeoutSeconds: 5
       volumes:
