@@ -96,16 +96,17 @@ spec:
             httpGet:
               path: /misc/ping
               port: 80
-            initialDelaySeconds: 60
+            initialDelaySeconds: 180
             periodSeconds: 30
-            timeoutSeconds: 10
+            timeoutSeconds: 30
+            failureThreshold: 3
           readinessProbe:
             httpGet:
               path: /misc/ping
               port: 80
-            initialDelaySeconds: 30
-            periodSeconds: 10
-            timeoutSeconds: 5
+            initialDelaySeconds: 60
+            periodSeconds: 15
+            timeoutSeconds: 15
       volumes:
         - name: pgadmin-data
           persistentVolumeClaim:
