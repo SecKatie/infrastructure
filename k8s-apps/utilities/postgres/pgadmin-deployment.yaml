@@ -25,6 +25,8 @@ spec:
         app.kubernetes.io/part-of: utilities
         app.kubernetes.io/component: app
     spec:
+      securityContext:
+        fsGroup: 5050
       affinity:
         nodeAffinity:
           preferredDuringSchedulingIgnoredDuringExecution:
