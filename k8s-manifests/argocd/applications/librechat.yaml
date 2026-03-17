@@ -9,13 +9,12 @@ metadata:
 spec:
   project: utilities
   sources:
-    - repoURL: oci://ghcr.io/danny-avila/librechat-chart
-      chart: librechat
-      targetRevision: latest
+    - repoURL: https://github.com/danny-avila/LibreChat.git
+      path: helm/librechat
+      targetRevision: main
       helm:
         valueFiles:
-          - path: values.yaml
-            repoURL: https://github.com/SecKatie/infrastructure.git
+          - values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: librechat
