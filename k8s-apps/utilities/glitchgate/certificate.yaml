@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: glitchgate-tls
   issuerRef:
-    name: letsencrypt-dnsimple
+    name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
     - glitchgate.corp.mulliken.net

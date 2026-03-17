@@ -6,7 +6,7 @@ metadata:
 spec:
   secretName: librechat-tls
   issuerRef:
-    name: letsencrypt-dnsimple
+    name: letsencrypt-prod
     kind: ClusterIssuer
   dnsNames:
     - chat.corp.mulliken.net
