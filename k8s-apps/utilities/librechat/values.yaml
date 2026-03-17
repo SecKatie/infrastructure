@@ -1,0 +1,26 @@
+# Minimal LibreChat Helm values
+
+global:
+  librechat:
+    existingSecretName: "librechat-credentials-env"
+
+librechat:
+  configEnv:
+    ALLOW_EMAIL_LOGIN: "true"
+    ALLOW_REGISTRATION: "false"
+    DOMAIN: "https://chat.corp.mulliken.net"
+
+ingress:
+  enabled: true
+  className: "traefik"
+  annotations:
+    cert-manager.io/cluster-issuer: letsencrypt-dnsimple
+  hosts:
+    - host: chat.corp.mulliken.net
+      paths:
+        - path: /
+          pathType: Prefix
+  tls:
+    - secretName: librechat-tls
+      hosts:
+        - chat.corp.mulliken.net

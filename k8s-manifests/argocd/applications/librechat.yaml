@@ -1,0 +1,32 @@
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: librechat
+  namespace: argocd
+  labels:
+    app.kubernetes.io/name: librechat
+    app.kubernetes.io/part-of: utilities
+spec:
+  project: utilities
+  source:
+    repoURL: https://github.com/SecKatie/infrastructure.git
+    path: k8s-apps/utilities/librechat
+    targetRevision: main
+    helm:
+      valueFiles:
+        - values.yaml
+  destination:
+    server: https://kubernetes.default.svc
+    namespace: utilities
+  syncPolicy:
+    automated:
+      prune: true
+      selfHeal: true
+    syncOptions:
+      - CreateNamespace=true
+    retry:
+      limit: 5
+      backoff:
+        duration: 5s
+        factor: 2
+        maxDuration: 3m

@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: utilities
+  labels:
+    app.kubernetes.io/name: utilities
+    app.kubernetes.io/part-of: argocd
