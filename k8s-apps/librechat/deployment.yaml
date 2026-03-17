@@ -35,7 +35,7 @@ spec:
             - name: ALLOW_EMAIL_LOGIN
               value: "true"
             - name: ALLOW_REGISTRATION
-              value: "false"
+              value: "true"
             - name: MEILI_HOST
               value: "http://meilisearch.librechat.svc.cluster.local:7700"
           envFrom:
