@@ -30,7 +30,8 @@ opentofu/           # DNSimple DNS records (managed via OpenTofu)
 k8s-apps/           # Kubernetes application manifests (Kustomize)
   ├── media/        # Jellyfin, Jellyseerr, Sonarr, Radarr, qBittorrent, etc.
   ├── monitoring/   # Victoria Metrics, Node Exporter, Headlamp
-  └── utilities/    # Paperless, Umami, Agate, DynDNS Updater, Personal Site, Sealed Secrets
+  ├── utilities/    # Paperless, Umami, Agate, DynDNS Updater, Personal Site, Sealed Secrets
+  └── librechat/    # LibreChat (Helm, multi-source ArgoCD app)
 k8s-manifests/      # Cluster-level manifests (ArgoCD apps, projects, cert-manager)
 scripts/            # Helper scripts for K8s operations
 ```
@@ -70,7 +71,46 @@ kubectl get secret <name> -n <ns> -o json | \
   --controller-namespace kube-system > path/to/sealedsecret.yaml
 ```
 
-### OIDC/SSO via Pocket-ID
+### ArgoCD Application Management
+
+ArgoCD applications are managed via `k8s-manifests/argocd/kustomization.yaml`. There are two patterns:
+
+1. **ApplicationSets** (`applicationsets/`) — auto-generate Applications from directory paths under `k8s-apps/{category}/*`. Used for media, monitoring, utilities, and tools. These are single-source kustomize apps.
+
+2. **Standalone Applications** (`applications/`) — manually listed in `kustomization.yaml`. Used for apps that need multi-source Helm (e.g., external chart repo + local values), like LibreChat and the ArgoCD app itself.
+
+**When adding a new standalone Application**: add it to `k8s-manifests/argocd/kustomization.yaml` under the standalone applications section, otherwise the app-of-apps will never deploy it.
+
+**Multi-source Helm apps** (e.g. LibreChat): use two separate sources for the same infra repo — one with `path` for kustomize resources, one with `ref` only (no `path`) for helm valueFiles. The `$ref/` variable then resolves relative to the repo root:
+
+```yaml
+sources:
+  - repoURL: https://github.com/SecKatie/infrastructure.git
+    path: k8s-apps/myapp         # deploys kustomize resources
+    targetRevision: main
+  - repoURL: https://github.com/SecKatie/infrastructure.git
+    targetRevision: main
+    ref: local                   # file reference only, no path
+  - repoURL: https://charts.example.com/myapp
+    path: helm/myapp
+    targetRevision: main
+    helm:
+      valueFiles:
+        - $local/k8s-apps/myapp/values.yaml  # full path from repo root
+```
+
+### Bitnami Images
+
+Bitnami removed images from `docker.io/bitnami` in late 2025. Use `public.ecr.aws/bitnami/<image>` as the registry override in helm values:
+
+```yaml
+mongodb:
+  image:
+    registry: public.ecr.aws
+    repository: bitnami/mongodb
+```
+
+
 
 Apps can authenticate against the Pocket-ID instance at `auth.mulliken.net`. Paperless-ngx uses django-allauth's `openid_connect` provider, configured via env vars in the deployment. Secret values (client ID/secret) are injected into the `PAPERLESS_SOCIALACCOUNT_PROVIDERS` JSON string using Kubernetes `$(ENV_VAR)` interpolation — the secret refs must be defined as env vars earlier in the list so they resolve at container startup.
 
