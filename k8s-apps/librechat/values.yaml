@@ -35,9 +35,9 @@ ingress:
 
 mongodb:
   image:
-    registry: public.ecr.aws
-    repository: bitnami/mongodb
-    tag: 8.2-debian-12
+    registry: docker.io
+    repository: mongo
+    tag: "8.2-noble"
   nodeSelector:
     kubernetes.io/arch: amd64
 
