@@ -22,10 +22,10 @@ spec:
             - containerPort: 27017
               name: mongodb
           env:
-            # Phase 1: auth disabled so bootstrap Job can create the initial user.
-            # After the ferretdb-bootstrap Job has run successfully, change to "true" and redeploy.
+            # Localhost exception: when no users exist, FerretDB allows unauthenticated
+            # connections from localhost only. Use `kubectl debug` to bootstrap the first user.
             - name: FERRETDB_AUTH
-              value: "false"
+              value: "true"
             - name: FERRETDB_POSTGRESQL_URL
               valueFrom:
                 secretKeyRef:

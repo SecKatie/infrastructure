@@ -6,7 +6,6 @@ resources:
   - sealedsecret.yaml
   - deployment.yaml
   - ferretdb.yaml
-  - ferretdb-bootstrap.yaml
   - meilisearch.yaml
   - service.yaml
   - certificate.yaml
