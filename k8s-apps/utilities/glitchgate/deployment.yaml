@@ -33,7 +33,7 @@ spec:
               mountPath: /etc/glitchgate
       containers:
         - name: glitchgate
-          image: ghcr.io/seckatie/glitchgate:latest
+          image: ghcr.io/seckatie/glitchgate:0.0.1
           ports:
             - containerPort: 4000
           envFrom:
