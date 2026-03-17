@@ -12,6 +12,13 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/arch: amd64
+      affinity:
+        podAntiAffinity:
+          requiredDuringSchedulingIgnoredDuringExecution:
+            - labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: ferretdb
+              topologyKey: kubernetes.io/hostname
       restartPolicy: OnFailure
       containers:
         - name: mongosh
