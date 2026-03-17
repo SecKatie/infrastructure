@@ -21,7 +21,7 @@ spec:
           command:
             - sh
             - -c
-            - apk add --no-cache gettext -q && envsubst < /config-template/config.yaml > /etc/glitchgate/config.yaml
+            - apk add --no-cache gettext -q && envsubst < /config-template/config.yaml > /data/config.yaml
           envFrom:
             - secretRef:
                 name: glitchgate-secrets
@@ -30,7 +30,7 @@ spec:
               mountPath: /config-template
               readOnly: true
             - name: config
-              mountPath: /etc/glitchgate
+              mountPath: /data
       containers:
         - name: glitchgate
           image: ghcr.io/seckatie/glitchgate:0.0.1
@@ -41,8 +41,7 @@ spec:
                 name: glitchgate-secrets
           volumeMounts:
             - name: config
-              mountPath: /etc/glitchgate
-              readOnly: true
+              mountPath: /data
       volumes:
         - name: config-template
           configMap:
