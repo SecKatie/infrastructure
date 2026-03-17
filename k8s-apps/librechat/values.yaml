@@ -10,6 +10,9 @@ librechat:
     ALLOW_REGISTRATION: "false"
     DOMAIN: "https://chat.corp.mulliken.net"
 
+nodeSelector:
+  kubernetes.io/arch: amd64
+
 ingress:
   enabled: true
   className: "traefik"
