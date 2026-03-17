@@ -6,6 +6,8 @@ image:
 global:
   librechat:
     existingSecretName: "librechat-credentials-env"
+  security:
+    allowInsecureImages: true
 
 librechat:
   configEnv:
