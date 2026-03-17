@@ -9,12 +9,15 @@ metadata:
 spec:
   project: utilities
   source:
-    repoURL: https://github.com/SecKatie/infrastructure.git
-    path: k8s-apps/utilities/librechat
-    targetRevision: main
+    repoURL: oci://ghcr.io/danny-avila/librechat-chart
+    chart: librechat
+    targetRevision: latest
     helm:
       valueFiles:
         - values.yaml
+      parameters:
+        - name: ingress.enabled
+          value: "true"
   destination:
     server: https://kubernetes.default.svc
     namespace: librechat
