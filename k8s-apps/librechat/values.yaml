@@ -30,3 +30,8 @@ ingress:
     - secretName: librechat-tls
       hosts:
         - chat.corp.mulliken.net
+
+mongodb:
+  image:
+    registry: public.ecr.aws
+    repository: bitnami/mongodb
