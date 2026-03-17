@@ -32,6 +32,10 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: postgres
       server: https://kubernetes.default.svc
+    - namespace: librechat
+      server: https://kubernetes.default.svc
+    - namespace: utilities
+      server: https://kubernetes.default.svc
   clusterResourceWhitelist:
     - group: ""
       kind: Namespace
