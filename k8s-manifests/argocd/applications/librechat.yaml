@@ -8,19 +8,10 @@ metadata:
     app.kubernetes.io/part-of: utilities
 spec:
   project: utilities
-  sources:
-    - repoURL: https://github.com/SecKatie/infrastructure.git
-      path: k8s-apps/librechat
-      targetRevision: main
-    - repoURL: https://github.com/SecKatie/infrastructure.git
-      targetRevision: main
-      ref: local
-    - repoURL: https://github.com/danny-avila/LibreChat.git
-      path: helm/librechat
-      targetRevision: main
-      helm:
-        valueFiles:
-          - $local/k8s-apps/librechat/values.yaml
+  source:
+    repoURL: https://github.com/SecKatie/infrastructure.git
+    path: k8s-apps/librechat
+    targetRevision: main
   destination:
     server: https://kubernetes.default.svc
     namespace: librechat

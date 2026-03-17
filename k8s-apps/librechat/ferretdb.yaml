@@ -1,0 +1,82 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: ferretdb
+  namespace: librechat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: ferretdb
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: ferretdb
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+        - name: ferretdb
+          image: ghcr.io/ferretdb/ferretdb:1
+          ports:
+            - containerPort: 27017
+              name: mongodb
+          env:
+            # Phase 1: auth disabled so bootstrap Job can create the initial user.
+            # After the ferretdb-bootstrap Job has run successfully, change to "true" and redeploy.
+            - name: FERRETDB_AUTH
+              value: "false"
+            - name: FERRETDB_POSTGRESQL_URL
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-credentials-env
+                  key: FERRETDB_POSTGRESQL_URL
+          resources:
+            requests:
+              cpu: 100m
+              memory: 128Mi
+            limits:
+              cpu: 500m
+              memory: 512Mi
+          livenessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 10
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: 27017
+            initialDelaySeconds: 5
+            periodSeconds: 10
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: ferretdb
+  namespace: librechat
+spec:
+  selector:
+    app.kubernetes.io/name: ferretdb
+  ports:
+    - name: mongodb
+      port: 27017
+      targetPort: 27017
+---
+apiVersion: networking.k8s.io/v1
+kind: NetworkPolicy
+metadata:
+  name: ferretdb-allow-librechat
+  namespace: librechat
+spec:
+  podSelector:
+    matchLabels:
+      app.kubernetes.io/name: ferretdb
+  policyTypes:
+    - Ingress
+  ingress:
+    - from:
+        - podSelector:
+            matchLabels:
+              app.kubernetes.io/name: librechat
+      ports:
+        - port: 27017

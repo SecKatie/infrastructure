@@ -1,0 +1,60 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: librechat
+  namespace: librechat
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: librechat
+  template:
+    metadata:
+      labels:
+        app.kubernetes.io/name: librechat
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      containers:
+        - name: librechat
+          image: ghcr.io/danny-avila/librechat:v0.8.3
+          ports:
+            - containerPort: 3080
+              name: http
+          env:
+            - name: HOST
+              value: "0.0.0.0"
+            - name: PORT
+              value: "3080"
+            - name: NODE_ENV
+              value: "production"
+            - name: DOMAIN_CLIENT
+              value: "https://chat.corp.mulliken.net"
+            - name: DOMAIN_SERVER
+              value: "https://chat.corp.mulliken.net"
+            - name: ALLOW_EMAIL_LOGIN
+              value: "true"
+            - name: ALLOW_REGISTRATION
+              value: "false"
+            - name: MEILI_HOST
+              value: "http://meilisearch.librechat.svc.cluster.local:7700"
+          envFrom:
+            - secretRef:
+                name: librechat-credentials-env
+          resources:
+            requests:
+              cpu: 200m
+              memory: 256Mi
+            limits:
+              cpu: 1000m
+              memory: 1Gi
+          livenessProbe:
+            tcpSocket:
+              port: 3080
+            initialDelaySeconds: 30
+            periodSeconds: 30
+          readinessProbe:
+            tcpSocket:
+              port: 3080
+            initialDelaySeconds: 10
+            periodSeconds: 10

@@ -1,0 +1,22 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: librechat
+  namespace: librechat
+spec:
+  ingressClassName: traefik
+  tls:
+    - secretName: librechat-tls
+      hosts:
+        - chat.corp.mulliken.net
+  rules:
+    - host: chat.corp.mulliken.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: librechat
+                port:
+                  number: 80

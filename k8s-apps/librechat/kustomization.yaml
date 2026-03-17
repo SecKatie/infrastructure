@@ -4,3 +4,10 @@ kind: Kustomization
 resources:
   - namespace.yaml
   - sealedsecret.yaml
+  - deployment.yaml
+  - ferretdb.yaml
+  - ferretdb-bootstrap.yaml
+  - meilisearch.yaml
+  - service.yaml
+  - certificate.yaml
+  - ingress.yaml

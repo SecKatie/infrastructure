@@ -1,0 +1,43 @@
+apiVersion: batch/v1
+kind: Job
+metadata:
+  name: ferretdb-bootstrap
+  namespace: librechat
+  annotations:
+    argocd.argoproj.io/hook: PostSync
+    argocd.argoproj.io/hook-delete-policy: BeforeHookCreation
+spec:
+  backoffLimit: 5
+  template:
+    spec:
+      nodeSelector:
+        kubernetes.io/arch: amd64
+      restartPolicy: OnFailure
+      containers:
+        - name: mongosh
+          image: mongo:7
+          command:
+            - mongosh
+            - "mongodb://ferretdb.librechat.svc.cluster.local:27017/admin"
+            - --eval
+            - |
+              try {
+                db.createUser({
+                  user: "librechat",
+                  pwd: process.env.MONGO_PASSWORD,
+                  roles: [{ role: "readWrite", db: "librechat" }]
+                });
+                print("Bootstrap: user created");
+              } catch(e) {
+                if (e.code === 51003) {
+                  print("Bootstrap: user already exists, skipping");
+                } else {
+                  throw e;
+                }
+              }
+          env:
+            - name: MONGO_PASSWORD
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-credentials-env
+                  key: FERRETDB_MONGO_PASSWORD
