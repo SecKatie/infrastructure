@@ -37,3 +37,9 @@ mongodb:
   image:
     registry: public.ecr.aws
     repository: bitnami/mongodb
+  nodeSelector:
+    kubernetes.io/arch: amd64
+
+meilisearch:
+  nodeSelector:
+    kubernetes.io/arch: amd64
