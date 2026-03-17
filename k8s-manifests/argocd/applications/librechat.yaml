@@ -12,13 +12,15 @@ spec:
     - repoURL: https://github.com/SecKatie/infrastructure.git
       path: k8s-apps/librechat
       targetRevision: main
+    - repoURL: https://github.com/SecKatie/infrastructure.git
+      targetRevision: main
       ref: local
     - repoURL: https://github.com/danny-avila/LibreChat.git
       path: helm/librechat
       targetRevision: main
       helm:
         valueFiles:
-          - values.yaml
+          - $local/k8s-apps/librechat/values.yaml
   destination:
     server: https://kubernetes.default.svc
     namespace: librechat
