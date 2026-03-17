@@ -1,0 +1,7 @@
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: glitchgate
+  labels:
+    app.kubernetes.io/name: glitchgate
+    app.kubernetes.io/part-of: utilities
