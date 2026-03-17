@@ -101,9 +101,13 @@ sources:
 
 ### Bitnami Images
 
-Bitnami removed images from `docker.io/bitnami` in late 2025. Use `public.ecr.aws/bitnami/<image>` as the registry override in helm values:
+Bitnami removed images from `docker.io/bitnami` in late 2025. Use `public.ecr.aws/bitnami/<image>` as the registry override in helm values. You must also set `global.security.allowInsecureImages: true` since Bitnami charts validate against an approved registry allowlist:
 
 ```yaml
+global:
+  security:
+    allowInsecureImages: true
+
 mongodb:
   image:
     registry: public.ecr.aws
