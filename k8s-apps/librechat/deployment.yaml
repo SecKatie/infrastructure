@@ -44,6 +44,13 @@ spec:
               value: "http://meilisearch.librechat.svc.cluster.local:7700"
             - name: RAG_API_URL
               value: "http://rag-api.librechat.svc.cluster.local:8000"
+            - name: RAG_OPENAI_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-credentials-env
+                  key: SYNTHETIC_API_KEY
+            - name: RAG_OPENAI_BASEURL
+              value: "https://api.synthetic.new/openai/v1"
             - name: CONFIG_PATH
               value: "/config/librechat.yaml"
           envFrom:
