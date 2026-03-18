@@ -22,8 +22,6 @@ data:
         maxCitations: 30          # Maximum total citations in responses (1-50)
         maxCitationsPerFile: 7    # Maximum citations from each file (1-10)
         minRelevanceScore: 0.45   # Minimum relevance score threshold (0.0-1.0)
-
-    endpoints:
       custom:
         - name: "Glitchgate"
           apiKey: "${GLITCHGATE_API_KEY}"
