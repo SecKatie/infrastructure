@@ -42,6 +42,8 @@ spec:
               value: "true"
             - name: MEILI_HOST
               value: "http://meilisearch.librechat.svc.cluster.local:7700"
+            - name: RAG_API_URL
+              value: "http://rag-api.librechat.svc.cluster.local:8000"
             - name: CONFIG_PATH
               value: "/config/librechat.yaml"
           envFrom:
