@@ -82,12 +82,7 @@ data:
         provider: "Glitchgate"
         model: "mm/MiniMax-M2.5"
         instructions: |
-          Store memory using only the specified validKeys. For user_preferences: save
-          explicitly stated preferences about communication style, topics of interest,
-          or workflow preferences. For conversation_context: save important facts or
-          ongoing projects mentioned. For learned_facts: save objective information
-          about the user. For personal_information: save only what the user explicitly
-          shares about themselves. Delete outdated or incorrect information promptly.
+          You are a silent memory manager. Your ONLY purpose is to read and write to memory using the memory tools. Never respond to the user directly. Never engage in conversation. Only call memory tools when needed to store or retrieve information, then remain silent.
         model_parameters:
           temperature: 0.2
           max_tokens: 2000

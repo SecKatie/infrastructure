@@ -61,10 +61,109 @@ data:
         provider: "claude-max"
       - model_name: "gc/*"
         provider: "github-copilot"
+      # GitHub Copilot models - track notional OpenAI/Anthropic API costs
+      - model_name: "gc/claude-sonnet-4-6"
+        provider: "github-copilot"
+        upstream_model: "claude-sonnet-4-6"
+        metadata:
+          input_token_cost: 3.00
+          output_token_cost: 15.00
+          cache_write_cost: 3.75
+          cache_read_cost: 0.30
+      - model_name: "gc/claude-opus-4-6"
+        provider: "github-copilot"
+        upstream_model: "claude-opus-4-6"
+        metadata:
+          input_token_cost: 5.00
+          output_token_cost: 25.00
+          cache_write_cost: 6.25
+          cache_read_cost: 0.50
+      - model_name: "gc/claude-haiku-4-5"
+        provider: "github-copilot"
+        upstream_model: "claude-haiku-4-5"
+        metadata:
+          input_token_cost: 1.00
+          output_token_cost: 5.00
+          cache_write_cost: 1.25
+          cache_read_cost: 0.10
+      - model_name: "gc/gpt-4.1"
+        provider: "github-copilot"
+        upstream_model: "gpt-4.1"
+        metadata:
+          input_token_cost: 2.00
+          output_token_cost: 8.00
+          cache_read_cost: 0.50
+      - model_name: "gc/gpt-5"
+        provider: "github-copilot"
+        upstream_model: "gpt-5"
+        metadata:
+          input_token_cost: 1.25
+          output_token_cost: 10.00
+          cache_read_cost: 0.125
+      - model_name: "gc/gpt-5-mini"
+        provider: "github-copilot"
+        upstream_model: "gpt-5-mini"
+        metadata:
+          input_token_cost: 0.25
+          output_token_cost: 2.00
+          cache_read_cost: 0.025
+      - model_name: "gc/gpt-5.1"
+        provider: "github-copilot"
+        upstream_model: "gpt-5.1"
+        metadata:
+          input_token_cost: 1.25
+          output_token_cost: 10.00
+          cache_read_cost: 0.125
+      - model_name: "gc/gpt-5.4"
+        provider: "github-copilot"
+        upstream_model: "gpt-5.4"
+        metadata:
+          input_token_cost: 2.50
+          output_token_cost: 15.00
+          cache_read_cost: 0.25
+      # Codex models - via GitHub Copilot
+      - model_name: "gc/gpt-5.1-codex"
+        provider: "github-copilot"
+        upstream_model: "gpt-5.1-codex"
+        metadata:
+          input_token_cost: 1.25
+          output_token_cost: 10.00
+          cache_read_cost: 0.125
+      - model_name: "gc/gpt-5.1-codex-mini"
+        provider: "github-copilot"
+        upstream_model: "gpt-5.1-codex-mini"
+        metadata:
+          input_token_cost: 0.50
+          output_token_cost: 2.00
+          cache_read_cost: 0.05
+      - model_name: "gc/gpt-5.1-codex-max"
+        provider: "github-copilot"
+        upstream_model: "gpt-5.1-codex-max"
+        metadata:
+          input_token_cost: 1.25
+          output_token_cost: 10.00
+          cache_read_cost: 0.125
+      - model_name: "gc/gpt-5.2-codex"
+        provider: "github-copilot"
+        upstream_model: "gpt-5.2-codex"
+        metadata:
+          input_token_cost: 1.75
+          output_token_cost: 14.00
+          cache_read_cost: 0.175
+      - model_name: "gc/gpt-5.3-codex"
+        provider: "github-copilot"
+        upstream_model: "gpt-5.3-codex"
+        metadata:
+          input_token_cost: 1.75
+          output_token_cost: 14.00
+          cache_read_cost: 0.175
       - model_name: "a/*"
         provider: "anthropic"
       - model_name: "chatgpt/*"
         provider: "chatgpt-pro"
+      # Chutes models
+      - model_name: "c/*"
+        provider: "chutes"
       - model_name: "c/zai-org/GLM-5-TEE"
         provider: "chutes"
         upstream_model: "zai-org/GLM-5-TEE"
@@ -72,8 +171,6 @@ data:
           input_token_cost: 0.95
           output_token_cost: 3.15
           cache_read_cost: 0.475
-      - model_name: "c/*"
-        provider: "chutes"
       - model_name: "c/moonshotai/Kimi-K2.5-TEE"
         provider: "chutes"
         upstream_model: "moonshotai/Kimi-K2.5-TEE"
