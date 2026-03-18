@@ -1,0 +1,64 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: librechat-config
+  namespace: librechat
+data:
+  librechat.yaml: |
+    version: 1.2.1
+
+    endpoints:
+      custom:
+        - name: "Glitchgate"
+          apiKey: "${GLITCHGATE_API_KEY}"
+          baseURL: "http://glitchgate.glitchgate.svc.cluster.local/v1"
+          models:
+            default:
+              - "claude-sonnet-resilient"
+              - "cm/claude-sonnet-4-6"
+              - "cm/claude-opus-4-6"
+              - "cm/claude-haiku-4-5"
+              - "gc/claude-sonnet-4-6"
+              - "gc/claude-sonnet-4-5"
+              - "gc/claude-opus-4-6"
+              - "gc/claude-opus-4-5"
+              - "gc/claude-haiku-4-5"
+              - "gc/gpt-4.1"
+              - "gc/gpt-5"
+              - "gc/gpt-5-mini"
+              - "gc/gpt-5.1"
+              - "gc/gpt-5.4"
+              - "a/claude-sonnet-4-6"
+              - "a/claude-opus-4-6"
+              - "a/claude-haiku-4-5"
+              - "c/zai-org/GLM-5-TEE"
+              - "c/moonshotai/Kimi-K2.5-TEE"
+              - "c/MiniMaxAI/MiniMax-M2.5-TEE"
+              - "c/deepseek-ai/DeepSeek-R1-0528-TEE"
+              - "c/deepseek-ai/DeepSeek-V3.2-TEE"
+              - "c/Qwen/Qwen3-Coder-Next-TEE"
+              - "c/Qwen/Qwen3-32B-TEE"
+              - "c/Qwen/Qwen3.5-397B-A17B-TEE"
+              - "s/MiniMax-M2.5"
+              - "s/Kimi-K2.5"
+              - "s/GLM-4.7"
+              - "s/GLM-4.7-Flash"
+              - "s/DeepSeek-R1-0528"
+              - "s/DeepSeek-V3"
+              - "s/DeepSeek-V3.2"
+              - "s/Llama-3.3-70B-Instruct"
+              - "s/MiniMax-M2.1"
+              - "s/Kimi-K2-Instruct-0905"
+              - "s/Kimi-K2-Thinking"
+              - "s/Kimi-K2.5-NVFP4"
+              - "s/NVIDIA-Nemotron-3-Super-120B-A12B-NVFP4"
+              - "s/gpt-oss-120b"
+              - "s/Qwen3-235B-A22B-Thinking-2507"
+              - "s/Qwen3-Coder-480B-A35B-Instruct"
+              - "s/Qwen3.5-397B-A17B"
+              - "mm/MiniMax-M2.5"
+              - "gpt-5.4"
+            fetch: false
+          titleConvo: true
+          titleModel: "cm/claude-sonnet-4-6"
+          modelDisplayLabel: "Glitchgate"

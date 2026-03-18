@@ -42,9 +42,15 @@ spec:
               value: "true"
             - name: MEILI_HOST
               value: "http://meilisearch.librechat.svc.cluster.local:7700"
+            - name: CONFIG_PATH
+              value: "/config/librechat.yaml"
           envFrom:
             - secretRef:
                 name: librechat-credentials-env
+          volumeMounts:
+            - name: config
+              mountPath: /config
+              readOnly: true
           resources:
             requests:
               cpu: 200m
@@ -62,3 +68,7 @@ spec:
               port: 3080
             initialDelaySeconds: 10
             periodSeconds: 10
+      volumes:
+        - name: config
+          configMap:
+            name: librechat-config
