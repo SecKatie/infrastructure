@@ -69,11 +69,6 @@ data:
 
     memory:
       disabled: false
-      validKeys:
-        - "user_preferences"
-        - "conversation_context"
-        - "learned_facts"
-        - "personal_information"
       tokenLimit: 3000
       charLimit: 10000
       personalize: true
