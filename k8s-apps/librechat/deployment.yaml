@@ -60,6 +60,8 @@ spec:
             - name: config
               mountPath: /config
               readOnly: true
+            - name: data
+              mountPath: /app/api/data
           resources:
             requests:
               cpu: 200m
@@ -81,3 +83,6 @@ spec:
         - name: config
           configMap:
             name: librechat-config
+        - name: data
+          persistentVolumeClaim:
+            claimName: librechat-data
