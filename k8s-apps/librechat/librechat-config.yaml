@@ -56,7 +56,10 @@ data:
               - "mm/MiniMax-M2.5"
             fetch: false
           titleConvo: true
-          titleModel: "cm/claude-sonnet-4-6"
+          titleModel: "mm/MiniMax-M2.5"
+          titleMethod: "completion"
+          summarize: true
+          summaryModel: "mm/MiniMax-M2.5"
           modelDisplayLabel: "Glitchgate"
 
     memory:
