@@ -69,12 +69,28 @@ data:
 
     memory:
       disabled: false
+      validKeys:
+        - "user_preferences"
+        - "conversation_context"
+        - "learned_facts"
+        - "personal_information"
+      tokenLimit: 3000
+      charLimit: 10000
       personalize: true
-      tokenLimit: 2000
-      messageWindowSize: 5
+      messageWindowSize: 8
       agent:
         provider: "Glitchgate"
-        model: "gc/gpt-5-mini"
+        model: "mm/MiniMax-M2.5"
+        instructions: |
+          Store memory using only the specified validKeys. For user_preferences: save
+          explicitly stated preferences about communication style, topics of interest,
+          or workflow preferences. For conversation_context: save important facts or
+          ongoing projects mentioned. For learned_facts: save objective information
+          about the user. For personal_information: save only what the user explicitly
+          shares about themselves. Delete outdated or incorrect information promptly.
+        model_parameters:
+          temperature: 0.2
+          max_tokens: 2000
 
     webSearch:
       searchProvider: "serper"
