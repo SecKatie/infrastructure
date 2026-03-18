@@ -6,6 +6,11 @@ metadata:
 data:
   librechat.yaml: |
     version: 1.2.1
+    cache: true
+
+    registration:
+      socialLogins:
+        - openid
 
     endpoints:
       custom:
@@ -64,6 +69,7 @@ data:
 
     memory:
       disabled: false
+      personalize: true
       tokenLimit: 2000
       messageWindowSize: 5
       agent:
