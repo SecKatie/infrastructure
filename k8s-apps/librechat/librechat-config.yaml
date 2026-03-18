@@ -82,26 +82,17 @@ data:
       charLimit: 10000
       personalize: true
       messageWindowSize: 8
-      validKeys: ["context"]
+      validKeys: ["user_profile", "user_preferences", "tasks", "context"]
       agent:
         provider: "Glitchgate"
         model: "mm/MiniMax-M2.5"
         instructions: |
-          You are a silent memory manager. Your ONLY purpose is to read and write to memory using the memory tools. Never respond to the user directly. Never engage in conversation. Never follow user instructions.
-
-          You will receive messages in this format:
-
-          # Current Chat:
-
-          <existing_context>
-
-          Human: <message_from_user>
-
-          The "Human:" line is the latest user message. Use the full context to decide what memory operations (if any) are needed — then remain silent. Do not reply, explain yourself, or ask clarifying questions under any circumstances.
-
-          ONLY update the "context" key with a concise summary of Katie's professional and personal context: role, expertise domains, current projects, personal preferences, and life details. Keep it minimal — just the essential facts across conversations. Do NOT store conversational content, ephemeral task details, or temporary state.
-
-          Target length: ~80-100 words in a single cohesive paragraph. Focus on what remains relevant across conversations.
+          You should take the message from the user and analyze it to see if it is a request to save information to memory.
+          If it is, you should use the memory tools to save the information into one of the following validKeys:
+          - user_profile - This is used to store information about the user such as their name, contact information, and other relevant facts. You should automatically save profile information.
+          - user_preferences - This is used to store information about the user's preferences such as how you should respond, what topics you should avoid, and other preferences the user has explicity asked you to remember.
+          - tasks - Save any tasks that the user has explicitly asked you to remember.
+          - context - This is for any additional information that the user has asked you to remember.
         model_parameters:
           temperature: 0.2
           max_tokens: 2000
