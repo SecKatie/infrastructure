@@ -15,9 +15,6 @@ data:
           models:
             default:
               - "claude-sonnet-resilient"
-              - "cm/claude-sonnet-4-6"
-              - "cm/claude-opus-4-6"
-              - "cm/claude-haiku-4-5"
               - "gc/claude-sonnet-4-6"
               - "gc/claude-sonnet-4-5"
               - "gc/claude-opus-4-6"
@@ -57,8 +54,22 @@ data:
               - "s/Qwen3-Coder-480B-A35B-Instruct"
               - "s/Qwen3.5-397B-A17B"
               - "mm/MiniMax-M2.5"
-              - "gpt-5.4"
             fetch: false
           titleConvo: true
           titleModel: "cm/claude-sonnet-4-6"
           modelDisplayLabel: "Glitchgate"
+
+    search:
+      provider: "serper"
+      apiKey: "${SERPER_API_KEY}"
+
+    jina:
+      apiKey: "${JINA_API_KEY}"
+
+    memory:
+      disabled: false
+      tokenLimit: 2000
+      messageWindowSize: 5
+      agent:
+        provider: "Glitchgate"
+        model: "gc/claude-sonnet-4-6"
