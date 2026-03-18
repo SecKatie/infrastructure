@@ -53,6 +53,10 @@ spec:
                   key: SYNTHETIC_API_KEY
             - name: RAG_OPENAI_BASEURL
               value: "https://api.synthetic.new/openai/v1"
+            - name: EMBEDDINGS_PROVIDER
+              value: "openai"
+            - name: EMBEDDINGS_MODEL
+              value: "hf:nomic-ai/nomic-embed-text-v1.5"
             - name: CONFIG_PATH
               value: "/config/librechat.yaml"
           envFrom:
