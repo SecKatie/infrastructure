@@ -42,9 +42,15 @@ spec:
           volumeMounts:
             - name: config
               mountPath: /data
+            - name: copilot-tokens
+              mountPath: /home/glitchgate/.config/glitchgate/copilot
+              readOnly: true
       volumes:
         - name: config-template
           configMap:
             name: glitchgate-config
         - name: config
           emptyDir: {}
+        - name: copilot-tokens
+          secret:
+            secretName: glitchgate-copilot-tokens

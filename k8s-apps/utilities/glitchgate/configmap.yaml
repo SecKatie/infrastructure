@@ -25,6 +25,7 @@ data:
         monthly_subscription_cost: 100.00
       - name: "github-copilot"
         type: "github_copilot"
+        token_dir: "/home/glitchgate/.config/glitchgate/copilot"
         monthly_subscription_cost: 8.34
       - name: "chatgpt-pro"
         type: "openai_responses"
