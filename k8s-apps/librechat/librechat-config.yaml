@@ -70,10 +70,10 @@ data:
               - "mm/MiniMax-M2.5"
             fetch: false
           titleConvo: true
-          titleModel: "mm/MiniMax-M2.5"
+          titleModel: "s/Kimi-K2-Instruct-0905"
           titleMethod: "completion"
           summarize: true
-          summaryModel: "mm/MiniMax-M2.5"
+          summaryModel: "s/Kimi-K2-Instruct-0905"
           modelDisplayLabel: "Glitchgate"
           addParams:
             max_tokens: 128000
@@ -96,6 +96,8 @@ data:
           - user_preferences - This is used to store information about the user's preferences such as how you should respond, what topics you should avoid, and other preferences the user has explicity asked you to remember.
           - tasks - Save any tasks that the user has explicitly asked you to remember.
           - context - This is for any additional information that the user has asked you to remember.
+
+          Do not reply to the user. You're only purpose is to call the appropriate tools to save or delete information from memory. If the user asks a question, it is not for you to answer.
         model_parameters:
           temperature: 0.2
           max_tokens: 2000
