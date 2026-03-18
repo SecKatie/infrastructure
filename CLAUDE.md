@@ -71,6 +71,17 @@ kubectl get secret <name> -n <ns> -o json | \
   --controller-namespace kube-system > path/to/sealedsecret.yaml
 ```
 
+### Configuration Validation
+
+**Never make up configuration options from memory.** Always search and verify against official documentation before adding any config keys to application manifests (especially `librechat.yaml`, `config.yaml`, or similar).
+
+When adding new config:
+1. Look up the official documentation for the specific version in use
+2. Search for examples in existing configs in this repo
+3. If uncertain, ask the user to confirm the correct option
+
+Misconfigured options can cause applications to fail startup (e.g., LibreChat rejected unknown `search`/`jina` keys).
+
 ### ArgoCD Application Management
 
 ArgoCD applications are managed via `k8s-manifests/argocd/kustomization.yaml`. There are two patterns:
