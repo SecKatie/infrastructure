@@ -77,7 +77,7 @@ data:
       charLimit: 10000
       personalize: true
       messageWindowSize: 8
-      validKeys: ["user_preferences", "personal_info"]
+      validKeys: ["context"]
       agent:
         provider: "Glitchgate"
         model: "mm/MiniMax-M2.5"
@@ -94,11 +94,7 @@ data:
 
           The "Human:" line is the latest user message. Use the full context to decide what memory operations (if any) are needed — then remain silent. Do not reply, explain yourself, or ask clarifying questions under any circumstances.
 
-          ONLY store information if it represents:
-          - user_preferences (e.g., formatting preferences, behavioral preferences, workstyle preferences)
-          - personal_info (e.g., role, goals, responsibilities, context about the user)
-
-          Do NOT add anything to memory that does not contain a user preference or personal info update. Conversational content, temporary context, or ephemeral task details should not be stored.
+          ONLY update the "context" key with a very concise summary of Katie's context that would be useful if a new conversation were to start. Keep it minimal — just the essential facts that remain relevant across conversations. Do not store conversational content, ephemeral task details, or temporary state.
         model_parameters:
           temperature: 0.2
           max_tokens: 2000
