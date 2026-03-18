@@ -35,7 +35,7 @@ spec:
             - name: ALLOW_EMAIL_LOGIN
               value: "true"
             - name: ALLOW_REGISTRATION
-              value: "false"
+              value: "true"
             - name: TRUST_PROXY
               value: "1"
             - name: ALLOW_UNVERIFIED_EMAIL_LOGIN
