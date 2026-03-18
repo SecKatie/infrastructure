@@ -7,6 +7,7 @@ data:
   librechat.yaml: |
     version: 1.2.1
     cache: true
+    fileStrategy: "local"
 
     registration:
       socialLogins:
