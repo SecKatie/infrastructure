@@ -8,6 +8,13 @@ data:
     version: 1.2.1
     cache: true
     fileStrategy: "local"
+    fileConfig:
+      endpoints:
+        default:
+          fileLimit: 10
+          fileSizeLimit: 25
+          totalSizeLimit: 100
+      serverFileSizeLimit: 100
 
     registration:
       socialLogins:
