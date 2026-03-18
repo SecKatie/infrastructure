@@ -35,6 +35,22 @@ spec:
               value: "8000"
             - name: NODE_ENV
               value: "production"
+            - name: DB_HOST
+              value: "rag-api-postgres"
+            - name: DB_PORT
+              value: "5432"
+            - name: DB_NAME
+              value: "rag"
+            - name: DB_USER
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-credentials-env
+                  key: RAG_POSTGRES_USER
+            - name: DB_PASS
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-credentials-env
+                  key: RAG_POSTGRES_PASSWORD
           resources:
             requests:
               cpu: 100m

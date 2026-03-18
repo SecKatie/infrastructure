@@ -6,6 +6,7 @@ resources:
   - sealedsecret.yaml
   - deployment.yaml
   - rag-api.yaml
+  - rag-api-postgres.yaml
   - librechat-config.yaml
   - librechat-postgres.yaml
   - ferretdb.yaml
