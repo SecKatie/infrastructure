@@ -35,6 +35,10 @@ spec:
               value: "8000"
             - name: NODE_ENV
               value: "production"
+            - name: RAG_CHECK_EMBEDDING_CTX_LENGTH
+              value: "False"
+            - name: EMBEDDINGS_CHUNK_SIZE
+              value: "8000"
             - name: DB_HOST
               value: "rag-api-postgres"
             - name: DB_PORT
