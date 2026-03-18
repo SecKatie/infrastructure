@@ -15,8 +15,6 @@ spec:
     spec:
       nodeSelector:
         kubernetes.io/arch: amd64
-      securityContext:
-        fsGroup: 1000
       containers:
         - name: librechat
           image: ghcr.io/danny-avila/librechat:v0.8.3
@@ -55,8 +53,6 @@ spec:
                   key: SYNTHETIC_API_KEY
             - name: RAG_OPENAI_BASEURL
               value: "https://api.synthetic.new/openai/v1"
-            - name: GOOGLE_KEY
-              value: "user_provided"
             - name: CONFIG_PATH
               value: "/config/librechat.yaml"
           envFrom:
@@ -66,8 +62,6 @@ spec:
             - name: config
               mountPath: /config
               readOnly: true
-            - name: data
-              mountPath: /app/api/data
           resources:
             requests:
               cpu: 200m
@@ -89,6 +83,3 @@ spec:
         - name: config
           configMap:
             name: librechat-config
-        - name: data
-          persistentVolumeClaim:
-            claimName: librechat-data
