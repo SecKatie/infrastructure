@@ -72,4 +72,4 @@ data:
       messageWindowSize: 5
       agent:
         provider: "Glitchgate"
-        model: "gc/claude-sonnet-4-6"
+        model: "gc/gpt-5-mini"
