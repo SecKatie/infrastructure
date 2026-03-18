@@ -11,12 +11,20 @@ data:
     registration:
       socialLogins:
         - openid
+    endpoints:
+
+    agents:
+      recursionLimit: 50
+      maxRecursionLimit: 100
+      disableBuilder: false
+      # (optional) Agent Capabilities available to all users. Omit the ones you wish to exclude. Defaults to list below.
+      # capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
+      # (optional) File citation configuration for file_search capability
+      maxCitations: 30          # Maximum total citations in responses (1-50)
+      maxCitationsPerFile: 7    # Maximum citations from each file (1-10)
+      minRelevanceScore: 0.45   # Minimum relevance score threshold (0.0-1.0)
 
     endpoints:
-      agents:
-        capabilities:
-          - "context"
-          - "ocr"
       custom:
         - name: "Glitchgate"
           apiKey: "${GLITCHGATE_API_KEY}"
