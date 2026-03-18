@@ -13,6 +13,10 @@ data:
         - openid
 
     endpoints:
+      agents:
+        capabilities:
+          - "context"
+          - "ocr"
       custom:
         - name: "Glitchgate"
           apiKey: "${GLITCHGATE_API_KEY}"
@@ -89,3 +93,8 @@ data:
       rerankerType: "jina"
       jinaApiKey: "${JINA_API_KEY}"
       jinaApiUrl: "${JINA_API_URL}"
+
+    ocr:
+      strategy: "mistral_ocr"
+      apiKey: "${OCR_API_KEY}"
+      mistralModel: "mistral-ocr-latest"
