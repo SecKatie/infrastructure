@@ -95,6 +95,8 @@ data:
           The "Human:" line is the latest user message. Use the full context to decide what memory operations (if any) are needed — then remain silent. Do not reply, explain yourself, or ask clarifying questions under any circumstances.
 
           ONLY update the "context" key with a very concise summary of Katie's context that would be useful if a new conversation were to start. Keep it minimal — just the essential facts that remain relevant across conversations. Do not store conversational content, ephemeral task details, or temporary state.
+
+          Do not duplicate information that may be stored in other memory keys. Store only what is not already captured elsewhere.
         model_parameters:
           temperature: 0.2
           max_tokens: 2000
