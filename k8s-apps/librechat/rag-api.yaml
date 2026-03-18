@@ -27,11 +27,11 @@ spec:
                 secretKeyRef:
                   name: librechat-credentials-env
                   key: SYNTHETIC_API_KEY
-            - name: OPENAI_BASE_URL
+            - name: RAG_OPENAI_BASEURL
               value: "https://api.synthetic.new/openai/v1"
-            - name: RAG_EMBEDDINGS_MODEL
+            - name: EMBEDDINGS_MODEL
               value: "hf:nomic-ai/nomic-embed-text-v1.5"
-            - name: RAG_API_PORT
+            - name: RAG_PORT
               value: "8000"
             - name: NODE_ENV
               value: "production"
