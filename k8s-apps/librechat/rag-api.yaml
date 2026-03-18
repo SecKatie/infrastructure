@@ -39,14 +39,14 @@ spec:
               value: "rag-api-postgres"
             - name: DB_PORT
               value: "5432"
-            - name: DB_NAME
+            - name: POSTGRES_DB
               value: "rag"
-            - name: DB_USER
+            - name: POSTGRES_USER
               valueFrom:
                 secretKeyRef:
                   name: librechat-credentials-env
                   key: RAG_POSTGRES_USER
-            - name: DB_PASS
+            - name: POSTGRES_PASSWORD
               valueFrom:
                 secretKeyRef:
                   name: librechat-credentials-env
