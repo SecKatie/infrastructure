@@ -59,13 +59,6 @@ data:
           titleModel: "cm/claude-sonnet-4-6"
           modelDisplayLabel: "Glitchgate"
 
-    search:
-      provider: "serper"
-      apiKey: "${SERPER_API_KEY}"
-
-    jina:
-      apiKey: "${JINA_API_KEY}"
-
     memory:
       disabled: false
       tokenLimit: 2000
