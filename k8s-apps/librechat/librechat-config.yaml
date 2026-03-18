@@ -75,6 +75,9 @@ data:
           summarize: true
           summaryModel: "mm/MiniMax-M2.5"
           modelDisplayLabel: "Glitchgate"
+          addParams:
+            max_tokens: 128000
+            max_output_tokens: 32000
 
     memory:
       disabled: false
