@@ -85,19 +85,18 @@ data:
       charLimit: 10000
       personalize: true
       messageWindowSize: 8
-      # validKeys: ["user_profile", "user_preferences", "tasks", "context"]
+      validKeys:
+        - "user_preferences"
+        - "conversation_context"
+        - "learned_facts"
+        - "personal_information"
       agent:
         provider: "Glitchgate"
-        model: "s/Kimi-K2-Instruct-0905"
-        # instructions: |
-        #   You should take the message from the user and analyze it to see if it is a request to save information to memory.
-        #   If it is, you should use the memory tools to save the information into one of the following validKeys:
-        #   - user_profile - This is used to store information about the user such as their name, contact information, and other relevant facts. You should automatically save profile information.
-        #   - user_preferences - This is used to store information about the user's preferences such as how you should respond, what topics you should avoid, and other preferences the user has explicity asked you to remember.
-        #   - tasks - Save any tasks that the user has explicitly asked you to remember.
-        #   - context - This is for any additional information that the user has asked you to remember.
-
-        #   Do not reply to the user. You're only purpose is to call the appropriate tools to save or delete information from memory. If the user asks a question, it is not for you to answer.
+        model: "s/GLM-4.7-Flash"
+        instructions: |
+          Store information only in the specified validKeys categories.
+          Focus on explicitly stated preferences and important facts.
+          Delete outdated or corrected information promptly.
         model_parameters:
           temperature: 0.2
           max_tokens: 2000
