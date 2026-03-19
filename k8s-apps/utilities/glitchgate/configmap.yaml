@@ -159,6 +159,31 @@ data:
           cache_read_cost: 0.175
       - model_name: "a/*"
         provider: "anthropic"
+      # Anthropic models with pricing
+      - model_name: "a/claude-opus-4-6"
+        provider: "anthropic"
+        upstream_model: "claude-opus-4-6"
+        metadata:
+          input_token_cost: 15.00
+          output_token_cost: 75.00
+          cache_write_cost: 18.75
+          cache_read_cost: 1.50
+      - model_name: "a/claude-sonnet-4-6"
+        provider: "anthropic"
+        upstream_model: "claude-sonnet-4-6"
+        metadata:
+          input_token_cost: 3.00
+          output_token_cost: 15.00
+          cache_write_cost: 3.75
+          cache_read_cost: 0.30
+      - model_name: "a/claude-haiku-4-5"
+        provider: "anthropic"
+        upstream_model: "claude-haiku-4-5"
+        metadata:
+          input_token_cost: 0.80
+          output_token_cost: 4.00
+          cache_write_cost: 1.00
+          cache_read_cost: 0.08
       - model_name: "chatgpt/*"
         provider: "chatgpt-pro"
       # Chutes models
