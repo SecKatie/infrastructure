@@ -357,6 +357,14 @@ data:
           output_token_cost: 2.40
           cache_read_cost: 0.03
           cache_write_cost: 0.375
+      - model_name: "mm/MiniMax-M2.7"
+        provider: "minimax"
+        upstream_model: "MiniMax-M2.7"
+        metadata:
+          input_token_cost: 0.30
+          output_token_cost: 1.20
+          cache_read_cost: 0.06
+          cache_write_cost: 0.375
       - model_name: "gpt-5.4"
         provider: "chatgpt-pro"
         upstream_model: "gpt-5.4"
