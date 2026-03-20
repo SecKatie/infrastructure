@@ -1,0 +1,26 @@
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: bifrost
+  namespace: bifrost
+  labels:
+    app.kubernetes.io/name: bifrost
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/managed-by: argocd
+spec:
+  ingressClassName: traefik
+  tls:
+    - hosts:
+        - bifrost.corp.mulliken.net
+      secretName: bifrost-tls
+  rules:
+    - host: bifrost.corp.mulliken.net
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: bifrost
+                port:
+                  number: 8080

@@ -1,0 +1,16 @@
+apiVersion: cert-manager.io/v1
+kind: Certificate
+metadata:
+  name: bifrost-tls
+  namespace: bifrost
+  labels:
+    app.kubernetes.io/name: bifrost
+    app.kubernetes.io/part-of: utilities
+    app.kubernetes.io/managed-by: argocd
+spec:
+  secretName: bifrost-tls
+  issuerRef:
+    name: letsencrypt-prod
+    kind: ClusterIssuer
+  dnsNames:
+    - bifrost.corp.mulliken.net
