@@ -38,6 +38,8 @@ spec:
               value: "true"
             - name: ALLOW_REGISTRATION
               value: "true"
+            - name: NODE_OPTIONS
+              value: "--max-old-space-size=921"
             - name: TRUST_PROXY
               value: "1"
             - name: ALLOW_UNVERIFIED_EMAIL_LOGIN
