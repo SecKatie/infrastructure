@@ -20,6 +20,8 @@ spec:
       labels:
         app.kubernetes.io/name: bifrost
     spec:
+      securityContext:
+        fsGroup: 1000
       containers:
         - name: bifrost
           image: maximhq/bifrost:latest
