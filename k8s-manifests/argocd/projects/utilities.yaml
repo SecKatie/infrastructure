@@ -37,6 +37,8 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: glitchgate
       server: https://kubernetes.default.svc
+    - namespace: bifrost
+      server: https://kubernetes.default.svc
     - namespace: utilities
       server: https://kubernetes.default.svc
   clusterResourceWhitelist:
