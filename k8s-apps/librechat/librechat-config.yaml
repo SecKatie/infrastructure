@@ -66,6 +66,7 @@ data:
       searchProvider: "serper"
       serperApiKey: "${SERPER_API_KEY}"
       scraperProvider: "serper"
+      scraperTimeout: 30000
       rerankerType: "jina"
       jinaApiKey: "${JINA_API_KEY}"
       jinaApiUrl: "${JINA_API_URL}"
