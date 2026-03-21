@@ -57,7 +57,6 @@ data:
         base_url: "https://api.minimax.io/anthropic"
         auth_mode: "proxy_key"
         api_key: "${MINIMAX_API_KEY}"
-        discover_models: true
         monthly_subscription_cost: 10.00
 
     model_list:
