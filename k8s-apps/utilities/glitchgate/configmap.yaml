@@ -46,8 +46,8 @@ data:
         api_key: "${ANTHROPIC_API_KEY}"
         discover_models: true
       - name: "synthetic"
-        type: "anthropic"
-        base_url: "https://api.synthetic.new/anthropic"
+        type: "openai"
+        base_url: "https://api.synthetic.new/openai"
         auth_mode: "proxy_key"
         api_key: "${SYNTHETIC_API_KEY}"
         discover_models: true
