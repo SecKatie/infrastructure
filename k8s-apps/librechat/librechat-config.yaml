@@ -25,7 +25,7 @@ data:
       custom:
         - name: "Glitchgate"
           apiKey: "${GLITCHGATE_API_KEY}"
-          baseURL: "http://glitchgate.glitchgate.svc.cluster.local/v1"
+          baseURL: "http://glitchgate.glitchgate.svc.cluster.local/openai/v1"
           models:
             default:
               - "s/Kimi-K2-Instruct-0905"
