@@ -25,16 +25,16 @@ data:
       custom:
         - name: "Glitchgate"
           apiKey: "${GLITCHGATE_API_KEY}"
-          baseURL: "http://glitchgate.glitchgate.svc.cluster.local/openai/v1"
+          baseURL: "https://glitchgate.corp.mulliken.net/openai/v1"
           models:
             default:
-              - "s/Kimi-K2-Instruct-0905"
+              - "synthetic/hf:moonshotai/Kimi-K2-Instruct-0905"
             fetch: true
           titleConvo: true
-          titleModel: "s/Kimi-K2-Instruct-0905"
+          titleModel: "synthetic/hf:moonshotai/Kimi-K2-Instruct-0905"
           titleMethod: "completion"
           summarize: true
-          summaryModel: "s/Kimi-K2-Instruct-0905"
+          summaryModel: "synthetic/hf:moonshotai/Kimi-K2-Instruct-0905"
           modelDisplayLabel: "Glitchgate"
           addParams:
             max_tokens: 128000
