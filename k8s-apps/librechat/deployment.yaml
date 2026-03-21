@@ -39,7 +39,7 @@ spec:
             - name: ALLOW_REGISTRATION
               value: "true"
             - name: NODE_OPTIONS
-              value: "--max-old-space-size=921"
+              value: "--max-old-space-size=1536"
             - name: TRUST_PROXY
               value: "1"
             - name: ALLOW_UNVERIFIED_EMAIL_LOGIN
@@ -67,7 +67,7 @@ spec:
               memory: 256Mi
             limits:
               cpu: 1000m
-              memory: 1Gi
+              memory: 2Gi
           livenessProbe:
             tcpSocket:
               port: 3080
