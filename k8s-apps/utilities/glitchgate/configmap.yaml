@@ -34,7 +34,7 @@ data:
         monthly_subscription_cost: 20.00
       - name: "chutes"
         type: "openai"
-        base_url: "https://llm.chutes.ai/v1"
+        base_url: "https://llm.chutes.ai"
         auth_mode: "proxy_key"
         api_key: "${CHUTES_API_KEY}"
         discover_models: true
