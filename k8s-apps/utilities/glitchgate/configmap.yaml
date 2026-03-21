@@ -63,25 +63,25 @@ data:
       # GitHub Copilot models - track notional OpenAI/Anthropic API costs
       - model_name: "gc/*"
         provider: "github-copilot"
-      - model_name: "gc/claude-sonnet-4-6"
+      - model_name: "gc/claude-sonnet-4.6"
         provider: "github-copilot"
-        upstream_model: "claude-sonnet-4-6"
+        upstream_model: "claude-sonnet-4.6"
         metadata:
           input_token_cost: 3.00
           output_token_cost: 15.00
           cache_write_cost: 3.75
           cache_read_cost: 0.30
-      - model_name: "gc/claude-opus-4-6"
+      - model_name: "gc/claude-opus-4.6"
         provider: "github-copilot"
-        upstream_model: "claude-opus-4-6"
+        upstream_model: "claude-opus-4.6"
         metadata:
           input_token_cost: 5.00
           output_token_cost: 25.00
           cache_write_cost: 6.25
           cache_read_cost: 0.50
-      - model_name: "gc/claude-haiku-4-5"
+      - model_name: "gc/claude-haiku-4.5"
         provider: "github-copilot"
-        upstream_model: "claude-haiku-4-5"
+        upstream_model: "claude-haiku-4.5"
         metadata:
           input_token_cost: 1.00
           output_token_cost: 5.00
@@ -166,4 +166,4 @@ data:
       - model_name: "cm/*"
         provider: "claude-max"
       - model_name: "claude-sonnet-resilient"
-        fallbacks: ["cm/claude-sonnet-4-6", "gc/claude-sonnet-4-6", "anthropic/claude-sonnet-4-6"]
+        fallbacks: ["cm/claude-sonnet-4-6", "gc/claude-sonnet-4.6", "anthropic/claude-sonnet-4-6"]
