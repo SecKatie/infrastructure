@@ -16,8 +16,7 @@ data:
         recursionLimit: 50
         maxRecursionLimit: 100
         disableBuilder: false
-        # (optional) Agent Capabilities available to all users. Omit the ones you wish to exclude. Defaults to list below.
-        # capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
+        capabilities: ["execute_code", "file_search", "actions", "tools", "artifacts", "context", "ocr", "chain", "web_search"]
         # (optional) File citation configuration for file_search capability
         maxCitations: 30          # Maximum total citations in responses (1-50)
         maxCitationsPerFile: 7    # Maximum citations from each file (1-10)
@@ -84,30 +83,15 @@ data:
           totalSizeLimit: 500
       ocr:
         supportedMimeTypes:
-          - "application/pdf"
-          - "image/.*"
-          - "application/vnd.openxmlformats-officedocument.*"
-          - "application/msword"
-          - "application/vnd.ms-excel"
-          - "application/vnd.ms-powerpoint"
-          - "application/vnd.oasis.opendocument.*"
+          - "^image/(jpeg|gif|png|webp|heic|heif)$"
+          - "^application/pdf$"
+          - "^application/vnd\\.openxmlformats-officedocument\\.(wordprocessingml\\.document|presentationml\\.presentation|spreadsheetml\\.sheet)$"
+          - "^application/vnd\\.ms-(word|powerpoint|excel)$"
+          - "^application/epub\\+zip$"
       text:
         supportedMimeTypes:
-          - "text/.*"
-          - "application/json"
-          - "application/xml"
-          - "application/javascript"
-          - "application/x-javascript"
-          - "application/typescript"
-          - "application/x-typescript"
-          - "application/x-python-code"
-          - "application/x-sh"
-          - "application/x-bash"
-          - "application/x-csh"
-          - "application/x-yaml"
-          - "application/yaml"
-          - "application/x-toml"
-          - "application/toml"
+          - "^text/(plain|markdown|csv|json|xml|html|css|javascript|typescript|x-python|x-java|x-csharp|x-php|x-ruby|x-go|x-rust|x-kotlin|x-swift|x-scala|x-perl|x-lua|x-shell|x-sql|x-yaml|x-toml)$"
+          - "^application/(json|xml|javascript|x-javascript|typescript|x-typescript|x-python-code|x-sh|x-bash|x-csh|yaml|x-yaml|toml|x-toml)$"
 
     speech:
       tts:
