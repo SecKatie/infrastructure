@@ -108,3 +108,26 @@ data:
           - "application/yaml"
           - "application/x-toml"
           - "application/toml"
+
+    speech:
+      tts:
+        elevenlabs:
+          apiKey: "${ELEVENLABS_API_KEY}"
+          model: "eleven_flash_v2_5"
+          voices: ["cgSgspJ2msm6clMCkdW9"]
+          voice_settings:
+            stability: 0.5
+            similarity_boost: 0.75
+            use_speaker_boost: true
+      stt:
+        openai:
+          apiKey: "${OPENAI_API_KEY}"
+          model: "whisper-1"
+      speechTab:
+        conversationMode: false
+        advancedMode: false
+        speechToText: true
+        textToSpeech:
+          engineTTS: "elevenlabs"
+          voice: "cgSgspJ2msm6clMCkdW9"
+          automaticPlayback: false

@@ -71,6 +71,23 @@ kubectl get secret <name> -n <ns> -o json | \
   --controller-namespace kube-system > path/to/sealedsecret.yaml
 ```
 
+### LibreChat Custom Endpoint Configuration
+
+When configuring custom OpenAI-compatible endpoints in `librechat.yaml`, the `baseURL` must include the `/v1` suffix:
+
+```yaml
+custom:
+  - name: "Glitchgate"
+    apiKey: "${GLITCHGATE_API_KEY}"
+    baseURL: "https://glitchgate.corp.mulliken.net/openai/v1"  # /v1 required
+    models:
+      default:
+        - "synthetic/hf:moonshotai/Kimi-K2-Instruct-0905"
+      fetch: true  # auto-discover models from /v1/models endpoint
+```
+
+**Why `/v1` is required**: LibreChat appends `/chat/completions` to the baseURL by default. Without `/v1`, requests would hit `.../openai/chat/completions` instead of `.../openai/v1/chat/completions`. To use a direct completions endpoint, set `directEndpoint: true`.
+
 ### Configuration Validation
 
 **Never make up configuration options from memory.** Always search and verify against official documentation before adding any config keys to application manifests (especially `librechat.yaml`, `config.yaml`, or similar).
