@@ -86,6 +86,9 @@ data:
         Glitchgate:
           supportedMimeTypes:
             - ".*"
+        glitchgate:
+          supportedMimeTypes:
+            - ".*"
       ocr:
         supportedMimeTypes:
           - "^image/(jpeg|gif|png|webp|heic|heif)$"
