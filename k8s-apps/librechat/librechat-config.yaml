@@ -75,3 +75,36 @@ data:
       strategy: "mistral_ocr"
       apiKey: "${OCR_API_KEY}"
       mistralModel: "mistral-ocr-latest"
+
+    fileConfig:
+      endpoints:
+        default:
+          fileLimit: 10
+          fileSizeLimit: 100
+          totalSizeLimit: 500
+      ocr:
+        supportedMimeTypes:
+          - "application/pdf"
+          - "image/.*"
+          - "application/vnd.openxmlformats-officedocument.*"
+          - "application/msword"
+          - "application/vnd.ms-excel"
+          - "application/vnd.ms-powerpoint"
+          - "application/vnd.oasis.opendocument.*"
+      text:
+        supportedMimeTypes:
+          - "text/.*"
+          - "application/json"
+          - "application/xml"
+          - "application/javascript"
+          - "application/x-javascript"
+          - "application/typescript"
+          - "application/x-typescript"
+          - "application/x-python-code"
+          - "application/x-sh"
+          - "application/x-bash"
+          - "application/x-csh"
+          - "application/x-yaml"
+          - "application/yaml"
+          - "application/x-toml"
+          - "application/toml"
