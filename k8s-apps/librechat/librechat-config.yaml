@@ -81,6 +81,8 @@ data:
           fileLimit: 10
           fileSizeLimit: 100
           totalSizeLimit: 500
+          supportedMimeTypes:
+            - ".*"
       ocr:
         supportedMimeTypes:
           - "^image/(jpeg|gif|png|webp|heic|heif)$"
