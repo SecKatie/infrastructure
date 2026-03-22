@@ -35,27 +35,27 @@ data:
       - name: "chutes"
         type: "openai"
         base_url: "https://llm.chutes.ai"
-        auth_mode: "proxy_key"
+        auth_mode: "api_key"
         api_key: "${CHUTES_API_KEY}"
         discover_models: true
         monthly_subscription_cost: 10.00
       - name: "anthropic"
         type: "anthropic"
         base_url: "https://api.anthropic.com"
-        auth_mode: "proxy_key"
+        auth_mode: "api_key"
         api_key: "${ANTHROPIC_API_KEY}"
         discover_models: true
       - name: "synthetic"
         type: "openai"
         base_url: "https://api.synthetic.new/openai"
-        auth_mode: "proxy_key"
+        auth_mode: "api_key"
         api_key: "${SYNTHETIC_API_KEY}"
         discover_models: true
         monthly_subscription_cost: 30.00
       - name: "minimax"
         type: "anthropic"
         base_url: "https://api.minimax.io/anthropic"
-        auth_mode: "proxy_key"
+        auth_mode: "api_key"
         api_key: "${MINIMAX_API_KEY}"
         monthly_subscription_cost: 10.00
 
