@@ -83,6 +83,9 @@ data:
           totalSizeLimit: 500
           supportedMimeTypes:
             - ".*"
+        Glitchgate:
+          supportedMimeTypes:
+            - ".*"
       ocr:
         supportedMimeTypes:
           - "^image/(jpeg|gif|png|webp|heic|heif)$"
