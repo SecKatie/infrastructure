@@ -83,6 +83,21 @@ data:
           totalSizeLimit: 500
           supportedMimeTypes:
             - ".*"
+        assistants:
+          supportedMimeTypes:
+            - ".*"
+        azureAssistants:
+          supportedMimeTypes:
+            - ".*"
+        agents:
+          supportedMimeTypes:
+            - ".*"
+        anthropic:
+          supportedMimeTypes:
+            - ".*"
+        Glitchgate:
+          supportedMimeTypes:
+            - ".*"
         glitchgate:
           supportedMimeTypes:
             - ".*"
