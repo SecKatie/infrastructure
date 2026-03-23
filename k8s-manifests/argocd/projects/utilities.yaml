@@ -29,15 +29,11 @@ spec:
       server: https://kubernetes.default.svc
     - namespace: pocket-id
       server: https://kubernetes.default.svc
-    - namespace: litellm
-      server: https://kubernetes.default.svc
     - namespace: postgres
       server: https://kubernetes.default.svc
     - namespace: librechat
       server: https://kubernetes.default.svc
     - namespace: glitchgate
-      server: https://kubernetes.default.svc
-    - namespace: bifrost
       server: https://kubernetes.default.svc
     - namespace: utilities
       server: https://kubernetes.default.svc
