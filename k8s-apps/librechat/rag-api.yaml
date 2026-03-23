@@ -22,6 +22,11 @@ spec:
             - containerPort: 8000
               name: http
           env:
+            - name: JWT_SECRET
+              valueFrom:
+                secretKeyRef:
+                  name: librechat-credentials-env
+                  key: JWT_SECRET
             - name: RAG_OPENAI_API_KEY
               valueFrom:
                 secretKeyRef:
