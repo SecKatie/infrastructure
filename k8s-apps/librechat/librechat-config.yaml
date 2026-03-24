@@ -130,8 +130,9 @@ data:
       speechTab:
         conversationMode: false
         advancedMode: false
-        speechToText: true
+        speechToText:
+          engineSTT: "external"
         textToSpeech:
-          engineTTS: "elevenlabs"
+          engineTTS: "external"
           voice: "cgSgspJ2msm6clMCkdW9"
           automaticPlayback: false
