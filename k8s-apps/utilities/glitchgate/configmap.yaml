@@ -20,7 +20,6 @@ data:
     providers:
       - name: "claude-max"
         type: "anthropic"
-        base_url: "https://api.anthropic.com"
         auth_mode: "forward"
         monthly_subscription_cost: 100.00
       - name: "github-copilot"
@@ -29,32 +28,31 @@ data:
         monthly_subscription_cost: 8.34
       - name: "chatgpt-pro"
         type: "openai_responses"
-        base_url: "https://chatgpt.com/backend-api/codex"
+        base_url: "https://chatgpt.com/backend-api/codex/v1"
         auth_mode: "forward"
         monthly_subscription_cost: 20.00
       - name: "chutes"
         type: "openai"
-        base_url: "https://llm.chutes.ai"
+        base_url: "https://llm.chutes.ai/v1"
         auth_mode: "api_key"
         api_key: "${CHUTES_API_KEY}"
         discover_models: true
         monthly_subscription_cost: 10.00
       - name: "anthropic"
         type: "anthropic"
-        base_url: "https://api.anthropic.com"
         auth_mode: "api_key"
         api_key: "${ANTHROPIC_API_KEY}"
         discover_models: true
       - name: "synthetic"
         type: "openai"
-        base_url: "https://api.synthetic.new/openai"
+        base_url: "https://api.synthetic.new/openai/v1"
         auth_mode: "api_key"
         api_key: "${SYNTHETIC_API_KEY}"
         discover_models: true
         monthly_subscription_cost: 30.00
       - name: "minimax"
         type: "anthropic"
-        base_url: "https://api.minimax.io/anthropic"
+        base_url: "https://api.minimax.io/anthropic/v1"
         auth_mode: "api_key"
         api_key: "${MINIMAX_API_KEY}"
         monthly_subscription_cost: 10.00
