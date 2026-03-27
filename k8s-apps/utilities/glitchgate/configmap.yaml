@@ -58,6 +58,12 @@ data:
         auth_mode: "api_key"
         api_key: "${MINIMAX_API_KEY}"
         monthly_subscription_cost: 10.00
+      - name: "zai"
+        type: "openai"
+        base_url: "https://api.z.ai/api/coding/paas/v4"
+        auth_mode: "api_key"
+        api_key: "${ZAI_API_KEY}"
+        monthly_subscription_cost: 10.00
 
     model_list:
       # GitHub Copilot models - track notional OpenAI/Anthropic API costs
@@ -158,6 +164,81 @@ data:
           input_token_cost: 1.75
           output_token_cost: 14.00
           cache_read_cost: 0.175
+      - model_name: "zai/glm-5.1"
+        provider: "zai"
+        upstream_model: "glm-5.1"
+        metadata:
+          input_token_cost: 1.00
+          output_token_cost: 3.20
+          cache_read_cost: 0.20
+          context_window: 200000
+          max_tokens: 128000
+      - model_name: "zai/glm-5"
+        provider: "zai"
+        upstream_model: "glm-5"
+        metadata:
+          input_token_cost: 1.00
+          output_token_cost: 3.20
+          cache_read_cost: 0.20
+          context_window: 200000
+          max_tokens: 128000
+      - model_name: "zai/glm-5-turbo"
+        provider: "zai"
+        upstream_model: "glm-5-turbo"
+        metadata:
+          input_token_cost: 1.20
+          output_token_cost: 4.00
+          cache_read_cost: 0.24
+          context_window: 200000
+          max_tokens: 128000
+      - model_name: "zai/glm-4.7"
+        provider: "zai"
+        upstream_model: "glm-4.7"
+        metadata:
+          input_token_cost: 0.60
+          output_token_cost: 2.20
+          cache_read_cost: 0.11
+          context_window: 200000
+          max_tokens: 128000
+      - model_name: "zai/glm-4.7-flash"
+        provider: "zai"
+        upstream_model: "glm-4.7-flash"
+        metadata:
+          context_window: 200000
+          max_tokens: 128000
+      - model_name: "zai/glm-4.6"
+        provider: "zai"
+        upstream_model: "glm-4.6"
+        metadata:
+          input_token_cost: 0.60
+          output_token_cost: 2.20
+          cache_read_cost: 0.11
+          context_window: 200000
+          max_tokens: 128000
+      - model_name: "zai/glm-4.5"
+        provider: "zai"
+        upstream_model: "glm-4.5"
+        metadata:
+          input_token_cost: 0.60
+          output_token_cost: 2.20
+          cache_read_cost: 0.11
+          context_window: 128000
+          max_tokens: 96000
+      - model_name: "zai/glm-4.5-air"
+        provider: "zai"
+        upstream_model: "glm-4.5-air"
+        metadata:
+          input_token_cost: 0.20
+          output_token_cost: 1.10
+          cache_read_cost: 0.03
+          context_window: 128000
+          max_tokens: 96000
+      - model_name: "zai/glm-4.5-flash"
+        provider: "zai"
+        upstream_model: "glm-4.5-flash"
+        metadata:
+          context_window: 128000
+          max_tokens: 96000
       - model_name: "mm/*"
         provider: "minimax"
       - model_name: "gpt-5.4"
