@@ -239,6 +239,12 @@ data:
           max_tokens: 96000
       - model_name: "mm/*"
         provider: "minimax"
+      - model_name: "mm/MiniMax-M2.7"
+        provider: "minimax"
+        upstream_model: "MiniMax-M2.7"
+      - model_name: "mm/MiniMax-M2.5"
+        provider: "minimax"
+        upstream_model: "MiniMax-M2.5"
       - model_name: "gpt-5.4"
         provider: "chatgpt-pro"
         upstream_model: "gpt-5.4"
