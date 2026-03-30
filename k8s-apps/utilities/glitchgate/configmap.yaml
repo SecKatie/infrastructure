@@ -9,7 +9,7 @@ data:
     listen: ":4000"
     timezone: "America/New_York"
     database_url: "${DATABASE_URL}"
-    log_level: "debug"
+    log_level: "info"
 
     oidc:
       issuer_url: "https://auth.mulliken.net"
