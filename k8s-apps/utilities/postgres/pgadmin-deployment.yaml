@@ -40,6 +40,8 @@ spec:
       initContainers:
         - name: pgadmin-init
           image: busybox
+          securityContext:
+            runAsUser: 0
           command:
             - sh
             - -c
