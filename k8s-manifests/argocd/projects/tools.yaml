@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Tools like ArchiveBox.
   sourceRepos:
-    - https://github.com/SecKatie/infrastructure.git
+    - ssh://git@codeberg.org/kglitchy/infra.git
   destinations:
     - namespace: "*"
       server: https://kubernetes.default.svc

@@ -11,7 +11,7 @@ metadata:
 spec:
   project: argocd
   source:
-    repoURL: https://github.com/SecKatie/infrastructure.git
+    repoURL: ssh://git@codeberg.org/kglitchy/infra.git
     path: k8s-manifests/argocd
     targetRevision: main
   destination:

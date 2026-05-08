@@ -113,10 +113,10 @@ ArgoCD applications are managed via `k8s-manifests/argocd/kustomization.yaml`. T
 
 ```yaml
 sources:
-  - repoURL: https://github.com/SecKatie/infrastructure.git
+  - repoURL: ssh://git@codeberg.org/kglitchy/infra.git
     path: k8s-apps/myapp         # deploys kustomize resources
     targetRevision: main
-  - repoURL: https://github.com/SecKatie/infrastructure.git
+  - repoURL: ssh://git@codeberg.org/kglitchy/infra.git
     targetRevision: main
     ref: local                   # file reference only, no path
   - repoURL: https://charts.example.com/myapp

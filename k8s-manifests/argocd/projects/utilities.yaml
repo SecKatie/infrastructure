@@ -6,7 +6,7 @@ metadata:
 spec:
   description: Utility applications (dashboards, tools, infrastructure)
   sourceRepos:
-    - https://github.com/SecKatie/infrastructure.git
+    - ssh://git@codeberg.org/kglitchy/infra.git
     - https://github.com/SecKatie/personal-site.git
     - https://bitnami-labs.github.io/sealed-secrets
     - https://github.com/danny-avila/LibreChat.git

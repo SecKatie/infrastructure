@@ -6,7 +6,7 @@ metadata:
 spec:
   description: ArgoCD self-management
   sourceRepos:
-    - https://github.com/SecKatie/infrastructure.git
+    - ssh://git@codeberg.org/kglitchy/infra.git
   destinations:
     - namespace: argocd
       server: https://kubernetes.default.svc
