@@ -5,12 +5,8 @@ resources:
   # ArgoCD config
   - argocd-cm.yaml
 
-  # AppProjects (authorization boundaries / allowed repos & destinations)
-  - projects/argocd.yaml
-  - projects/media.yaml
-  - projects/monitoring.yaml
-  - projects/utilities.yaml
-  - projects/tools.yaml
+  # AppProject (allowed repos and destinations)
+  - projects/infrastructure.yaml
 
   # ApplicationSets (generate Applications from repo paths)
   - applicationsets/media.yaml
@@ -25,5 +21,4 @@ resources:
   # Ingress and TLS for ArgoCD
   - ingress.yaml
   - certificate.yaml
-
 

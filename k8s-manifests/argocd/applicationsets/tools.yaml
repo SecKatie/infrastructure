@@ -12,7 +12,7 @@ spec:
   goTemplateOptions: ["missingkey=error"]
   generators:
     - git:
-        repoURL: ssh://git@codeberg.org/kglitchy/infra.git
+        repoURL: https://github.com/SecKatie/infrastructure.git
         revision: main
         directories:
           - path: k8s-apps/tools/*
@@ -26,9 +26,9 @@ spec:
       finalizers:
         - resources-finalizer.argocd.argoproj.io
     spec:
-      project: tools
+      project: infrastructure
       source:
-        repoURL: ssh://git@codeberg.org/kglitchy/infra.git
+        repoURL: https://github.com/SecKatie/infrastructure.git
         path: '{{.path.path}}'
         targetRevision: main
       destination:

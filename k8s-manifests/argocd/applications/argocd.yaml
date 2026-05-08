@@ -9,9 +9,9 @@ metadata:
   finalizers:
     - resources-finalizer.argocd.argoproj.io
 spec:
-  project: argocd
+  project: infrastructure
   source:
-    repoURL: ssh://git@codeberg.org/kglitchy/infra.git
+    repoURL: https://github.com/SecKatie/infrastructure.git
     path: k8s-manifests/argocd
     targetRevision: main
   destination:

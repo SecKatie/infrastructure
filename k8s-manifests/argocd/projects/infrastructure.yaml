@@ -1,0 +1,23 @@
+apiVersion: argoproj.io/v1alpha1
+kind: AppProject
+metadata:
+  name: infrastructure
+  namespace: argocd
+spec:
+  description: Shared project for all cluster applications
+  sourceRepos:
+    - https://github.com/SecKatie/infrastructure.git
+    - https://github.com/SecKatie/personal-site.git
+    - https://bitnami-labs.github.io/sealed-secrets
+    - https://github.com/danny-avila/LibreChat.git
+  destinations:
+    - namespace: ""
+      server: https://kubernetes.default.svc
+    - namespace: "*"
+      server: https://kubernetes.default.svc
+  clusterResourceWhitelist:
+    - group: "*"
+      kind: "*"
+  namespaceResourceWhitelist:
+    - group: "*"
+      kind: "*"

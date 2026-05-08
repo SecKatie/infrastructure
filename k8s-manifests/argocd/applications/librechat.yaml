@@ -7,9 +7,9 @@ metadata:
     app.kubernetes.io/name: librechat
     app.kubernetes.io/part-of: utilities
 spec:
-  project: utilities
+  project: infrastructure
   source:
-    repoURL: ssh://git@codeberg.org/kglitchy/infra.git
+    repoURL: https://github.com/SecKatie/infrastructure.git
     path: k8s-apps/librechat
     targetRevision: main
   destination:
